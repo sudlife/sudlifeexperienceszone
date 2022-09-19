@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "802592535097",
+    "project_id": "experiencezone-8a3a5",
+    "storage_bucket": "experiencezone-8a3a5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802592535097:android:9a3b951025a9e2d971d3e8",
+        "android_client_info": {
+          "package_name": "com.sudlife.sudlifeexperienceszone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802592535097-ebhiht35ek39uj295qf5i3db441rhapk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sudlife.sudlifeexperienceszone",
+            "certificate_hash": "a4276e0684630dba9ba3f5981f27a3b8c8430aaf"
+          }
+        },
+        {
+          "client_id": "802592535097-5ebd2utkhl5h35eng48rj8plnf8uctk7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUvdt_qjGfUz18Xz-aP5gOsMpIuGpxueA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802592535097-5ebd2utkhl5h35eng48rj8plnf8uctk7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
