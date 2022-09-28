@@ -42,7 +42,7 @@ class GameBox {
 
 List<GameBox> gameList = [
   GameBox(
-      url: "https://ronin.co.in/sudlifegame/",
+      url: "https://d1jm9hpbqnjqwi.cloudfront.net",
       name: "Coin Saver",
       image_url: "assets/game/coin Saver.png"),
   GameBox(
@@ -81,6 +81,9 @@ class BannerScreenState extends State<BannerScreen>
   bool _policyChecked = false;
   late bool _femaleChecked;
   late bool _maleChecked;
+  late bool _continuePressed;
+  late bool _otpDone ;
+
   bool _otpSent = false;
   late CurvedAnimation curve;
   late AnimationController controller;
@@ -265,13 +268,15 @@ class BannerScreenState extends State<BannerScreen>
         backgroundColor: LightColor.buttonground,
         body: GestureDetector(
           onTap: () {
+
             FocusScope.of(context).unfocus();
-            this.controller.isCompleted
-                ? this.controller.reverse()
-                : this.controller.forward();
+            controller.isCompleted
+                ? controller.reverse()
+                : controller.forward();
+
           },
 
-          //child: !_developerMode! ? widthSize < 900
+          // child: !_developerMode! ? widthSize < 900
           child: !_rootStatus
               ? widthSize < 900
                   ? SingleChildScrollView(
@@ -1618,8 +1623,8 @@ class BannerScreenState extends State<BannerScreen>
                                             color: Color(0xff0F5A93),
                                           ),
                                         ),
-                                        child: const Text(
-                                          "Exit",
+                                        child: Text( FirebaseAuth.instance.currentUser != null
+                                           ? "Exit" : "Login" ,
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
@@ -1627,7 +1632,10 @@ class BannerScreenState extends State<BannerScreen>
                                           ),
                                         ),
                                         onPressed: () async {
-                                          _showMyDialog();
+                                          FirebaseAuth.instance.currentUser != null
+                                              ? _showMyDialog()
+                                              : loginView(context);
+                                          //_showMyDialog();
                                         },
                                       ),
                                     ),
@@ -3008,8 +3016,9 @@ class BannerScreenState extends State<BannerScreen>
                                               color: Color(0xff0F5A93),
                                             ),
                                           ),
-                                          child: const Text(
-                                            "Exit",
+                                          child: Text(
+                                            FirebaseAuth.instance.currentUser != null
+                                                ? "Exit" : "Login",
                                             style: TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
@@ -3017,7 +3026,10 @@ class BannerScreenState extends State<BannerScreen>
                                             ),
                                           ),
                                           onPressed: () async {
-                                            _showMyDialog();
+                                           // _showMyDialog();
+                                            FirebaseAuth.instance.currentUser != null
+                                                ? _showMyDialog()
+                                                : loginView(context);
                                           },
                                         ),
                                       ),
@@ -4270,7 +4282,7 @@ class BannerScreenState extends State<BannerScreen>
   Future<void> _showMyDialog() async {
     return showCupertinoDialog<void>(
       context: context,
-      barrierDismissible: false, // user must tap button!
+      barrierDismissible: true, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
@@ -4350,6 +4362,9 @@ class BannerScreenState extends State<BannerScreen>
       builder: (context) {
         _femaleChecked = false;
         _maleChecked = true;
+
+        _continuePressed = false;
+        _otpDone = false;
         return StatefulBuilder(
           builder: (context, setState) {
             return SimpleDialog(
@@ -4748,7 +4763,11 @@ class BannerScreenState extends State<BannerScreen>
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
-                            child: Text(
+                            child: _continuePressed ? SizedBox(
+                              height: 25,
+                              width: 25,
+                              child: CircularProgressIndicator( color: Colors.white),
+                            ) : Text(
                               'Enter the zone',
                               style: TextStyle(
                                   fontSize: 16,
@@ -4756,6 +4775,14 @@ class BannerScreenState extends State<BannerScreen>
                                   fontWeight: FontWeight.bold,
                                   color: Colors.white),
                             ),
+                            // child: Text(
+                            //   'Enter the zone',
+                            //   style: TextStyle(
+                            //       fontSize: 16,
+                            //       fontFamily: defaultFontFamily,
+                            //       fontWeight: FontWeight.bold,
+                            //       color: Colors.white),
+                            // ),
                           ),
                         ),
                       ),
@@ -4991,7 +5018,11 @@ class BannerScreenState extends State<BannerScreen>
                             // ],
                           ),
                           child: Center(
-                            child: Text(
+                            child: _otpDone ? SizedBox(
+                              height: 25,
+                              width: 25,
+                              child: CircularProgressIndicator( color: Colors.white),
+                            ) : Text(
                               'Continue',
                               style: TextStyle(
                                   fontSize: 16,
@@ -5000,6 +5031,16 @@ class BannerScreenState extends State<BannerScreen>
                                   color: Colors.white),
                             ),
                           ),
+                          // child: Center(
+                          //   child: Text(
+                          //     'Continue',
+                          //     style: TextStyle(
+                          //         fontSize: 16,
+                          //         fontFamily: defaultFontFamily,
+                          //         fontWeight: FontWeight.bold,
+                          //         color: Colors.white),
+                          //   ),
+                          // ),
                         ),
                       ),
                     ],
@@ -5043,8 +5084,6 @@ class BannerScreenState extends State<BannerScreen>
           }));
     }
   }
-
-
 
   Future<void> clear() async {
     var prefs = await SharedPreferences.getInstance();
@@ -5157,6 +5196,7 @@ class BannerScreenState extends State<BannerScreen>
               if (kDebugMode) {
                 print(error);
               }
+              setState( () => _continuePressed = false);
               showSnackBar("Something went wrong, please try again.");
               //showSnackBar(error.toString());
             },
@@ -5175,10 +5215,12 @@ class BannerScreenState extends State<BannerScreen>
               showSnackBar("Verified.");
             },
             codeAutoRetrievalTimeout: (String verificationId) {
+
               setState(() {
+                _continuePressed = false;
                 _timeout = true;
               });
-              //showSnackBar("Timed out!");
+              showSnackBar("Timed out!");
             },
           );
           if (kDebugMode) {
@@ -5223,6 +5265,7 @@ class BannerScreenState extends State<BannerScreen>
                 setState(() {
                   _timeout = false;
                   _otpSent = true;
+                  _continuePressed = true;
                   verification_id = verificationId;
                 });
                 Navigator.pop(context);
@@ -5264,6 +5307,11 @@ class BannerScreenState extends State<BannerScreen>
     } else if (_sixthDigitOtp.text.trim() == "") {
       showSnackBar("Enter Sixth Digit Of OTP");
     } else {
+
+      setState(() {
+        _otpDone = true;
+      });
+
       showProgressSnackBar("Logging you in");
       smsCode = _firstDigitOtp.text +
           _secondDigitOtp.text +
@@ -5279,8 +5327,15 @@ class BannerScreenState extends State<BannerScreen>
           .signInWithCredential(credential)
           .then((UserCredential authRes) {
         if (authRes.user != null) {
+
+          setState(() {
+            _otpDone = false;
+            _continuePressed = false;
+          });
+
           String? id = authRes.user?.uid;
           String? name = _nameController.text.toString();
+
           Map<String, String> _userMap = {
             'Name': _nameController.text.toString(),
             'Number': _phoneController.text.toString(),
@@ -5317,6 +5372,11 @@ class BannerScreenState extends State<BannerScreen>
           //       );
           //     }));
         } else {
+          setState(() {
+            _otpDone = false;
+            _continuePressed = false;
+          });
+
           showSnackBar("Enter Correct OTP");
         }
       }).catchError((e) => {

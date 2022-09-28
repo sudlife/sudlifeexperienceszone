@@ -29,6 +29,7 @@ Future<void> main() async {
   //   DeviceOrientation.landscapeRight,
   //   DeviceOrientation.landscapeLeft,
   // ]).then((_) {
+
   runApp(
     //MultiProvider(
     // providers: [
@@ -60,6 +61,7 @@ Future<void> main() async {
         // }),
   //)
     ));
+
 // });
 // flutter build appbundle --release --no-sound-null-safety
 

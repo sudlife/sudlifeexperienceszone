@@ -3009,7 +3009,6 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
     }
   }
 
-
   Future<void> getQuizQuestion(bool value) async {
     /// false for PREVIOUS and true for NEXT
 

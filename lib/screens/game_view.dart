@@ -23,7 +23,7 @@ class _GameWebViewState extends State<GameWebViewScreen> {
   Completer<WebViewController>();
 
   late Timer _timer;
-  int _start = 120; // 2 minute
+  int _start = 360; // 5 minute
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -48,7 +48,7 @@ class _GameWebViewState extends State<GameWebViewScreen> {
 
   @override
   void initState() {
-    startTimer();
+  //  startTimer();
   }
 
   @override
@@ -74,6 +74,18 @@ class _GameWebViewState extends State<GameWebViewScreen> {
                       initialUrl: widget.url_link,
                       gestureNavigationEnabled: false,
                       javascriptMode: JavascriptMode.unrestricted,
+                      javascriptChannels: <JavascriptChannel>{
+                        JavascriptChannel(
+                            name: 'onExitToMainMenu',
+                            onMessageReceived: (s) {
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                  context, MaterialPageRoute(builder: (context) => BannerScreen()));
+                              // Scaffold.of(context).showSnackBar(SnackBar(
+                              //   content: Text(s.message),
+                              // ));
+                            }),
+                      },
                       onPageFinished: _handleLoad,
                       onWebViewCreated: (WebViewController webViewController) {
                         _controller.complete(webViewController);
