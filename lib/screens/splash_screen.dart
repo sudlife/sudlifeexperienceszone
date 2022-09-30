@@ -13,7 +13,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     init();
@@ -31,14 +30,14 @@ class _SplashScreenState extends State<SplashScreen> {
             Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage("assets/images/EX Mob Bag.png"),
+                  image: MediaQuery.of(context).size.width < 500
+                      ? const AssetImage("assets/images/splash.png")
+                      : const AssetImage("assets/images/slpash_tab.png"),
                   fit: BoxFit.fill,
                 ),
               ),
-
-
             ),
           ],
         ),
@@ -47,14 +46,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> init() async {
-    Timer(const Duration(milliseconds: 1200), () {
+    Timer(const Duration(milliseconds: 2000), () {
       HapticFeedback.vibrate();
       Navigator.pop(context);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => BannerScreen()));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const BannerScreen()));
     });
   }
-
 }

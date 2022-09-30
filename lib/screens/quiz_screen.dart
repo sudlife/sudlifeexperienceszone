@@ -1,17 +1,14 @@
 import 'dart:async';
 
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:sudlifeexperienceszone/screens/banner_screen.dart';
-import 'package:sudlifeexperienceszone/screens/scoreboard_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sudlifeexperienceszone/screens/zonehome_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudlifeexperienceszone/screens/banner_screen.dart';
+import 'package:sudlifeexperienceszone/screens/scoreboard_screen.dart';
 
 import '../cache/common.dart';
-
-import 'dart:io' show Platform;
-
 import '../utils/light_color.dart';
 
 enum SingingCharacter { Yes, NO }
@@ -206,41 +203,41 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
   late var system_size;
 
   late Timer _timer;
-  int _start = 120; // 2 minute
+  int _start = 60; // 2 minute
+
+  void startTimer() {
+    const oneSec = Duration(seconds: 1);
+    _timer = Timer.periodic(
+      oneSec,
+      (Timer timer) {
+        if (_start == 0) {
+          if (FirebaseAuth.instance.currentUser != null) {
+            logOutUser(context);
+            setState(() {});
+            _timer.cancel();
+            Navigator.pop(context);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => const BannerScreen()));
+          }
+        } else {
+          _start--;
+          print(_start);
+        }
+      },
+    );
+  }
+
+  void logOutUser(BuildContext context) {
+    clear();
+    FirebaseAuth.instance.signOut();
+    setState(() {});
+  }
 
   @override
   void initState() {
     startTimer();
     getInitQuizQuestion();
     super.initState();
-  }
-
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-          (Timer timer) {
-        if (_start == 0) {
-          setState(() {
-            _timer.cancel();
-            timer.cancel();
-          });
-
-          print("Quiz Screen Timer Cancelled ");
-          showSnackBar(
-              "5 Minute Limit Over");
-          clear();
-          Navigator.of(context).pop();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => BannerScreen()));
-
-        } else {
-          setState(() {
-            _start--;
-          });
-        }
-      },
-    );
   }
 
   Future showSnackBar(String error) async {
@@ -449,2564 +446,2625 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
         //   title: Text(""),
         //   centerTitle: false,
         // ),
-        body: Stack(
-          children: [
-            widthSize < 900
-                ? Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/Background.png"),
-                  fit: BoxFit.fill,
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    //
-                    // Padding(
-                    //   padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: [
-                    //       Container(
-                    //         // height: 70,
-                    //         // width: 160,
-                    //         padding: const EdgeInsets.all(14),
-                    //         decoration: const BoxDecoration(
-                    //           color: Colors.white,
-                    //           borderRadius: BorderRadius.only(
-                    //               topRight: Radius.circular(15.0),
-                    //               bottomRight: Radius.circular(15.0),
-                    //               topLeft: Radius.circular(15.0),
-                    //               bottomLeft: Radius.circular(15.0)),
-                    //         ),
-                    //         child: Container(
-                    //           // height: 50,
-                    //           // width: 100,
-                    //           padding:
-                    //               const EdgeInsets.fromLTRB(60, 20, 60, 20),
-                    //           decoration: const BoxDecoration(
-                    //             color: Colors.white,
-                    //             image: DecorationImage(
-                    //               image: AssetImage(
-                    //                   "assets/images/site-logo.png"),
-                    //               fit: BoxFit.contain,
-                    //             ),
-                    //           ),
-                    //           child: null,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SizedBox(
-                    //   height: 10,
-                    // ),
-
-                    SingleChildScrollView(
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(0, 60, 0, 0),
-                        margin: const EdgeInsets.all(0),
-                        decoration: const BoxDecoration(
-                          //color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15.0),
-                              bottomRight: Radius.circular(15.0),
-                              topLeft: Radius.circular(15.0),
-                              bottomLeft: Radius.circular(15.0)),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 170,
-                                  width: 160,
-                                  padding: const EdgeInsets.fromLTRB(
-                                      60, 0, 60, 20),
-                                  decoration: const BoxDecoration(
-                                    //color: Colors.white,
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/KBC logo.png"),
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  child: null,
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(
-                              height: 30,
-                            ),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: CustomPaint(
-                                    size: Size(
-                                        size,
-                                        (200 * 0.18461538461538463)
-                                            .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                                    painter: Counter(),
-                                    child: Container(
-                                      width: 50,
-                                      margin: const EdgeInsets.fromLTRB(
-                                          0, 15, 0, 15),
-                                      //padding: EdgeInsets.fromLTRB(0, 0, 0, 45),
-                                      child: Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            65, 0, 5, 0),
-                                        child: Text(
-                                          "Q." + counter.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              fontSize: 16,
-                                              color: Colors.white,
-                                              fontWeight:
-                                              FontWeight.w600),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 8,
-                                  child: Container(),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-
-                            /// question box
-                            SizedBox(
-                              width: size,
-                              child: CustomPaint(
-                                size: Size(
-                                    size,
-                                    (150 * 0.18461538461538463)
-                                        .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                                painter: QuestionCustomPainter(),
-                                child: Container(
-                                  width: 450,
-                                  margin: const EdgeInsets.fromLTRB(
-                                      0, 20, 0, 20),
-                                  //padding: EdgeInsets.fromLTRB(0, 0, 0, 45),
-                                  child: Padding(
-                                    padding:
-                                    EdgeInsets.fromLTRB(75, 0, 75, 0),
-                                    child: Text(
-                                      quizObject.question,
-                                      //"What is the Purpose of Life insurance",
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-
-                            Column(
-                              children: [
-                                InkWell(
-                                  onTap: () {
-                                    if (_enabledA) {
-                                      setState(() {
-                                        pressed = "A";
-
-                                        _enabledA = false;
-                                        _enabledB = false;
-                                        _enabledC = false;
-                                        _enabledD = false;
-
-                                        if (quizObject.answerA == "Yes") {
-                                          _answerA = quizObject.answerA;
-
-                                          _correctA = true;
-                                          _correctB = false;
-                                          _correctC = false;
-                                          _correctD = false;
-                                        }
-                                      });
-                                    }
-                                  },
-                                  child: SizedBox(
-                                    height: 55,
-                                    width: size,
-                                    child: CustomPaint(
-                                      painter: AMobileOptionCustomPainter(
-                                          _correctA, pressed),
-                                      size: Size(
-                                          size,
-                                          (400 * 0.18461538461538463)
-                                              .toDouble()),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              75, 0, 75, 0),
-                                          child: Text(
-                                            "A. " + quizObject.optionA,
-                                            //"A. What is the Purpose of Life insurance",
-                                            textAlign: TextAlign.center,
-                                            maxLines: 3,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: _correctA
-                                                    ? Colors.white
-                                                    : !_correctA &&
-                                                    pressed == "A"
-                                                    ? Colors.white
-                                                    : Colors.blue
-                                                    .shade800,
-                                                fontWeight:
-                                                FontWeight.w600),
-                                            // style: TextStyle(
-                                            //     fontSize: 14,
-                                            //     color: Colors.white,
-                                            //     fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    if (_enabledB) {
-                                      setState(() {
-                                        pressed = "B";
-
-                                        _enabledB = false;
-                                        _enabledA = false;
-                                        _enabledC = false;
-                                        _enabledD = false;
-
-                                        if (quizObject.answerB == "Yes") {
-                                          _answerB = quizObject.answerB;
-
-                                          _correctB = true;
-
-                                          _correctA = false;
-                                          _correctC = false;
-                                          _correctD = false;
-                                        }
-                                      });
-                                    }
-                                  },
-                                  child: SizedBox(
-                                    height: 55,
-                                    width: size,
-                                    child: CustomPaint(
-                                      size: Size(
-                                          size,
-                                          (400 * 0.18461538461538463)
-                                              .toDouble()),
-                                      painter: BMobileOptionCustomPainter(
-                                          _correctB, pressed),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              75, 0, 75, 0),
-                                          child: Text(
-                                            "B. " + quizObject.optionB,
-                                            //"A. What is the Purpose of Life insurance",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: _correctB
-                                                    ? Colors.white
-                                                //: !_enabledB && !_correctB
-                                                    : !_correctB &&
-                                                    pressed == "B"
-                                                    ? Colors.white
-                                                    : Colors.blue
-                                                    .shade800,
-
-                                                // ? Colors.blue.shade800
-                                                //     : Colors.white,
-                                                fontWeight:
-                                                FontWeight.w600),
-                                            // style: TextStyle(
-                                            //     fontSize: 14,
-                                            //     color: Colors.white,
-                                            //     fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    if (_enabledC) {
-                                      setState(() {
-                                        pressed = "C";
-
-                                        _enabledC = false;
-                                        _enabledA = false;
-                                        _enabledB = false;
-                                        _enabledD = false;
-
-                                        if (quizObject.answerC == "Yes") {
-                                          _answerC = quizObject.answerC;
-
-                                          _correctC = true;
-
-                                          _correctA = false;
-                                          _correctB = false;
-                                          _correctD = false;
-                                        }
-                                      });
-                                    }
-                                  },
-                                  child: SizedBox(
-                                    height: 55,
-                                    width: size,
-                                    child: CustomPaint(
-                                      size: Size(
-                                          size,
-                                          (400 * 0.18461538461538463)
-                                              .toDouble()),
-                                      painter: CMobileOptionCustomPainter(
-                                          _correctC, pressed),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              75, 0, 75, 0),
-                                          child: Text(
-                                            "C. " + quizObject.optionC,
-                                            //"A. What is the Purpose of Life insurance",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: _correctC
-                                                    ? Colors.white
-                                                    : !_correctC &&
-                                                    pressed == "C"
-                                                    ? Colors.white
-                                                    : Colors.blue
-                                                    .shade800,
-                                                fontWeight:
-                                                FontWeight.w600),
-                                            // style: TextStyle(
-                                            //     fontSize: 14,
-                                            //     color: Colors.white,
-                                            //     fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    if (_enabledD) {
-                                      setState(() {
-                                        pressed = "D";
-
-                                        _enabledD = false;
-                                        _enabledA = false;
-                                        _enabledB = false;
-                                        _enabledC = false;
-
-                                        if (quizObject.answerD == "Yes") {
-                                          _answerD = quizObject.answerD;
-
-                                          _correctD = true;
-                                          _correctA = false;
-                                          _correctB = false;
-                                          _correctC = false;
-                                        }
-                                      });
-                                    }
-                                  },
-                                  child: SizedBox(
-                                    height: 55,
-                                    width: size,
-                                    child: CustomPaint(
-                                      size: Size(
-                                          size,
-                                          (400 * 0.18461538461538463)
-                                              .toDouble()),
-                                      painter: DMobileOptionCustomPainter(
-                                          _correctD, pressed),
-                                      child: Center(
-                                        child: Padding(
-                                          padding: EdgeInsets.fromLTRB(
-                                              75, 0, 75, 0),
-                                          child: Text(
-                                            "D. " + quizObject.optionD,
-                                            //"A. What is the Purpose of Life insurance",
-                                            textAlign: TextAlign.center,
-                                            maxLines: 3,
-                                            style: TextStyle(
-                                                fontSize: 14,
-                                                color: _correctD
-                                                    ? Colors.white
-                                                    : !_correctD &&
-                                                    pressed == "D"
-                                                    ? Colors.white
-                                                    : Colors.blue
-                                                    .shade800,
-                                                fontWeight:
-                                                FontWeight.w600),
-                                            // style: TextStyle(
-                                            //     fontSize: 14,
-                                            //     color: Colors.white,
-                                            //     fontWeight: FontWeight.w600),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-
-                            Row(
-                              children: [
-                                index > 0
-                                    ? Padding(
-                                  padding:
-                                  const EdgeInsets.fromLTRB(
-                                      30, 0, 0, 0),
-                                  child: Container(
-                                    height: 45,
-                                    width: 120,
-                                    child: OutlinedButton(
-                                      style:
-                                      OutlinedButton.styleFrom(
-                                        backgroundColor:
-                                        Colors.white,
-                                        shape:
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius
-                                                .circular(
-                                                10.0)),
-                                        side: const BorderSide(
-                                          width: 2,
-                                          color: Color(0xff0F5A93),
-                                        ),
-                                      ),
-                                      child: const Text(
-                                        "Previous",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight:
-                                          FontWeight.bold,
-                                          color: Color(0xff0F5A93),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        index > 0
-                                            ? getQuizQuestion(false)
-                                            : Container();
-                                      },
-                                    ),
-                                  ),
-                                )
-                                    : Container(),
-                                const Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      0, 0, 30, 0),
-                                  child: OutlinedButton(
-                                    style: OutlinedButton.styleFrom(
-                                      backgroundColor: Color(0xff0F5A93),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                          BorderRadius.circular(
-                                              10.0)),
-                                      side: const BorderSide(
-                                        width: 1,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    child: Container(
-                                      width: 60,
-                                      height: 40,
-                                      child: Center(
-                                        child: Text(
-                                          quizList.length - 1 != index
-                                              ? 'Next'
-                                              : 'Finish',
-                                          style: const TextStyle(
-                                              fontSize: 17,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      if (index == 0) {
-                                        await Common.setQuestion0Pressed(
-                                            pressed);
-                                      } else if (index == 1) {
-                                        await Common.setQuestion1Pressed(
-                                            pressed);
-                                      } else if (index == 2) {
-                                        await Common.setQuestion2Pressed(
-                                            pressed);
-                                      } else if (index == 3) {
-                                        await Common.setQuestion3Pressed(
-                                            pressed);
-                                      } else if (index == 4) {
-                                        await Common.setQuestion4Pressed(
-                                            pressed);
-                                      } else if (index == 5) {
-                                        await Common.setQuestion5Pressed(
-                                            pressed);
-                                      } else if (index == 6) {
-                                        await Common.setQuestion6Pressed(
-                                            pressed);
-                                      } else if (index == 7) {
-                                        await Common.setQuestion7Pressed(
-                                            pressed);
-                                      } else if (index == 8) {
-                                        await Common.setQuestion8Pressed(
-                                            pressed);
-                                      } else if (index == 9) {
-                                        await Common.setQuestion9Pressed(
-                                            pressed);
-                                      }
-
-                                      if (pressed == "A") {
-                                        if (quizObject.answerA == "Yes") {
-                                          setState(() {
-                                            score = score + 1;
-                                          });
-                                        } else {
-                                          // if(score > 0 ){
-                                          //   setState(() {
-                                          //     score = score - 1;
-                                          //   });
-                                          // }
-                                        }
-
-                                        if (index == 0) {
-                                          await Common
-                                              .setQuestion0Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion0CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion0CorrectedA(
-                                                false);
-                                          }
-                                        } else if (index == 1) {
-                                          await Common
-                                              .setQuestion1Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion1CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion1CorrectedA(
-                                                false);
-                                          }
-                                        } else if (index == 2) {
-                                          await Common
-                                              .setQuestion2Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion2CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion2CorrectedA(
-                                                false);
-                                          }
-                                        } else if (index == 3) {
-                                          await Common
-                                              .setQuestion3Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion3CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion3CorrectedA(
-                                                false);
-                                          }
-                                        } else if (index == 4) {
-                                          await Common
-                                              .setQuestion4Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion4CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion4CorrectedA(
-                                                false);
-                                          }
-                                        } else if (index == 5) {
-                                          await Common
-                                              .setQuestion5Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion5CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion5CorrectedA(
-                                                false);
-                                          }
-                                        } else if (index == 6) {
-                                          await Common
-                                              .setQuestion6Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion6CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion6CorrectedA(
-                                                false);
-                                          }
-                                        } else if (index == 7) {
-                                          await Common
-                                              .setQuestion7Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion7CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion7CorrectedA(
-                                                false);
-                                          }
-                                        } else if (index == 8) {
-                                          await Common
-                                              .setQuestion8Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion8CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion8CorrectedA(
-                                                false);
-                                          }
-                                        } else if (index == 9) {
-                                          await Common
-                                              .setQuestion9Pressed(
-                                              pressed);
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion9CorrectedA(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion9CorrectedA(
-                                                false);
-                                          }
-                                        }
-                                      } else if (pressed == "B") {
-                                        if (quizObject.answerB == "Yes") {
-                                          setState(() {
-                                            score = score + 1;
-                                          });
-                                        } else {
-                                          // if(score > 0 ){
-                                          //   setState(() {
-                                          //     score = score - 1;
-                                          //   });
-                                          // }
-                                        }
-
-                                        if (index == 0) {
-                                          await Common
-                                              .setQuestion0Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion0CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion0CorrectedB(
-                                                false);
-                                          }
-                                        } else if (index == 1) {
-                                          await Common
-                                              .setQuestion1Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion1CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion1CorrectedB(
-                                                false);
-                                          }
-                                        } else if (index == 2) {
-                                          await Common
-                                              .setQuestion2Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion2CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion2CorrectedB(
-                                                false);
-                                          }
-                                        } else if (index == 3) {
-                                          await Common
-                                              .setQuestion3Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion3CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion3CorrectedB(
-                                                false);
-                                          }
-                                        } else if (index == 4) {
-                                          await Common
-                                              .setQuestion4Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion4CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion4CorrectedB(
-                                                false);
-                                          }
-                                        } else if (index == 5) {
-                                          await Common
-                                              .setQuestion5Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion5CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion5CorrectedB(
-                                                false);
-                                          }
-                                        } else if (index == 6) {
-                                          await Common
-                                              .setQuestion6Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion6CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion6CorrectedB(
-                                                false);
-                                          }
-                                        } else if (index == 7) {
-                                          await Common
-                                              .setQuestion7Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion7CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion7CorrectedB(
-                                                false);
-                                          }
-                                        } else if (index == 8) {
-                                          await Common
-                                              .setQuestion8Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion8CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion8CorrectedB(
-                                                false);
-                                          }
-                                        } else if (index == 9) {
-                                          await Common
-                                              .setQuestion9Pressed(
-                                              pressed);
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion9CorrectedB(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion9CorrectedB(
-                                                false);
-                                          }
-                                        }
-                                      } else if (pressed == "C") {
-                                        if (quizObject.answerC == "Yes") {
-                                          setState(() {
-                                            score = score + 1;
-                                          });
-                                        } else {
-                                          // if(score > 0 ){
-                                          //   setState(() {
-                                          //     score = score - 1;
-                                          //   });
-                                          // }
-                                        }
-
-                                        if (index == 0) {
-                                          await Common
-                                              .setQuestion0Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion0CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion0CorrectedC(
-                                                false);
-                                          }
-                                        } else if (index == 1) {
-                                          await Common
-                                              .setQuestion1Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion1CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion1CorrectedC(
-                                                false);
-                                          }
-                                        } else if (index == 2) {
-                                          await Common
-                                              .setQuestion2Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion2CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion2CorrectedC(
-                                                false);
-                                          }
-                                        } else if (index == 3) {
-                                          await Common
-                                              .setQuestion3Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion3CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion3CorrectedC(
-                                                false);
-                                          }
-                                        } else if (index == 4) {
-                                          await Common
-                                              .setQuestion4Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion4CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion4CorrectedC(
-                                                false);
-                                          }
-                                        } else if (index == 5) {
-                                          await Common
-                                              .setQuestion5Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion5CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion5CorrectedC(
-                                                false);
-                                          }
-                                        } else if (index == 6) {
-                                          await Common
-                                              .setQuestion6Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion6CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion6CorrectedC(
-                                                false);
-                                          }
-                                        } else if (index == 7) {
-                                          await Common
-                                              .setQuestion7Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion7CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion7CorrectedC(
-                                                false);
-                                          }
-                                        } else if (index == 8) {
-                                          await Common
-                                              .setQuestion8Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion8CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion8CorrectedC(
-                                                false);
-                                          }
-                                        } else if (index == 9) {
-                                          await Common
-                                              .setQuestion9Pressed(
-                                              pressed);
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion9CorrectedC(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion9CorrectedC(
-                                                false);
-                                          }
-                                        }
-                                      } else if (pressed == "D") {
-                                        if (quizObject.answerD == "Yes") {
-                                          setState(() {
-                                            score = score + 1;
-                                          });
-                                        } else {
-                                          // if(score > 0 ){
-                                          //   setState(() {
-                                          //     score = score - 1;
-                                          //   });
-                                          // }
-                                        }
-
-                                        if (index == 0) {
-                                          await Common
-                                              .setQuestion0Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion0CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion0CorrectedD(
-                                                false);
-                                          }
-                                        } else if (index == 1) {
-                                          await Common
-                                              .setQuestion1Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion1CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion1CorrectedD(
-                                                false);
-                                          }
-                                        } else if (index == 2) {
-                                          await Common
-                                              .setQuestion2Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion2CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion2CorrectedD(
-                                                false);
-                                          }
-                                        } else if (index == 3) {
-                                          await Common
-                                              .setQuestion3Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion3CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion3CorrectedD(
-                                                false);
-                                          }
-                                        } else if (index == 4) {
-                                          await Common
-                                              .setQuestion4Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion4CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion4CorrectedD(
-                                                false);
-                                          }
-                                        } else if (index == 5) {
-                                          await Common
-                                              .setQuestion5Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion5CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion5CorrectedD(
-                                                false);
-                                          }
-                                        } else if (index == 6) {
-                                          await Common
-                                              .setQuestion6Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion6CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion6CorrectedD(
-                                                false);
-                                          }
-                                        } else if (index == 7) {
-                                          await Common
-                                              .setQuestion7Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion7CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion7CorrectedD(
-                                                false);
-                                          }
-                                        } else if (index == 8) {
-                                          await Common
-                                              .setQuestion8Pressed(
-                                              pressed);
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion8CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion8CorrectedD(
-                                                false);
-                                          }
-                                        } else if (index == 9) {
-                                          await Common
-                                              .setQuestion9Pressed(
-                                              pressed);
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            await Common
-                                                .setQuestion9CorrectedD(
-                                                true);
-                                          } else {
-                                            await Common
-                                                .setQuestion9CorrectedD(
-                                                false);
-                                          }
-                                        }
-                                      }
-
-
-                                      quizList.length - 1 != index
-                                          ? getQuizQuestion(true)
-                                          : nextScreen(score);
-                                          // : Navigator.push(
-                                          // context,
-                                          // MaterialPageRoute(
-                                          //   // builder: (context) => ChessGame()),
-                                          //     builder: (context) =>
-                                          //         ScoreBoardScreen(
-                                          //           Score: score
-                                          //               .toString(),
-                                          //         )));
-                                    },
-                                  ),
-
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-
-                          ],
+        body: GestureDetector(
+          onTap: () {
+            if (FirebaseAuth.instance.currentUser != null) {
+              _start = 60;
+            }
+          },
+          onTapDown: (val) {
+            if (FirebaseAuth.instance.currentUser != null) {
+              _start = 60;
+            }
+          },
+          onTapUp: (val) {
+            if (FirebaseAuth.instance.currentUser != null) {
+              _start = 60;
+            }
+          },
+          child: Stack(
+            children: [
+              widthSize < 900
+                  ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/Background.png"),
+                          fit: BoxFit.fill,
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ),
-            )
-
-                : Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/images/Background.png"),
-                  fit: BoxFit.fill,
-                ),
-              ),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-
-
-                    SingleChildScrollView(
-                      child: Container(
-                        padding: EdgeInsets.fromLTRB(0, 60, 0, 0),
-                        margin: const EdgeInsets.all(0),
-                        decoration: const BoxDecoration(
-                          //color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15.0),
-                              bottomRight: Radius.circular(15.0),
-                              topLeft: Radius.circular(15.0),
-                              bottomLeft: Radius.circular(15.0)),
-                        ),
-
-
+                      child: SingleChildScrollView(
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 170,
-                                  width: 160,
-                                  padding: const EdgeInsets.fromLTRB(
-                                      60, 0, 60, 20),
-                                  decoration: const BoxDecoration(
-                                    //color: Colors.white,
-                                    image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/KBC logo.png"),
-                                      fit: BoxFit.contain,
-                                    ),
-                                  ),
-                                  child: null,
-                                ),
-                              ],
-                            ),
-                            const SizedBox(
-                              height: 30,
-                            ),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 3,
-                                  child: CustomPaint(
-                                    size: Size(
-                                        size,
-                                        (350 * 0.18461538461538463)
-                                            .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                                    painter: Counter(),
-                                    child: Container(
-                                      //width: 50,
-                                      margin: const EdgeInsets.fromLTRB(
-                                          0, 15, 0, 15),
-                                      //padding: EdgeInsets.fromLTRB(0, 0, 0, 45),
-                                      child: Padding(
-                                        padding: EdgeInsets.fromLTRB(
-                                            165, 0, 5, 0),
-                                        child: Text(
-                                          "Q." + counter.toString(),
-                                          textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              fontSize: 22,
-                                              color: Colors.white,
-                                              fontWeight:
-                                              FontWeight.w600),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 8,
-                                  child: Container(),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-
-                            SizedBox(
-                              width: size,
-                              child: CustomPaint(
-                                size: Size(
-                                    size,
-                                    (450 * 0.18461538461538463)
-                                        .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                                painter: QuestionCustomPainter(),
-                                child: Container(
-                                  //width: 400,
-                                  //height: 15,
-                                  //margin: const EdgeInsets.all(25),
-                                  padding: EdgeInsets.fromLTRB(
-                                      200, 30, 200, 35),
-                                  child: Text(
-                                    quizObject.question,
-                                    //"What is the Purpose of Life insurance",
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                        fontSize: 26,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 5,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (_enabledA) {
-                                        setState(() {
-                                          pressed = "A";
-
-                                          _enabledA = false;
-                                          _enabledB = false;
-                                          _enabledC = false;
-                                          _enabledD = false;
-
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            _answerA = quizObject.answerA;
-
-                                            _correctA = true;
-
-                                            _correctB = false;
-                                            _correctC = false;
-                                            _correctD = false;
-                                          }
-                                        });
-                                      }
-                                    },
-                                    child: SizedBox(
-                                      width: size,
-                                      child: CustomPaint(
-                                        size: Size(
-                                            size,
-                                            (400 * 0.18461538461538463)
-                                                .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                                        painter: AOptionCustomPainter(
-                                            _correctA, pressed),
-                                        child: Container(
-                                          //width: 250,
-                                          height: 80,
-                                          //margin: const EdgeInsets.all(25),
-                                          padding: EdgeInsets.fromLTRB(
-                                              200, 0, 20, 0),
-                                          child: Center(
-                                            child: Text(
-                                              "A. " + quizObject.optionA,
-                                              //"A. What is the Purpose of Life insurance",
-                                              textAlign: TextAlign.start,
-                                              maxLines: 3,
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: _correctA
-                                                      ? Colors.white
-                                                      : !_correctA &&
-                                                      pressed ==
-                                                          "A"
-                                                      ? Colors.white
-                                                      : Colors.blue
-                                                      .shade800,
-                                                  fontWeight:
-                                                  FontWeight.w600),
-                                              // style: TextStyle(
-                                              //     fontSize: 18,
-                                              //     color: Colors.white,
-                                              //     fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 5,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (_enabledB) {
-                                        setState(() {
-                                          pressed = "B";
-
-                                          _enabledB = false;
-                                          _enabledA = false;
-                                          _enabledC = false;
-                                          _enabledD = false;
-
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            _answerB = quizObject.answerB;
-
-                                            _correctB = true;
-
-                                            _correctA = false;
-                                            _correctC = false;
-                                            _correctD = false;
-                                          }
-                                        });
-                                      }
-                                    },
-                                    child: SizedBox(
-                                      width: size,
-                                      child: CustomPaint(
-                                        size: Size(
-                                            size,
-                                            (400 * 0.18461538461538463)
-                                                .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                                        painter: BOptionCustomPainter(
-                                            _correctB, pressed),
-                                        child: Container(
-                                          height: 80,
-                                          //margin: const EdgeInsets.all(25),
-                                          padding: EdgeInsets.fromLTRB(
-                                              30, 0, 170, 0),
-                                          child: Center(
-                                            child: Text(
-                                              "B. " + quizObject.optionB,
-                                              //"A. What is the Purpose of Life insurance",
-                                              textAlign: TextAlign.start,
-                                              maxLines: 3,
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: _correctB
-                                                      ? Colors.white
-                                                      : !_correctB &&
-                                                      pressed ==
-                                                          "B"
-                                                      ? Colors.white
-                                                      : Colors.blue
-                                                      .shade800,
-                                                  fontWeight:
-                                                  FontWeight.w600),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Expanded(
-                                  flex: 5,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (_enabledC) {
-                                        setState(() {
-                                          pressed = "C";
-
-                                          _enabledC = false;
-                                          _enabledA = false;
-                                          _enabledB = false;
-                                          _enabledD = false;
-
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            _answerC = quizObject.answerC;
-
-                                            _correctC = true;
-
-                                            _correctA = false;
-                                            _correctB = false;
-                                            _correctD = false;
-                                          }
-                                        });
-                                      }
-                                    },
-                                    child: SizedBox(
-                                      width: size,
-                                      child: CustomPaint(
-                                        size: Size(
-                                            size,
-                                            (400 * 0.18461538461538463)
-                                                .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                                        painter: COptionCustomPainter(
-                                            _correctC, pressed),
-                                        child: Container(
-                                          //width: 250,
-                                          height: 80,
-                                          //margin: const EdgeInsets.all(25),
-                                          padding: EdgeInsets.fromLTRB(
-                                              200, 0, 20, 0),
-                                          child: Center(
-                                            child: Text(
-                                              "C. " + quizObject.optionC,
-                                              textAlign: TextAlign.start,
-                                              maxLines: 3,
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: _correctC
-                                                      ? Colors.white
-                                                      : !_correctC &&
-                                                      pressed ==
-                                                          "C"
-                                                      ? Colors.white
-                                                      : Colors.blue
-                                                      .shade800,
-                                                  fontWeight:
-                                                  FontWeight.w600),
-                                              // style: TextStyle(
-                                              //     fontSize: 18,
-                                              //     color: Colors.white,
-                                              //     fontWeight: FontWeight.w600),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 5,
-                                  child: InkWell(
-                                    onTap: () {
-                                      if (_enabledD) {
-                                        setState(() {
-                                          pressed = "D";
-
-                                          _enabledD = false;
-                                          _enabledA = false;
-                                          _enabledB = false;
-                                          _enabledC = false;
-
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            _answerD = quizObject.answerD;
-
-                                            _correctD = true;
-                                            _correctA = false;
-                                            _correctB = false;
-                                            _correctC = false;
-                                          }
-                                        });
-                                      }
-                                    },
-                                    child: SizedBox(
-                                      width: size,
-                                      child: CustomPaint(
-                                        size: Size(
-                                            size,
-                                            (400 * 0.18461538461538463)
-                                                .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                                        painter: DOptionCustomPainter(
-                                            _correctD, pressed),
-                                        child: Container(
-                                          //width: 250,
-                                          height: 80,
-                                          //margin: const EdgeInsets.all(25),
-                                          padding: EdgeInsets.fromLTRB(
-                                              30, 0, 170, 0),
-                                          child: Center(
-                                            child: Text(
-                                              "D. " + quizObject.optionD,
-                                              maxLines: 3,
-                                              //"A. What is the Purpose of Life insurance",
-                                              textAlign: TextAlign.start,
-                                              style: TextStyle(
-                                                  fontSize: 17,
-                                                  color: _correctD
-                                                      ? Colors.white
-                                                      : !_correctD &&
-                                                      pressed ==
-                                                          "D"
-                                                      ? Colors.white
-                                                      : Colors.blue
-                                                      .shade800,
-                                                  fontWeight:
-                                                  FontWeight.w600),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(
-                              height: 20,
-                            ),
-
-                            Row(
-                              children: [
-                                index > 0
-                                    ? Padding(
-                                  padding:
-                                  const EdgeInsets.fromLTRB(
-                                      30, 0, 0, 0),
-                                  child: Container(
-                                    height: 45,
-                                    width: 120,
-                                    child: OutlinedButton(
-                                      style:
-                                      OutlinedButton.styleFrom(
-                                        backgroundColor:
-                                        Colors.white,
-                                        shape:
-                                        RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius
-                                                .circular(
-                                                15.0)),
-                                        side: const BorderSide(
-                                          width: 2,
-                                          color: Color(0xff0F5A93),
-                                        ),
-                                      ),
-                                      child: const Text(
-                                        "Previous",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight:
-                                          FontWeight.bold,
-                                          color: Color(0xff0F5A93),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        index > 0
-                                            ? getQuizQuestion(false)
-                                            : Container();
-                                      },
-                                    ),
-                                  ),
-                                )
-                                    : Container(),
-                                const Spacer(),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      0, 0, 30, 0),
-                                  child: Container(
-                                    height: 45,
-                                    width: 120,
-                                    child: OutlinedButton(
-                                      style: OutlinedButton.styleFrom(
-                                        backgroundColor:
-                                        Color(0xff0F5A93),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                            BorderRadius.circular(
-                                                15.0)),
-                                        side: const BorderSide(
-                                          width: 2,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      child: Text(
-                                        quizList.length - 1 != index
-                                            ? 'Next'
-                                            : 'Finish',
-                                        style: const TextStyle(
-                                            fontSize: 17,
-                                            color: Colors.white),
-                                      ),
-                                      onPressed: () async {
-                                        if (index == 0) {
-                                          await Common
-                                              .setQuestion0Pressed(
-                                              pressed);
-                                        } else if (index == 1) {
-                                          await Common
-                                              .setQuestion1Pressed(
-                                              pressed);
-                                        } else if (index == 2) {
-                                          await Common
-                                              .setQuestion2Pressed(
-                                              pressed);
-                                        } else if (index == 3) {
-                                          await Common
-                                              .setQuestion3Pressed(
-                                              pressed);
-                                        } else if (index == 4) {
-                                          await Common
-                                              .setQuestion4Pressed(
-                                              pressed);
-                                        } else if (index == 5) {
-                                          await Common
-                                              .setQuestion5Pressed(
-                                              pressed);
-                                        } else if (index == 6) {
-                                          await Common
-                                              .setQuestion6Pressed(
-                                              pressed);
-                                        } else if (index == 7) {
-                                          await Common
-                                              .setQuestion7Pressed(
-                                              pressed);
-                                        } else if (index == 8) {
-                                          await Common
-                                              .setQuestion8Pressed(
-                                              pressed);
-                                        } else if (index == 9) {
-                                          await Common
-                                              .setQuestion9Pressed(
-                                              pressed);
-                                        }
-
-                                        if (pressed == "A") {
-                                          if (quizObject.answerA ==
-                                              "Yes") {
-                                            setState(() {
-                                              score = score + 1;
-                                            });
-                                          } else {
-                                            // if(score > 0 ){
-                                            //   setState(() {
-                                            //     score = score - 1;
-                                            //   });
-                                            // }
-                                          }
-
-                                          if (index == 0) {
-                                            await Common
-                                                .setQuestion0Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion0CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion0CorrectedA(
-                                                  false);
-                                            }
-                                          } else if (index == 1) {
-                                            await Common
-                                                .setQuestion1Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion1CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion1CorrectedA(
-                                                  false);
-                                            }
-                                          } else if (index == 2) {
-                                            await Common
-                                                .setQuestion2Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion2CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion2CorrectedA(
-                                                  false);
-                                            }
-                                          } else if (index == 3) {
-                                            await Common
-                                                .setQuestion3Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion3CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion3CorrectedA(
-                                                  false);
-                                            }
-                                          } else if (index == 4) {
-                                            await Common
-                                                .setQuestion4Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion4CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion4CorrectedA(
-                                                  false);
-                                            }
-                                          } else if (index == 5) {
-                                            await Common
-                                                .setQuestion5Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion5CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion5CorrectedA(
-                                                  false);
-                                            }
-                                          } else if (index == 6) {
-                                            await Common
-                                                .setQuestion6Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion6CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion6CorrectedA(
-                                                  false);
-                                            }
-                                          } else if (index == 7) {
-                                            await Common
-                                                .setQuestion7Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion7CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion7CorrectedA(
-                                                  false);
-                                            }
-                                          } else if (index == 8) {
-                                            await Common
-                                                .setQuestion8Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion8CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion8CorrectedA(
-                                                  false);
-                                            }
-                                          } else if (index == 9) {
-                                            await Common
-                                                .setQuestion9Pressed(
-                                                pressed);
-                                            if (quizObject.answerA ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion9CorrectedA(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion9CorrectedA(
-                                                  false);
-                                            }
-                                          }
-                                        } else if (pressed == "B") {
-                                          if (quizObject.answerB ==
-                                              "Yes") {
-                                            setState(() {
-                                              score = score + 1;
-                                            });
-                                          } else {
-                                            // if(score > 0 ){
-                                            //   setState(() {
-                                            //     score = score - 1;
-                                            //   });
-                                            // }
-                                          }
-
-                                          if (index == 0) {
-                                            await Common
-                                                .setQuestion0Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion0CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion0CorrectedB(
-                                                  false);
-                                            }
-                                          } else if (index == 1) {
-                                            await Common
-                                                .setQuestion1Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion1CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion1CorrectedB(
-                                                  false);
-                                            }
-                                          } else if (index == 2) {
-                                            await Common
-                                                .setQuestion2Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion2CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion2CorrectedB(
-                                                  false);
-                                            }
-                                          } else if (index == 3) {
-                                            await Common
-                                                .setQuestion3Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion3CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion3CorrectedB(
-                                                  false);
-                                            }
-                                          } else if (index == 4) {
-                                            await Common
-                                                .setQuestion4Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion4CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion4CorrectedB(
-                                                  false);
-                                            }
-                                          } else if (index == 5) {
-                                            await Common
-                                                .setQuestion5Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion5CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion5CorrectedB(
-                                                  false);
-                                            }
-                                          } else if (index == 6) {
-                                            await Common
-                                                .setQuestion6Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion6CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion6CorrectedB(
-                                                  false);
-                                            }
-                                          } else if (index == 7) {
-                                            await Common
-                                                .setQuestion7Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion7CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion7CorrectedB(
-                                                  false);
-                                            }
-                                          } else if (index == 8) {
-                                            await Common
-                                                .setQuestion8Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion8CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion8CorrectedB(
-                                                  false);
-                                            }
-                                          } else if (index == 9) {
-                                            await Common
-                                                .setQuestion9Pressed(
-                                                pressed);
-                                            if (quizObject.answerB ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion9CorrectedB(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion9CorrectedB(
-                                                  false);
-                                            }
-                                          }
-                                        } else if (pressed == "C") {
-                                          if (quizObject.answerC ==
-                                              "Yes") {
-                                            setState(() {
-                                              score = score + 1;
-                                            });
-                                          } else {
-                                            // if(score > 0 ){
-                                            //   setState(() {
-                                            //     score = score - 1;
-                                            //   });
-                                            // }
-                                          }
-
-                                          if (index == 0) {
-                                            await Common
-                                                .setQuestion0Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion0CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion0CorrectedC(
-                                                  false);
-                                            }
-                                          } else if (index == 1) {
-                                            await Common
-                                                .setQuestion1Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion1CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion1CorrectedC(
-                                                  false);
-                                            }
-                                          } else if (index == 2) {
-                                            await Common
-                                                .setQuestion2Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion2CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion2CorrectedC(
-                                                  false);
-                                            }
-                                          } else if (index == 3) {
-                                            await Common
-                                                .setQuestion3Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion3CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion3CorrectedC(
-                                                  false);
-                                            }
-                                          } else if (index == 4) {
-                                            await Common
-                                                .setQuestion4Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion4CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion4CorrectedC(
-                                                  false);
-                                            }
-                                          } else if (index == 5) {
-                                            await Common
-                                                .setQuestion5Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion5CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion5CorrectedC(
-                                                  false);
-                                            }
-                                          } else if (index == 6) {
-                                            await Common
-                                                .setQuestion6Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion6CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion6CorrectedC(
-                                                  false);
-                                            }
-                                          } else if (index == 7) {
-                                            await Common
-                                                .setQuestion7Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion7CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion7CorrectedC(
-                                                  false);
-                                            }
-                                          } else if (index == 8) {
-                                            await Common
-                                                .setQuestion8Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion8CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion8CorrectedC(
-                                                  false);
-                                            }
-                                          } else if (index == 9) {
-                                            await Common
-                                                .setQuestion9Pressed(
-                                                pressed);
-                                            if (quizObject.answerC ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion9CorrectedC(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion9CorrectedC(
-                                                  false);
-                                            }
-                                          }
-                                        } else if (pressed == "D") {
-                                          if (quizObject.answerD ==
-                                              "Yes") {
-                                            setState(() {
-                                              score = score + 1;
-                                            });
-                                          } else {
-                                            // if(score > 0 ){
-                                            //   setState(() {
-                                            //     score = score - 1;
-                                            //   });
-                                            // }
-                                          }
-
-                                          if (index == 0) {
-                                            await Common
-                                                .setQuestion0Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion0CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion0CorrectedD(
-                                                  false);
-                                            }
-                                          } else if (index == 1) {
-                                            await Common
-                                                .setQuestion1Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion1CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion1CorrectedD(
-                                                  false);
-                                            }
-                                          } else if (index == 2) {
-                                            await Common
-                                                .setQuestion2Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion2CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion2CorrectedD(
-                                                  false);
-                                            }
-                                          } else if (index == 3) {
-                                            await Common
-                                                .setQuestion3Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion3CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion3CorrectedD(
-                                                  false);
-                                            }
-                                          } else if (index == 4) {
-                                            await Common
-                                                .setQuestion4Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion4CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion4CorrectedD(
-                                                  false);
-                                            }
-                                          } else if (index == 5) {
-                                            await Common
-                                                .setQuestion5Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion5CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion5CorrectedD(
-                                                  false);
-                                            }
-                                          } else if (index == 6) {
-                                            await Common
-                                                .setQuestion6Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion6CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion6CorrectedD(
-                                                  false);
-                                            }
-                                          } else if (index == 7) {
-                                            await Common
-                                                .setQuestion7Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion7CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion7CorrectedD(
-                                                  false);
-                                            }
-                                          } else if (index == 8) {
-                                            await Common
-                                                .setQuestion8Pressed(
-                                                pressed);
-
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion8CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion8CorrectedD(
-                                                  false);
-                                            }
-                                          } else if (index == 9) {
-                                            await Common
-                                                .setQuestion9Pressed(
-                                                pressed);
-                                            if (quizObject.answerD ==
-                                                "Yes") {
-                                              await Common
-                                                  .setQuestion9CorrectedD(
-                                                  true);
-                                            } else {
-                                              await Common
-                                                  .setQuestion9CorrectedD(
-                                                  false);
-                                            }
-                                          }
-                                        }
-
-                                        quizList.length - 1 != index
-                                            ? getQuizQuestion(true)
-                                         : nextScreen(score);
-                                            // : Navigator.push(
-                                            // context,
-                                            // MaterialPageRoute(
-                                            //   // builder: (context) => ChessGame()),
-                                            //     builder: (context) =>
-                                            //         ScoreBoardScreen(
-                                            //           Score: score
-                                            //               .toString(),
-                                            //         )));
-                                      },
-                                    ),
-                                  ),
-
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-
-                            // Row(
-                            //   mainAxisAlignment: MainAxisAlignment.center,
-                            //   children: [
-                            //     CustomPaint(
-                            //       size: Size(
-                            //           size / 50,
-                            //           (220 * 0.18461538461538463)
-                            //               .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                            //       painter: LeftRPSCustomPainter(),
-                            //     ),
-                            //     CustomPaint(
-                            //       size: Size(
-                            //           size / 50,
-                            //           (220 * 0.18461538461538463)
-                            //               .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-                            //       painter: RightRPSCustomPainter(),
-                            //     ),
-                            //   ],
+                            //
+                            // Padding(
+                            //   padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
+                            //   child: Row(
+                            //     mainAxisAlignment: MainAxisAlignment.center,
+                            //     children: [
+                            //       Container(
+                            //         // height: 70,
+                            //         // width: 160,
+                            //         padding: const EdgeInsets.all(14),
+                            //         decoration: const BoxDecoration(
+                            //           color: Colors.white,
+                            //           borderRadius: BorderRadius.only(
+                            //               topRight: Radius.circular(15.0),
+                            //               bottomRight: Radius.circular(15.0),
+                            //               topLeft: Radius.circular(15.0),
+                            //               bottomLeft: Radius.circular(15.0)),
+                            //         ),
+                            //         child: Container(
+                            //           // height: 50,
+                            //           // width: 100,
+                            //           padding:
+                            //               const EdgeInsets.fromLTRB(60, 20, 60, 20),
+                            //           decoration: const BoxDecoration(
+                            //             color: Colors.white,
+                            //             image: DecorationImage(
+                            //               image: AssetImage(
+                            //                   "assets/images/site-logo.png"),
+                            //               fit: BoxFit.contain,
+                            //             ),
+                            //           ),
+                            //           child: null,
+                            //         ),
+                            //       ),
+                            //     ],
+                            //   ),
                             // ),
+                            // const SizedBox(
+                            //   height: 10,
+                            // ),
+
+                            SingleChildScrollView(
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
+                                margin: const EdgeInsets.all(0),
+                                decoration: const BoxDecoration(
+                                  //color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(15.0),
+                                      bottomRight: Radius.circular(15.0),
+                                      topLeft: Radius.circular(15.0),
+                                      bottomLeft: Radius.circular(15.0)),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 170,
+                                          width: 160,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              60, 0, 60, 20),
+                                          decoration: const BoxDecoration(
+                                            //color: Colors.white,
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/KBC logo.png"),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                          child: null,
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
+
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: CustomPaint(
+                                            size: Size(
+                                                size,
+                                                (200 * 0.18461538461538463)
+                                                    .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                            painter: Counter(),
+                                            child: Container(
+                                              width: 50,
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  0, 15, 0, 15),
+                                              //padding: EdgeInsets.fromLTRB(0, 0, 0, 45),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        65, 0, 5, 0),
+                                                child: Text(
+                                                  "Q.$counter",
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 8,
+                                          child: Container(),
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+
+                                    /// question box
+                                    SizedBox(
+                                      width: size,
+                                      child: CustomPaint(
+                                        size: Size(
+                                            size,
+                                            (150 * 0.18461538461538463)
+                                                .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                        painter: QuestionCustomPainter(),
+                                        child: Container(
+                                          width: 450,
+                                          margin: const EdgeInsets.fromLTRB(
+                                              0, 20, 0, 20),
+                                          //padding: EdgeInsets.fromLTRB(0, 0, 0, 45),
+                                          child: Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                75, 0, 75, 0),
+                                            child: Text(
+                                              quizObject.question,
+                                              //"What is the Purpose of Life insurance",
+                                              textAlign: TextAlign.center,
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+
+                                    Column(
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            if (_enabledA) {
+                                              setState(() {
+                                                pressed = "A";
+
+                                                _enabledA = false;
+                                                _enabledB = false;
+                                                _enabledC = false;
+                                                _enabledD = false;
+
+                                                if (quizObject.answerA ==
+                                                    "Yes") {
+                                                  _answerA = quizObject.answerA;
+
+                                                  _correctA = true;
+                                                  _correctB = false;
+                                                  _correctC = false;
+                                                  _correctD = false;
+                                                }
+                                              });
+                                            }
+                                          },
+                                          child: SizedBox(
+                                            height: 55,
+                                            width: size,
+                                            child: CustomPaint(
+                                              painter:
+                                                  AMobileOptionCustomPainter(
+                                                      _correctA, pressed),
+                                              size: Size(
+                                                  size,
+                                                  (400 * 0.18461538461538463)
+                                                      .toDouble()),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          75, 0, 75, 0),
+                                                  child: Text(
+                                                    "A. ${quizObject.optionA}",
+                                                    //"A. What is the Purpose of Life insurance",
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 3,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: _correctA
+                                                            ? Colors.white
+                                                            : !_correctA &&
+                                                                    pressed ==
+                                                                        "A"
+                                                                ? Colors.white
+                                                                : Colors.blue
+                                                                    .shade800,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                    // style: TextStyle(
+                                                    //     fontSize: 14,
+                                                    //     color: Colors.white,
+                                                    //     fontWeight: FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            if (_enabledB) {
+                                              setState(() {
+                                                pressed = "B";
+
+                                                _enabledB = false;
+                                                _enabledA = false;
+                                                _enabledC = false;
+                                                _enabledD = false;
+
+                                                if (quizObject.answerB ==
+                                                    "Yes") {
+                                                  _answerB = quizObject.answerB;
+
+                                                  _correctB = true;
+
+                                                  _correctA = false;
+                                                  _correctC = false;
+                                                  _correctD = false;
+                                                }
+                                              });
+                                            }
+                                          },
+                                          child: SizedBox(
+                                            height: 55,
+                                            width: size,
+                                            child: CustomPaint(
+                                              size: Size(
+                                                  size,
+                                                  (400 * 0.18461538461538463)
+                                                      .toDouble()),
+                                              painter:
+                                                  BMobileOptionCustomPainter(
+                                                      _correctB, pressed),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          75, 0, 75, 0),
+                                                  child: Text(
+                                                    "B. ${quizObject.optionB}",
+                                                    //"A. What is the Purpose of Life insurance",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: _correctB
+                                                            ? Colors.white
+                                                            //: !_enabledB && !_correctB
+                                                            : !_correctB &&
+                                                                    pressed ==
+                                                                        "B"
+                                                                ? Colors.white
+                                                                : Colors.blue
+                                                                    .shade800,
+
+                                                        // ? Colors.blue.shade800
+                                                        //     : Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                    // style: TextStyle(
+                                                    //     fontSize: 14,
+                                                    //     color: Colors.white,
+                                                    //     fontWeight: FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            if (_enabledC) {
+                                              setState(() {
+                                                pressed = "C";
+
+                                                _enabledC = false;
+                                                _enabledA = false;
+                                                _enabledB = false;
+                                                _enabledD = false;
+
+                                                if (quizObject.answerC ==
+                                                    "Yes") {
+                                                  _answerC = quizObject.answerC;
+
+                                                  _correctC = true;
+
+                                                  _correctA = false;
+                                                  _correctB = false;
+                                                  _correctD = false;
+                                                }
+                                              });
+                                            }
+                                          },
+                                          child: SizedBox(
+                                            height: 55,
+                                            width: size,
+                                            child: CustomPaint(
+                                              size: Size(
+                                                  size,
+                                                  (400 * 0.18461538461538463)
+                                                      .toDouble()),
+                                              painter:
+                                                  CMobileOptionCustomPainter(
+                                                      _correctC, pressed),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          75, 0, 75, 0),
+                                                  child: Text(
+                                                    "C. ${quizObject.optionC}",
+                                                    //"A. What is the Purpose of Life insurance",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: _correctC
+                                                            ? Colors.white
+                                                            : !_correctC &&
+                                                                    pressed ==
+                                                                        "C"
+                                                                ? Colors.white
+                                                                : Colors.blue
+                                                                    .shade800,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                    // style: TextStyle(
+                                                    //     fontSize: 14,
+                                                    //     color: Colors.white,
+                                                    //     fontWeight: FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            if (_enabledD) {
+                                              setState(() {
+                                                pressed = "D";
+
+                                                _enabledD = false;
+                                                _enabledA = false;
+                                                _enabledB = false;
+                                                _enabledC = false;
+
+                                                if (quizObject.answerD ==
+                                                    "Yes") {
+                                                  _answerD = quizObject.answerD;
+
+                                                  _correctD = true;
+                                                  _correctA = false;
+                                                  _correctB = false;
+                                                  _correctC = false;
+                                                }
+                                              });
+                                            }
+                                          },
+                                          child: SizedBox(
+                                            height: 55,
+                                            width: size,
+                                            child: CustomPaint(
+                                              size: Size(
+                                                  size,
+                                                  (400 * 0.18461538461538463)
+                                                      .toDouble()),
+                                              painter:
+                                                  DMobileOptionCustomPainter(
+                                                      _correctD, pressed),
+                                              child: Center(
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          75, 0, 75, 0),
+                                                  child: Text(
+                                                    "D. ${quizObject.optionD}",
+                                                    //"A. What is the Purpose of Life insurance",
+                                                    textAlign: TextAlign.center,
+                                                    maxLines: 3,
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: _correctD
+                                                            ? Colors.white
+                                                            : !_correctD &&
+                                                                    pressed ==
+                                                                        "D"
+                                                                ? Colors.white
+                                                                : Colors.blue
+                                                                    .shade800,
+                                                        fontWeight:
+                                                            FontWeight.w600),
+                                                    // style: TextStyle(
+                                                    //     fontSize: 14,
+                                                    //     color: Colors.white,
+                                                    //     fontWeight: FontWeight.w600),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+
+                                    Row(
+                                      children: [
+                                        index > 0
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        30, 0, 0, 0),
+                                                child: SizedBox(
+                                                  height: 45,
+                                                  width: 120,
+                                                  child: OutlinedButton(
+                                                    style: OutlinedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          10.0)),
+                                                      side: const BorderSide(
+                                                        width: 2,
+                                                        color:
+                                                            Color(0xff0F5A93),
+                                                      ),
+                                                    ),
+                                                    child: const Text(
+                                                      "Previous",
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            Color(0xff0F5A93),
+                                                      ),
+                                                    ),
+                                                    onPressed: () {
+                                                      index > 0
+                                                          ? getQuizQuestion(
+                                                              false)
+                                                          : Container();
+                                                    },
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(),
+                                        const Spacer(),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 0, 30, 0),
+                                          child: OutlinedButton(
+                                            style: OutlinedButton.styleFrom(
+                                              backgroundColor:
+                                                  const Color(0xff0F5A93),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0)),
+                                              side: const BorderSide(
+                                                width: 1,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            child: SizedBox(
+                                              width: 60,
+                                              height: 40,
+                                              child: Center(
+                                                child: Text(
+                                                  quizList.length - 1 != index
+                                                      ? 'Next'
+                                                      : 'Finish',
+                                                  style: const TextStyle(
+                                                      fontSize: 17,
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ),
+                                            onPressed: () async {
+                                              if (index == 0) {
+                                                await Common
+                                                    .setQuestion0Pressed(
+                                                        pressed);
+                                              } else if (index == 1) {
+                                                await Common
+                                                    .setQuestion1Pressed(
+                                                        pressed);
+                                              } else if (index == 2) {
+                                                await Common
+                                                    .setQuestion2Pressed(
+                                                        pressed);
+                                              } else if (index == 3) {
+                                                await Common
+                                                    .setQuestion3Pressed(
+                                                        pressed);
+                                              } else if (index == 4) {
+                                                await Common
+                                                    .setQuestion4Pressed(
+                                                        pressed);
+                                              } else if (index == 5) {
+                                                await Common
+                                                    .setQuestion5Pressed(
+                                                        pressed);
+                                              } else if (index == 6) {
+                                                await Common
+                                                    .setQuestion6Pressed(
+                                                        pressed);
+                                              } else if (index == 7) {
+                                                await Common
+                                                    .setQuestion7Pressed(
+                                                        pressed);
+                                              } else if (index == 8) {
+                                                await Common
+                                                    .setQuestion8Pressed(
+                                                        pressed);
+                                              } else if (index == 9) {
+                                                await Common
+                                                    .setQuestion9Pressed(
+                                                        pressed);
+                                              }
+
+                                              if (pressed == "A") {
+                                                if (quizObject.answerA ==
+                                                    "Yes") {
+                                                  setState(() {
+                                                    score = score + 1;
+                                                  });
+                                                } else {
+                                                  // if(score > 0 ){
+                                                  //   setState(() {
+                                                  //     score = score - 1;
+                                                  //   });
+                                                  // }
+                                                }
+
+                                                if (index == 0) {
+                                                  await Common
+                                                      .setQuestion0Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion0CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion0CorrectedA(
+                                                            false);
+                                                  }
+                                                } else if (index == 1) {
+                                                  await Common
+                                                      .setQuestion1Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion1CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion1CorrectedA(
+                                                            false);
+                                                  }
+                                                } else if (index == 2) {
+                                                  await Common
+                                                      .setQuestion2Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion2CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion2CorrectedA(
+                                                            false);
+                                                  }
+                                                } else if (index == 3) {
+                                                  await Common
+                                                      .setQuestion3Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion3CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion3CorrectedA(
+                                                            false);
+                                                  }
+                                                } else if (index == 4) {
+                                                  await Common
+                                                      .setQuestion4Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion4CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion4CorrectedA(
+                                                            false);
+                                                  }
+                                                } else if (index == 5) {
+                                                  await Common
+                                                      .setQuestion5Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion5CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion5CorrectedA(
+                                                            false);
+                                                  }
+                                                } else if (index == 6) {
+                                                  await Common
+                                                      .setQuestion6Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion6CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion6CorrectedA(
+                                                            false);
+                                                  }
+                                                } else if (index == 7) {
+                                                  await Common
+                                                      .setQuestion7Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion7CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion7CorrectedA(
+                                                            false);
+                                                  }
+                                                } else if (index == 8) {
+                                                  await Common
+                                                      .setQuestion8Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion8CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion8CorrectedA(
+                                                            false);
+                                                  }
+                                                } else if (index == 9) {
+                                                  await Common
+                                                      .setQuestion9Pressed(
+                                                          pressed);
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion9CorrectedA(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion9CorrectedA(
+                                                            false);
+                                                  }
+                                                }
+                                              } else if (pressed == "B") {
+                                                if (quizObject.answerB ==
+                                                    "Yes") {
+                                                  setState(() {
+                                                    score = score + 1;
+                                                  });
+                                                } else {
+                                                  // if(score > 0 ){
+                                                  //   setState(() {
+                                                  //     score = score - 1;
+                                                  //   });
+                                                  // }
+                                                }
+
+                                                if (index == 0) {
+                                                  await Common
+                                                      .setQuestion0Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion0CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion0CorrectedB(
+                                                            false);
+                                                  }
+                                                } else if (index == 1) {
+                                                  await Common
+                                                      .setQuestion1Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion1CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion1CorrectedB(
+                                                            false);
+                                                  }
+                                                } else if (index == 2) {
+                                                  await Common
+                                                      .setQuestion2Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion2CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion2CorrectedB(
+                                                            false);
+                                                  }
+                                                } else if (index == 3) {
+                                                  await Common
+                                                      .setQuestion3Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion3CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion3CorrectedB(
+                                                            false);
+                                                  }
+                                                } else if (index == 4) {
+                                                  await Common
+                                                      .setQuestion4Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion4CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion4CorrectedB(
+                                                            false);
+                                                  }
+                                                } else if (index == 5) {
+                                                  await Common
+                                                      .setQuestion5Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion5CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion5CorrectedB(
+                                                            false);
+                                                  }
+                                                } else if (index == 6) {
+                                                  await Common
+                                                      .setQuestion6Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion6CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion6CorrectedB(
+                                                            false);
+                                                  }
+                                                } else if (index == 7) {
+                                                  await Common
+                                                      .setQuestion7Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion7CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion7CorrectedB(
+                                                            false);
+                                                  }
+                                                } else if (index == 8) {
+                                                  await Common
+                                                      .setQuestion8Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion8CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion8CorrectedB(
+                                                            false);
+                                                  }
+                                                } else if (index == 9) {
+                                                  await Common
+                                                      .setQuestion9Pressed(
+                                                          pressed);
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion9CorrectedB(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion9CorrectedB(
+                                                            false);
+                                                  }
+                                                }
+                                              } else if (pressed == "C") {
+                                                if (quizObject.answerC ==
+                                                    "Yes") {
+                                                  setState(() {
+                                                    score = score + 1;
+                                                  });
+                                                } else {
+                                                  // if(score > 0 ){
+                                                  //   setState(() {
+                                                  //     score = score - 1;
+                                                  //   });
+                                                  // }
+                                                }
+
+                                                if (index == 0) {
+                                                  await Common
+                                                      .setQuestion0Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion0CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion0CorrectedC(
+                                                            false);
+                                                  }
+                                                } else if (index == 1) {
+                                                  await Common
+                                                      .setQuestion1Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion1CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion1CorrectedC(
+                                                            false);
+                                                  }
+                                                } else if (index == 2) {
+                                                  await Common
+                                                      .setQuestion2Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion2CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion2CorrectedC(
+                                                            false);
+                                                  }
+                                                } else if (index == 3) {
+                                                  await Common
+                                                      .setQuestion3Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion3CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion3CorrectedC(
+                                                            false);
+                                                  }
+                                                } else if (index == 4) {
+                                                  await Common
+                                                      .setQuestion4Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion4CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion4CorrectedC(
+                                                            false);
+                                                  }
+                                                } else if (index == 5) {
+                                                  await Common
+                                                      .setQuestion5Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion5CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion5CorrectedC(
+                                                            false);
+                                                  }
+                                                } else if (index == 6) {
+                                                  await Common
+                                                      .setQuestion6Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion6CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion6CorrectedC(
+                                                            false);
+                                                  }
+                                                } else if (index == 7) {
+                                                  await Common
+                                                      .setQuestion7Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion7CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion7CorrectedC(
+                                                            false);
+                                                  }
+                                                } else if (index == 8) {
+                                                  await Common
+                                                      .setQuestion8Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion8CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion8CorrectedC(
+                                                            false);
+                                                  }
+                                                } else if (index == 9) {
+                                                  await Common
+                                                      .setQuestion9Pressed(
+                                                          pressed);
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion9CorrectedC(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion9CorrectedC(
+                                                            false);
+                                                  }
+                                                }
+                                              } else if (pressed == "D") {
+                                                if (quizObject.answerD ==
+                                                    "Yes") {
+                                                  setState(() {
+                                                    score = score + 1;
+                                                  });
+                                                } else {
+                                                  // if(score > 0 ){
+                                                  //   setState(() {
+                                                  //     score = score - 1;
+                                                  //   });
+                                                  // }
+                                                }
+
+                                                if (index == 0) {
+                                                  await Common
+                                                      .setQuestion0Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion0CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion0CorrectedD(
+                                                            false);
+                                                  }
+                                                } else if (index == 1) {
+                                                  await Common
+                                                      .setQuestion1Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion1CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion1CorrectedD(
+                                                            false);
+                                                  }
+                                                } else if (index == 2) {
+                                                  await Common
+                                                      .setQuestion2Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion2CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion2CorrectedD(
+                                                            false);
+                                                  }
+                                                } else if (index == 3) {
+                                                  await Common
+                                                      .setQuestion3Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion3CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion3CorrectedD(
+                                                            false);
+                                                  }
+                                                } else if (index == 4) {
+                                                  await Common
+                                                      .setQuestion4Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion4CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion4CorrectedD(
+                                                            false);
+                                                  }
+                                                } else if (index == 5) {
+                                                  await Common
+                                                      .setQuestion5Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion5CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion5CorrectedD(
+                                                            false);
+                                                  }
+                                                } else if (index == 6) {
+                                                  await Common
+                                                      .setQuestion6Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion6CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion6CorrectedD(
+                                                            false);
+                                                  }
+                                                } else if (index == 7) {
+                                                  await Common
+                                                      .setQuestion7Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion7CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion7CorrectedD(
+                                                            false);
+                                                  }
+                                                } else if (index == 8) {
+                                                  await Common
+                                                      .setQuestion8Pressed(
+                                                          pressed);
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion8CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion8CorrectedD(
+                                                            false);
+                                                  }
+                                                } else if (index == 9) {
+                                                  await Common
+                                                      .setQuestion9Pressed(
+                                                          pressed);
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    await Common
+                                                        .setQuestion9CorrectedD(
+                                                            true);
+                                                  } else {
+                                                    await Common
+                                                        .setQuestion9CorrectedD(
+                                                            false);
+                                                  }
+                                                }
+                                              }
+
+                                              quizList.length - 1 != index
+                                                  ? getQuizQuestion(true)
+                                                  : nextScreen(score);
+                                              // : Navigator.push(
+                                              // context,
+                                              // MaterialPageRoute(
+                                              //   // builder: (context) => ChessGame()),
+                                              //     builder: (context) =>
+                                              //         ScoreBoardScreen(
+                                              //           Score: score
+                                              //               .toString(),
+                                              //         )));
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                  ],
+                                ),
+                              ),
+                            )
                           ],
                         ),
                       ),
                     )
-                  ],
-                ),
-              ),
-            ),
+                  : Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage("assets/images/Background.png"),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            SingleChildScrollView(
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),
+                                margin: const EdgeInsets.all(0),
+                                decoration: const BoxDecoration(
+                                  //color: Colors.white,
+                                  borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(15.0),
+                                      bottomRight: Radius.circular(15.0),
+                                      topLeft: Radius.circular(15.0),
+                                      bottomLeft: Radius.circular(15.0)),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Container(
+                                          height: 170,
+                                          width: 160,
+                                          padding: const EdgeInsets.fromLTRB(
+                                              60, 0, 60, 20),
+                                          decoration: const BoxDecoration(
+                                            //color: Colors.white,
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/KBC logo.png"),
+                                              fit: BoxFit.contain,
+                                            ),
+                                          ),
+                                          child: null,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 30,
+                                    ),
 
-            TargetPlatform.android == defaultTargetPlatform
-                ? Positioned(
-              top: 20.0,
-              right: 30.0,
-              child: InkWell(
-                onTap: () {
-                  //Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      // builder: (context) => ChessGame()),
-                      //  builder: (context) => ZoneHomeScreen()),
-                        builder: (context) => BannerScreen()),
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(10),
-                  height: 100,
-                  width: 40,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/games/Home Icon.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-            )
-                : Positioned(
-              top: 30.0,
-              right: 30.0,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      // builder: (context) => ChessGame()),
-                      //  builder: (context) => ZoneHomeScreen()),
-                        builder: (context) => BannerScreen()),
-                  );
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(10),
-                  height: 100,
-                  width: 40,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/games/Home Icon.png"),
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
-            ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Expanded(
+                                          flex: 3,
+                                          child: CustomPaint(
+                                            size: Size(
+                                                size,
+                                                (350 * 0.18461538461538463)
+                                                    .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                            painter: Counter(),
+                                            child: Container(
+                                              //width: 50,
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  0, 15, 0, 15),
+                                              //padding: EdgeInsets.fromLTRB(0, 0, 0, 45),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        165, 0, 5, 0),
+                                                child: Text(
+                                                  "Q.$counter",
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                      fontSize: 22,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 8,
+                                          child: Container(),
+                                        ),
+                                      ],
+                                    ),
 
-          ],
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+
+                                    SizedBox(
+                                      width: size,
+                                      child: CustomPaint(
+                                        size: Size(
+                                            size,
+                                            (450 * 0.18461538461538463)
+                                                .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                        painter: QuestionCustomPainter(),
+                                        child: Container(
+                                          //width: 400,
+                                          //height: 15,
+                                          //margin: const EdgeInsets.all(25),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              200, 30, 200, 35),
+                                          child: Text(
+                                            quizObject.question,
+                                            //"What is the Purpose of Life insurance",
+                                            textAlign: TextAlign.center,
+                                            style: const TextStyle(
+                                                fontSize: 26,
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 5,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (_enabledA) {
+                                                setState(() {
+                                                  pressed = "A";
+
+                                                  _enabledA = false;
+                                                  _enabledB = false;
+                                                  _enabledC = false;
+                                                  _enabledD = false;
+
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    _answerA =
+                                                        quizObject.answerA;
+
+                                                    _correctA = true;
+
+                                                    _correctB = false;
+                                                    _correctC = false;
+                                                    _correctD = false;
+                                                  }
+                                                });
+                                              }
+                                            },
+                                            child: SizedBox(
+                                              width: size,
+                                              child: CustomPaint(
+                                                size: Size(
+                                                    size,
+                                                    (400 * 0.18461538461538463)
+                                                        .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                                painter: AOptionCustomPainter(
+                                                    _correctA, pressed),
+                                                child: Container(
+                                                  //width: 250,
+                                                  height: 80,
+                                                  //margin: const EdgeInsets.all(25),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          200, 0, 20, 0),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "A. ${quizObject.optionA}",
+                                                      //"A. What is the Purpose of Life insurance",
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      maxLines: 3,
+                                                      style: TextStyle(
+                                                          fontSize: 17,
+                                                          color: _correctA
+                                                              ? Colors.white
+                                                              : !_correctA &&
+                                                                      pressed ==
+                                                                          "A"
+                                                                  ? Colors.white
+                                                                  : Colors.blue
+                                                                      .shade800,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                      // style: TextStyle(
+                                                      //     fontSize: 18,
+                                                      //     color: Colors.white,
+                                                      //     fontWeight: FontWeight.w600),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 5,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (_enabledB) {
+                                                setState(() {
+                                                  pressed = "B";
+
+                                                  _enabledB = false;
+                                                  _enabledA = false;
+                                                  _enabledC = false;
+                                                  _enabledD = false;
+
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    _answerB =
+                                                        quizObject.answerB;
+
+                                                    _correctB = true;
+
+                                                    _correctA = false;
+                                                    _correctC = false;
+                                                    _correctD = false;
+                                                  }
+                                                });
+                                              }
+                                            },
+                                            child: SizedBox(
+                                              width: size,
+                                              child: CustomPaint(
+                                                size: Size(
+                                                    size,
+                                                    (400 * 0.18461538461538463)
+                                                        .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                                painter: BOptionCustomPainter(
+                                                    _correctB, pressed),
+                                                child: Container(
+                                                  height: 80,
+                                                  //margin: const EdgeInsets.all(25),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          30, 0, 170, 0),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "B. ${quizObject.optionB}",
+                                                      //"A. What is the Purpose of Life insurance",
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      maxLines: 3,
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: _correctB
+                                                              ? Colors.white
+                                                              : !_correctB &&
+                                                                      pressed ==
+                                                                          "B"
+                                                                  ? Colors.white
+                                                                  : Colors.blue
+                                                                      .shade800,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 5,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (_enabledC) {
+                                                setState(() {
+                                                  pressed = "C";
+
+                                                  _enabledC = false;
+                                                  _enabledA = false;
+                                                  _enabledB = false;
+                                                  _enabledD = false;
+
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    _answerC =
+                                                        quizObject.answerC;
+
+                                                    _correctC = true;
+
+                                                    _correctA = false;
+                                                    _correctB = false;
+                                                    _correctD = false;
+                                                  }
+                                                });
+                                              }
+                                            },
+                                            child: SizedBox(
+                                              width: size,
+                                              child: CustomPaint(
+                                                size: Size(
+                                                    size,
+                                                    (400 * 0.18461538461538463)
+                                                        .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                                painter: COptionCustomPainter(
+                                                    _correctC, pressed),
+                                                child: Container(
+                                                  //width: 250,
+                                                  height: 80,
+                                                  //margin: const EdgeInsets.all(25),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          200, 0, 20, 0),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "C. ${quizObject.optionC}",
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      maxLines: 3,
+                                                      style: TextStyle(
+                                                          fontSize: 17,
+                                                          color: _correctC
+                                                              ? Colors.white
+                                                              : !_correctC &&
+                                                                      pressed ==
+                                                                          "C"
+                                                                  ? Colors.white
+                                                                  : Colors.blue
+                                                                      .shade800,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                      // style: TextStyle(
+                                                      //     fontSize: 18,
+                                                      //     color: Colors.white,
+                                                      //     fontWeight: FontWeight.w600),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 5,
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (_enabledD) {
+                                                setState(() {
+                                                  pressed = "D";
+
+                                                  _enabledD = false;
+                                                  _enabledA = false;
+                                                  _enabledB = false;
+                                                  _enabledC = false;
+
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    _answerD =
+                                                        quizObject.answerD;
+
+                                                    _correctD = true;
+                                                    _correctA = false;
+                                                    _correctB = false;
+                                                    _correctC = false;
+                                                  }
+                                                });
+                                              }
+                                            },
+                                            child: SizedBox(
+                                              width: size,
+                                              child: CustomPaint(
+                                                size: Size(
+                                                    size,
+                                                    (400 * 0.18461538461538463)
+                                                        .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                                painter: DOptionCustomPainter(
+                                                    _correctD, pressed),
+                                                child: Container(
+                                                  //width: 250,
+                                                  height: 80,
+                                                  //margin: const EdgeInsets.all(25),
+                                                  padding:
+                                                      const EdgeInsets.fromLTRB(
+                                                          30, 0, 170, 0),
+                                                  child: Center(
+                                                    child: Text(
+                                                      "D. ${quizObject.optionD}",
+                                                      maxLines: 3,
+                                                      //"A. What is the Purpose of Life insurance",
+                                                      textAlign:
+                                                          TextAlign.start,
+                                                      style: TextStyle(
+                                                          fontSize: 17,
+                                                          color: _correctD
+                                                              ? Colors.white
+                                                              : !_correctD &&
+                                                                      pressed ==
+                                                                          "D"
+                                                                  ? Colors.white
+                                                                  : Colors.blue
+                                                                      .shade800,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+
+                                    Row(
+                                      children: [
+                                        index > 0
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        30, 0, 0, 0),
+                                                child: SizedBox(
+                                                  height: 45,
+                                                  width: 120,
+                                                  child: OutlinedButton(
+                                                    style: OutlinedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.white,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          15.0)),
+                                                      side: const BorderSide(
+                                                        width: 2,
+                                                        color:
+                                                            Color(0xff0F5A93),
+                                                      ),
+                                                    ),
+                                                    child: const Text(
+                                                      "Previous",
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color:
+                                                            Color(0xff0F5A93),
+                                                      ),
+                                                    ),
+                                                    onPressed: () {
+                                                      index > 0
+                                                          ? getQuizQuestion(
+                                                              false)
+                                                          : Container();
+                                                    },
+                                                  ),
+                                                ),
+                                              )
+                                            : Container(),
+                                        const Spacer(),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 0, 30, 0),
+                                          child: SizedBox(
+                                            height: 45,
+                                            width: 120,
+                                            child: OutlinedButton(
+                                              style: OutlinedButton.styleFrom(
+                                                backgroundColor:
+                                                    const Color(0xff0F5A93),
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15.0)),
+                                                side: const BorderSide(
+                                                  width: 2,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              child: Text(
+                                                quizList.length - 1 != index
+                                                    ? 'Next'
+                                                    : 'Finish',
+                                                style: const TextStyle(
+                                                    fontSize: 17,
+                                                    color: Colors.white),
+                                              ),
+                                              onPressed: () async {
+                                                if (index == 0) {
+                                                  await Common
+                                                      .setQuestion0Pressed(
+                                                          pressed);
+                                                } else if (index == 1) {
+                                                  await Common
+                                                      .setQuestion1Pressed(
+                                                          pressed);
+                                                } else if (index == 2) {
+                                                  await Common
+                                                      .setQuestion2Pressed(
+                                                          pressed);
+                                                } else if (index == 3) {
+                                                  await Common
+                                                      .setQuestion3Pressed(
+                                                          pressed);
+                                                } else if (index == 4) {
+                                                  await Common
+                                                      .setQuestion4Pressed(
+                                                          pressed);
+                                                } else if (index == 5) {
+                                                  await Common
+                                                      .setQuestion5Pressed(
+                                                          pressed);
+                                                } else if (index == 6) {
+                                                  await Common
+                                                      .setQuestion6Pressed(
+                                                          pressed);
+                                                } else if (index == 7) {
+                                                  await Common
+                                                      .setQuestion7Pressed(
+                                                          pressed);
+                                                } else if (index == 8) {
+                                                  await Common
+                                                      .setQuestion8Pressed(
+                                                          pressed);
+                                                } else if (index == 9) {
+                                                  await Common
+                                                      .setQuestion9Pressed(
+                                                          pressed);
+                                                }
+
+                                                if (pressed == "A") {
+                                                  if (quizObject.answerA ==
+                                                      "Yes") {
+                                                    setState(() {
+                                                      score = score + 1;
+                                                    });
+                                                  } else {
+                                                    // if(score > 0 ){
+                                                    //   setState(() {
+                                                    //     score = score - 1;
+                                                    //   });
+                                                    // }
+                                                  }
+
+                                                  if (index == 0) {
+                                                    await Common
+                                                        .setQuestion0Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion0CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion0CorrectedA(
+                                                              false);
+                                                    }
+                                                  } else if (index == 1) {
+                                                    await Common
+                                                        .setQuestion1Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion1CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion1CorrectedA(
+                                                              false);
+                                                    }
+                                                  } else if (index == 2) {
+                                                    await Common
+                                                        .setQuestion2Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion2CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion2CorrectedA(
+                                                              false);
+                                                    }
+                                                  } else if (index == 3) {
+                                                    await Common
+                                                        .setQuestion3Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion3CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion3CorrectedA(
+                                                              false);
+                                                    }
+                                                  } else if (index == 4) {
+                                                    await Common
+                                                        .setQuestion4Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion4CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion4CorrectedA(
+                                                              false);
+                                                    }
+                                                  } else if (index == 5) {
+                                                    await Common
+                                                        .setQuestion5Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion5CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion5CorrectedA(
+                                                              false);
+                                                    }
+                                                  } else if (index == 6) {
+                                                    await Common
+                                                        .setQuestion6Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion6CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion6CorrectedA(
+                                                              false);
+                                                    }
+                                                  } else if (index == 7) {
+                                                    await Common
+                                                        .setQuestion7Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion7CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion7CorrectedA(
+                                                              false);
+                                                    }
+                                                  } else if (index == 8) {
+                                                    await Common
+                                                        .setQuestion8Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion8CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion8CorrectedA(
+                                                              false);
+                                                    }
+                                                  } else if (index == 9) {
+                                                    await Common
+                                                        .setQuestion9Pressed(
+                                                            pressed);
+                                                    if (quizObject.answerA ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion9CorrectedA(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion9CorrectedA(
+                                                              false);
+                                                    }
+                                                  }
+                                                } else if (pressed == "B") {
+                                                  if (quizObject.answerB ==
+                                                      "Yes") {
+                                                    setState(() {
+                                                      score = score + 1;
+                                                    });
+                                                  } else {
+                                                    // if(score > 0 ){
+                                                    //   setState(() {
+                                                    //     score = score - 1;
+                                                    //   });
+                                                    // }
+                                                  }
+
+                                                  if (index == 0) {
+                                                    await Common
+                                                        .setQuestion0Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion0CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion0CorrectedB(
+                                                              false);
+                                                    }
+                                                  } else if (index == 1) {
+                                                    await Common
+                                                        .setQuestion1Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion1CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion1CorrectedB(
+                                                              false);
+                                                    }
+                                                  } else if (index == 2) {
+                                                    await Common
+                                                        .setQuestion2Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion2CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion2CorrectedB(
+                                                              false);
+                                                    }
+                                                  } else if (index == 3) {
+                                                    await Common
+                                                        .setQuestion3Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion3CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion3CorrectedB(
+                                                              false);
+                                                    }
+                                                  } else if (index == 4) {
+                                                    await Common
+                                                        .setQuestion4Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion4CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion4CorrectedB(
+                                                              false);
+                                                    }
+                                                  } else if (index == 5) {
+                                                    await Common
+                                                        .setQuestion5Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion5CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion5CorrectedB(
+                                                              false);
+                                                    }
+                                                  } else if (index == 6) {
+                                                    await Common
+                                                        .setQuestion6Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion6CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion6CorrectedB(
+                                                              false);
+                                                    }
+                                                  } else if (index == 7) {
+                                                    await Common
+                                                        .setQuestion7Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion7CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion7CorrectedB(
+                                                              false);
+                                                    }
+                                                  } else if (index == 8) {
+                                                    await Common
+                                                        .setQuestion8Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion8CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion8CorrectedB(
+                                                              false);
+                                                    }
+                                                  } else if (index == 9) {
+                                                    await Common
+                                                        .setQuestion9Pressed(
+                                                            pressed);
+                                                    if (quizObject.answerB ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion9CorrectedB(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion9CorrectedB(
+                                                              false);
+                                                    }
+                                                  }
+                                                } else if (pressed == "C") {
+                                                  if (quizObject.answerC ==
+                                                      "Yes") {
+                                                    setState(() {
+                                                      score = score + 1;
+                                                    });
+                                                  } else {
+                                                    // if(score > 0 ){
+                                                    //   setState(() {
+                                                    //     score = score - 1;
+                                                    //   });
+                                                    // }
+                                                  }
+
+                                                  if (index == 0) {
+                                                    await Common
+                                                        .setQuestion0Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion0CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion0CorrectedC(
+                                                              false);
+                                                    }
+                                                  } else if (index == 1) {
+                                                    await Common
+                                                        .setQuestion1Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion1CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion1CorrectedC(
+                                                              false);
+                                                    }
+                                                  } else if (index == 2) {
+                                                    await Common
+                                                        .setQuestion2Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion2CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion2CorrectedC(
+                                                              false);
+                                                    }
+                                                  } else if (index == 3) {
+                                                    await Common
+                                                        .setQuestion3Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion3CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion3CorrectedC(
+                                                              false);
+                                                    }
+                                                  } else if (index == 4) {
+                                                    await Common
+                                                        .setQuestion4Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion4CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion4CorrectedC(
+                                                              false);
+                                                    }
+                                                  } else if (index == 5) {
+                                                    await Common
+                                                        .setQuestion5Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion5CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion5CorrectedC(
+                                                              false);
+                                                    }
+                                                  } else if (index == 6) {
+                                                    await Common
+                                                        .setQuestion6Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion6CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion6CorrectedC(
+                                                              false);
+                                                    }
+                                                  } else if (index == 7) {
+                                                    await Common
+                                                        .setQuestion7Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion7CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion7CorrectedC(
+                                                              false);
+                                                    }
+                                                  } else if (index == 8) {
+                                                    await Common
+                                                        .setQuestion8Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion8CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion8CorrectedC(
+                                                              false);
+                                                    }
+                                                  } else if (index == 9) {
+                                                    await Common
+                                                        .setQuestion9Pressed(
+                                                            pressed);
+                                                    if (quizObject.answerC ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion9CorrectedC(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion9CorrectedC(
+                                                              false);
+                                                    }
+                                                  }
+                                                } else if (pressed == "D") {
+                                                  if (quizObject.answerD ==
+                                                      "Yes") {
+                                                    setState(() {
+                                                      score = score + 1;
+                                                    });
+                                                  } else {
+                                                    // if(score > 0 ){
+                                                    //   setState(() {
+                                                    //     score = score - 1;
+                                                    //   });
+                                                    // }
+                                                  }
+
+                                                  if (index == 0) {
+                                                    await Common
+                                                        .setQuestion0Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion0CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion0CorrectedD(
+                                                              false);
+                                                    }
+                                                  } else if (index == 1) {
+                                                    await Common
+                                                        .setQuestion1Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion1CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion1CorrectedD(
+                                                              false);
+                                                    }
+                                                  } else if (index == 2) {
+                                                    await Common
+                                                        .setQuestion2Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion2CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion2CorrectedD(
+                                                              false);
+                                                    }
+                                                  } else if (index == 3) {
+                                                    await Common
+                                                        .setQuestion3Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion3CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion3CorrectedD(
+                                                              false);
+                                                    }
+                                                  } else if (index == 4) {
+                                                    await Common
+                                                        .setQuestion4Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion4CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion4CorrectedD(
+                                                              false);
+                                                    }
+                                                  } else if (index == 5) {
+                                                    await Common
+                                                        .setQuestion5Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion5CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion5CorrectedD(
+                                                              false);
+                                                    }
+                                                  } else if (index == 6) {
+                                                    await Common
+                                                        .setQuestion6Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion6CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion6CorrectedD(
+                                                              false);
+                                                    }
+                                                  } else if (index == 7) {
+                                                    await Common
+                                                        .setQuestion7Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion7CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion7CorrectedD(
+                                                              false);
+                                                    }
+                                                  } else if (index == 8) {
+                                                    await Common
+                                                        .setQuestion8Pressed(
+                                                            pressed);
+
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion8CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion8CorrectedD(
+                                                              false);
+                                                    }
+                                                  } else if (index == 9) {
+                                                    await Common
+                                                        .setQuestion9Pressed(
+                                                            pressed);
+                                                    if (quizObject.answerD ==
+                                                        "Yes") {
+                                                      await Common
+                                                          .setQuestion9CorrectedD(
+                                                              true);
+                                                    } else {
+                                                      await Common
+                                                          .setQuestion9CorrectedD(
+                                                              false);
+                                                    }
+                                                  }
+                                                }
+
+                                                quizList.length - 1 != index
+                                                    ? getQuizQuestion(true)
+                                                    : nextScreen(score);
+                                                // : Navigator.push(
+                                                // context,
+                                                // MaterialPageRoute(
+                                                //   // builder: (context) => ChessGame()),
+                                                //     builder: (context) =>
+                                                //         ScoreBoardScreen(
+                                                //           Score: score
+                                                //               .toString(),
+                                                //         )));
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+
+                                    // Row(
+                                    //   mainAxisAlignment: MainAxisAlignment.center,
+                                    //   children: [
+                                    //     CustomPaint(
+                                    //       size: Size(
+                                    //           size / 50,
+                                    //           (220 * 0.18461538461538463)
+                                    //               .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                    //       painter: LeftRPSCustomPainter(),
+                                    //     ),
+                                    //     CustomPaint(
+                                    //       size: Size(
+                                    //           size / 50,
+                                    //           (220 * 0.18461538461538463)
+                                    //               .toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+                                    //       painter: RightRPSCustomPainter(),
+                                    //     ),
+                                    //   ],
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+              TargetPlatform.android == defaultTargetPlatform
+                  ? Positioned(
+                      top: 20.0,
+                      right: 30.0,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                // builder: (context) => ChessGame()),
+                                //  builder: (context) => ZoneHomeScreen()),
+                                builder: (context) => const BannerScreen()),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10),
+                          height: 100,
+                          width: 40,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/games/Home Icon.png"),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Positioned(
+                      top: 30.0,
+                      right: 30.0,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                // builder: (context) => ChessGame()),
+                                //  builder: (context) => ZoneHomeScreen()),
+                                builder: (context) => const BannerScreen()),
+                          );
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.all(10),
+                          height: 100,
+                          width: 40,
+                          decoration: const BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage("assets/games/Home Icon.png"),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void nextScreen(int score){
+  void nextScreen(int score) {
     dispose();
     Navigator.of(context).pop();
     Navigator.push(
         context,
         MaterialPageRoute(
-          // builder: (context) => ChessGame()),
-            builder: (context) =>
-                ScoreBoardScreen(
-                  Score: score
-                      .toString(),
+            // builder: (context) => ChessGame()),
+            builder: (context) => ScoreBoardScreen(
+                  Score: score.toString(),
                 )));
   }
 
   @override
   void dispose() {
-    super.dispose();
-    if(_timer.isActive){
+    if (_timer.isActive) {
       _timer.cancel();
       print("QuizScreen Timer Canceled in Dispose() ");
     }
+    super.dispose();
   }
 
   Future<void> getQuizQuestion(bool value) async {
@@ -3711,9 +3769,6 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
         quizObject = quizList[index];
       });
 
-
-
-
       if (index == 0) {
         await Common.getQuestion0Pressed().then((value) => {
               setState(() {
@@ -3743,9 +3798,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
 
         await Common.getQuestion0CorrectedA().then((value) => {
               setState(() {
@@ -3812,9 +3865,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
         await Common.getQuestion1CorrectedA().then((value) => {
               setState(() {
                 if (value == null) {
@@ -3880,9 +3931,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
         await Common.getQuestion2CorrectedA().then((value) => {
               setState(() {
                 if (value == null) {
@@ -3948,9 +3997,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
         await Common.getQuestion3CorrectedA().then((value) => {
               setState(() {
                 if (value == null) {
@@ -4016,9 +4063,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
         await Common.getQuestion4CorrectedA().then((value) => {
               setState(() {
                 if (value == null) {
@@ -4084,9 +4129,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
         await Common.getQuestion5CorrectedA().then((value) => {
               setState(() {
                 if (value == null) {
@@ -4152,9 +4195,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
         await Common.getQuestion6CorrectedA().then((value) => {
               setState(() {
                 if (value == null) {
@@ -4220,9 +4261,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
         await Common.getQuestion7CorrectedA().then((value) => {
               setState(() {
                 if (value == null) {
@@ -4288,9 +4327,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
         await Common.getQuestion8CorrectedA().then((value) => {
               setState(() {
                 if (value == null) {
@@ -4356,9 +4393,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
             _enabledC = false;
             _enabledD = false;
           });
-        }else{
-
-        }
+        } else {}
         await Common.getQuestion9CorrectedA().then((value) => {
               setState(() {
                 if (value == null) {
@@ -4422,14 +4457,12 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
 class Counter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.008908686;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawLine(
-        Offset(size.width * -0.02672606, size.height * 0.5000000),
-        Offset(size.width * 0.6971047, size.height * 0.5000000),
-        paint_0_stroke);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawLine(Offset(size.width * -0.02672606, size.height * 0.5000000),
+        Offset(size.width * 0.6971047, size.height * 0.5000000), paint0Stroke);
     Path path_1 = Path();
     path_1.moveTo(size.width * 0.5813207, size.height * 0.1032120);
     path_1.cubicTo(
@@ -4467,14 +4500,14 @@ class Counter extends CustomPainter {
     path_1.lineTo(size.width * 0.4940111, size.height * 0.5000000);
     path_1.lineTo(size.width * 0.5813207, size.height * 0.1032120);
     path_1.close();
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.008908686;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_stroke);
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
-    paint_1_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_fill);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Stroke);
+    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
+    paint1Fill.color = const Color(0xff0375BC).withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Fill);
 
     // Path path_2 = Path();
     // path_2.moveTo(size.width * 0.7187817, size.height * 0.7290400);
@@ -4730,24 +4763,21 @@ class Counter extends CustomPainter {
 }
 
 class QuestionCustomPainter extends CustomPainter {
-
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawLine(
-        Offset(size.width * -0.006896552, size.height * 0.5000000),
-        Offset(size.width * 0.1281609, size.height * 0.5000000),
-        paint_0_stroke);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawLine(Offset(size.width * -0.006896552, size.height * 0.5000000),
+        Offset(size.width * 0.1281609, size.height * 0.5000000), paint0Stroke);
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
     canvas.drawLine(Offset(size.width * 0.8706897, size.height * 0.5000000),
-        Offset(size.width * 1.005747, size.height * 0.5000000), paint_1_stroke);
+        Offset(size.width * 1.005747, size.height * 0.5000000), paint1Stroke);
 
     Path path_2 = Path();
     path_2.moveTo(size.width * 0.1582023, size.height * 0.1155887);
@@ -4787,15 +4817,15 @@ class QuestionCustomPainter extends CustomPainter {
     path_2.lineTo(size.width * 0.1582023, size.height * 0.1155887);
     path_2.close();
 
-    Paint paint_2_stroke = Paint()
+    Paint paint2Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_2_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_stroke);
+    paint2Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_2, paint2Stroke);
 
-    Paint paint_2_fill = Paint()..style = PaintingStyle.fill;
-    paint_2_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_fill);
+    Paint paint2Fill = Paint()..style = PaintingStyle.fill;
+    paint2Fill.color = const Color(0xff0375BC).withOpacity(1.0);
+    canvas.drawPath(path_2, paint2Fill);
   }
 
   @override
@@ -4805,22 +4835,18 @@ class QuestionCustomPainter extends CustomPainter {
 }
 
 class AOptionCustomPainter extends CustomPainter {
-
-
-  late bool _correctA;
+  late final bool _correctA;
   late String pressed;
   AOptionCustomPainter(this._correctA, this.pressed);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.004602992;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawLine(
-        Offset(size.width * -0.01380898, size.height * 0.5000000),
-        Offset(size.width * 0.2577675, size.height * 0.5000000),
-        paint_0_stroke);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawLine(Offset(size.width * -0.01380898, size.height * 0.5000000),
+        Offset(size.width * 0.2577675, size.height * 0.5000000), paint0Stroke);
 
     Path path_1 = Path();
     path_1.moveTo(size.width * 0.3303188, size.height * 0.01666667);
@@ -4860,20 +4886,20 @@ class AOptionCustomPainter extends CustomPainter {
         size.height * 0.01666667);
     path_1.close();
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.004602992;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_stroke);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Stroke);
 
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
+    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
     //paint_1_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    paint_1_fill.color = _correctA
+    paint1Fill.color = _correctA
         ? LightColor.colorOne
         : !_correctA && pressed == "A"
-        ? LightColor.colorTwo
-        : LightColor.colorThr.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_fill);
+            ? LightColor.colorTwo
+            : LightColor.colorThr.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Fill);
   }
 
   @override
@@ -4883,23 +4909,18 @@ class AOptionCustomPainter extends CustomPainter {
 }
 
 class COptionCustomPainter extends CustomPainter {
-
-
-
-  late bool _correctC;
+  late final bool _correctC;
   late String pressed;
   COptionCustomPainter(this._correctC, this.pressed);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.004602992;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawLine(
-        Offset(size.width * -0.01380898, size.height * 0.5000000),
-        Offset(size.width * 0.2577675, size.height * 0.5000000),
-        paint_0_stroke);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawLine(Offset(size.width * -0.01380898, size.height * 0.5000000),
+        Offset(size.width * 0.2577675, size.height * 0.5000000), paint0Stroke);
 
     Path path_1 = Path();
     path_1.moveTo(size.width * 0.3303188, size.height * 0.01666667);
@@ -4939,20 +4960,20 @@ class COptionCustomPainter extends CustomPainter {
         size.height * 0.01666667);
     path_1.close();
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.004602992;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_stroke);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Stroke);
 
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
+    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
     //paint_1_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    paint_1_fill.color = _correctC
+    paint1Fill.color = _correctC
         ? LightColor.colorOne
         : !_correctC && pressed == "C"
-        ? LightColor.colorTwo
-        : LightColor.colorThr.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_fill);
+            ? LightColor.colorTwo
+            : LightColor.colorThr.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Fill);
   }
 
   @override
@@ -4962,21 +4983,18 @@ class COptionCustomPainter extends CustomPainter {
 }
 
 class BOptionCustomPainter extends CustomPainter {
-
-
-
-  late bool _correctB;
+  late final bool _correctB;
   late String pressed;
   BOptionCustomPainter(this._correctB, this.pressed);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.004592423;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
     canvas.drawLine(Offset(size.width * 0.7382319, size.height * 0.5000000),
-        Offset(size.width, size.height * 0.5000000), paint_0_stroke);
+        Offset(size.width, size.height * 0.5000000), paint0Stroke);
 
     Path path_1 = Path();
     path_1.moveTo(size.width * 0.07812572, size.height * 0.01666667);
@@ -5016,20 +5034,20 @@ class BOptionCustomPainter extends CustomPainter {
         size.height * 0.01666667);
     path_1.close();
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.004592423;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_stroke);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Stroke);
 
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
+    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
     //paint_1_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    paint_1_fill.color = _correctB
+    paint1Fill.color = _correctB
         ? LightColor.colorOne
         : !_correctB && pressed == "B"
-        ? LightColor.colorTwo
-        : LightColor.colorThr.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_fill);
+            ? LightColor.colorTwo
+            : LightColor.colorThr.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Fill);
   }
 
   @override
@@ -5039,21 +5057,18 @@ class BOptionCustomPainter extends CustomPainter {
 }
 
 class DOptionCustomPainter extends CustomPainter {
-
-
-
-  late bool _correctD;
+  late final bool _correctD;
   late String pressed;
   DOptionCustomPainter(this._correctD, this.pressed);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.004592423;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
     canvas.drawLine(Offset(size.width * 0.7382319, size.height * 0.5000000),
-        Offset(size.width, size.height * 0.5000000), paint_0_stroke);
+        Offset(size.width, size.height * 0.5000000), paint0Stroke);
 
     Path path_1 = Path();
     path_1.moveTo(size.width * 0.07812572, size.height * 0.01666667);
@@ -5093,20 +5108,20 @@ class DOptionCustomPainter extends CustomPainter {
         size.height * 0.01666667);
     path_1.close();
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.004592423;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_stroke);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Stroke);
 
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
+    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
     //paint_1_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    paint_1_fill.color = _correctD
+    paint1Fill.color = _correctD
         ? LightColor.colorOne
         : !_correctD && pressed == "D"
-        ? LightColor.colorTwo
-        : LightColor.colorThr.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_fill);
+            ? LightColor.colorTwo
+            : LightColor.colorThr.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Fill);
   }
 
   @override
@@ -5115,18 +5130,15 @@ class DOptionCustomPainter extends CustomPainter {
   }
 }
 
-
 class QuestionMobileCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.02603538;
-    paint_0_stroke.color = Color(0xff0375BC).withOpacity(1.0);
-    canvas.drawLine(
-        Offset(size.width * -1.128205, size.height * 0.4807120),
-        Offset(size.width * 0.9871795, size.height * 0.4807120),
-        paint_0_stroke);
+    paint0Stroke.color = const Color(0xff0375BC).withOpacity(1.0);
+    canvas.drawLine(Offset(size.width * -1.128205, size.height * 0.4807120),
+        Offset(size.width * 0.9871795, size.height * 0.4807120), paint0Stroke);
   }
 
   @override
@@ -5136,27 +5148,25 @@ class QuestionMobileCustomPainter extends CustomPainter {
 }
 
 class AMobileOptionCustomPainter extends CustomPainter {
-  late bool _correctA;
+  late final bool _correctA;
   late String pressed;
   AMobileOptionCustomPainter(this._correctA, this.pressed);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawLine(
-        Offset(size.width * -0.006896552, size.height * 0.5000000),
-        Offset(size.width * 0.1281609, size.height * 0.5000000),
-        paint_0_stroke);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawLine(Offset(size.width * -0.006896552, size.height * 0.5000000),
+        Offset(size.width * 0.1281609, size.height * 0.5000000), paint0Stroke);
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
     canvas.drawLine(Offset(size.width * 0.8706897, size.height * 0.5000000),
-        Offset(size.width * 1.005747, size.height * 0.5000000), paint_1_stroke);
+        Offset(size.width * 1.005747, size.height * 0.5000000), paint1Stroke);
 
     Path path_2 = Path();
     path_2.moveTo(size.width * 0.1582023, size.height * 0.1155887);
@@ -5196,20 +5206,20 @@ class AMobileOptionCustomPainter extends CustomPainter {
     path_2.lineTo(size.width * 0.1582023, size.height * 0.1155887);
     path_2.close();
 
-    Paint paint_2_stroke = Paint()
+    Paint paint2Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_2_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_stroke);
+    paint2Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_2, paint2Stroke);
 
-    Paint paint_2_fill = Paint()..style = PaintingStyle.fill;
+    Paint paint2Fill = Paint()..style = PaintingStyle.fill;
     //paint_2_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    paint_2_fill.color = _correctA
+    paint2Fill.color = _correctA
         ? LightColor.colorOne
         : !_correctA && pressed == "A"
             ? LightColor.colorTwo
             : LightColor.colorThr.withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_fill);
+    canvas.drawPath(path_2, paint2Fill);
   }
 
   @override
@@ -5219,27 +5229,25 @@ class AMobileOptionCustomPainter extends CustomPainter {
 }
 
 class BMobileOptionCustomPainter extends CustomPainter {
-  bool _correctB;
+  final bool _correctB;
   String pressed;
   BMobileOptionCustomPainter(this._correctB, this.pressed);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawLine(
-        Offset(size.width * -0.006896552, size.height * 0.5000000),
-        Offset(size.width * 0.1281609, size.height * 0.5000000),
-        paint_0_stroke);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawLine(Offset(size.width * -0.006896552, size.height * 0.5000000),
+        Offset(size.width * 0.1281609, size.height * 0.5000000), paint0Stroke);
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
     canvas.drawLine(Offset(size.width * 0.8706897, size.height * 0.5000000),
-        Offset(size.width * 1.005747, size.height * 0.5000000), paint_1_stroke);
+        Offset(size.width * 1.005747, size.height * 0.5000000), paint1Stroke);
 
     Path path_2 = Path();
     path_2.moveTo(size.width * 0.1582023, size.height * 0.1155887);
@@ -5279,20 +5287,20 @@ class BMobileOptionCustomPainter extends CustomPainter {
     path_2.lineTo(size.width * 0.1582023, size.height * 0.1155887);
     path_2.close();
 
-    Paint paint_2_stroke = Paint()
+    Paint paint2Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_2_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_stroke);
+    paint2Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_2, paint2Stroke);
 
-    Paint paint_2_fill = Paint()..style = PaintingStyle.fill;
+    Paint paint2Fill = Paint()..style = PaintingStyle.fill;
     //paint_2_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    paint_2_fill.color = _correctB
+    paint2Fill.color = _correctB
         ? LightColor.colorOne
         : !_correctB && pressed == "B"
             ? LightColor.colorTwo
             : LightColor.colorThr.withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_fill);
+    canvas.drawPath(path_2, paint2Fill);
   }
 
   @override
@@ -5302,27 +5310,25 @@ class BMobileOptionCustomPainter extends CustomPainter {
 }
 
 class CMobileOptionCustomPainter extends CustomPainter {
-  bool _correctC;
+  final bool _correctC;
   String pressed;
   CMobileOptionCustomPainter(this._correctC, this.pressed);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawLine(
-        Offset(size.width * -0.006896552, size.height * 0.5000000),
-        Offset(size.width * 0.1281609, size.height * 0.5000000),
-        paint_0_stroke);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawLine(Offset(size.width * -0.006896552, size.height * 0.5000000),
+        Offset(size.width * 0.1281609, size.height * 0.5000000), paint0Stroke);
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
     canvas.drawLine(Offset(size.width * 0.8706897, size.height * 0.5000000),
-        Offset(size.width * 1.005747, size.height * 0.5000000), paint_1_stroke);
+        Offset(size.width * 1.005747, size.height * 0.5000000), paint1Stroke);
 
     Path path_2 = Path();
     path_2.moveTo(size.width * 0.1582023, size.height * 0.1155887);
@@ -5362,20 +5368,20 @@ class CMobileOptionCustomPainter extends CustomPainter {
     path_2.lineTo(size.width * 0.1582023, size.height * 0.1155887);
     path_2.close();
 
-    Paint paint_2_stroke = Paint()
+    Paint paint2Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_2_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_stroke);
+    paint2Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_2, paint2Stroke);
 
-    Paint paint_2_fill = Paint()..style = PaintingStyle.fill;
+    Paint paint2Fill = Paint()..style = PaintingStyle.fill;
     //paint_2_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    paint_2_fill.color = _correctC
+    paint2Fill.color = _correctC
         ? LightColor.colorOne
         : !_correctC && pressed == "C"
             ? LightColor.colorTwo
             : LightColor.colorThr.withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_fill);
+    canvas.drawPath(path_2, paint2Fill);
   }
 
   @override
@@ -5385,27 +5391,25 @@ class CMobileOptionCustomPainter extends CustomPainter {
 }
 
 class DMobileOptionCustomPainter extends CustomPainter {
-  bool _correctD;
+  final bool _correctD;
   String pressed;
   DMobileOptionCustomPainter(this._correctD, this.pressed);
 
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_0_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawLine(
-        Offset(size.width * -0.006896552, size.height * 0.5000000),
-        Offset(size.width * 0.1281609, size.height * 0.5000000),
-        paint_0_stroke);
+    paint0Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawLine(Offset(size.width * -0.006896552, size.height * 0.5000000),
+        Offset(size.width * 0.1281609, size.height * 0.5000000), paint0Stroke);
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_1_stroke.color = Colors.white.withOpacity(1.0);
+    paint1Stroke.color = Colors.white.withOpacity(1.0);
     canvas.drawLine(Offset(size.width * 0.8706897, size.height * 0.5000000),
-        Offset(size.width * 1.005747, size.height * 0.5000000), paint_1_stroke);
+        Offset(size.width * 1.005747, size.height * 0.5000000), paint1Stroke);
 
     Path path_2 = Path();
     path_2.moveTo(size.width * 0.1582023, size.height * 0.1155887);
@@ -5445,20 +5449,20 @@ class DMobileOptionCustomPainter extends CustomPainter {
     path_2.lineTo(size.width * 0.1582023, size.height * 0.1155887);
     path_2.close();
 
-    Paint paint_2_stroke = Paint()
+    Paint paint2Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.002298851;
-    paint_2_stroke.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_stroke);
+    paint2Stroke.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_2, paint2Stroke);
 
-    Paint paint_2_fill = Paint()..style = PaintingStyle.fill;
+    Paint paint2Fill = Paint()..style = PaintingStyle.fill;
     //paint_2_fill.color = Color(0xff0375BC).withOpacity(1.0);
-    paint_2_fill.color = _correctD
+    paint2Fill.color = _correctD
         ? LightColor.colorOne
         : !_correctD && pressed == "D"
             ? LightColor.colorTwo
             : LightColor.colorThr.withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_fill);
+    canvas.drawPath(path_2, paint2Fill);
   }
 
   @override

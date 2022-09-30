@@ -1,14 +1,16 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io' show Platform;
+
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudlifeexperienceszone/screens/quiz_screen.dart';
 import 'package:sudlifeexperienceszone/screens/webview_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'dart:io' show Platform;
+
 import 'banner_screen.dart';
 import 'funfacts_screen.dart';
 
@@ -19,11 +21,10 @@ class ZoneHomeScreen extends StatefulWidget {
   }
 }
 
-final imageAsset = AssetImage("assets/images/new.png");
+const imageAsset = AssetImage("assets/images/new.png");
 
 class ZoneHomeScreenState extends State<ZoneHomeScreen>
-    with WidgetsBindingObserver  {
-
+    with WidgetsBindingObserver {
   String url = "";
   double progress = 0;
   num _stackToView = 1;
@@ -36,13 +37,13 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   late Timer _timer;
-  final int _start = 120; // 2 minute
+  final int _start = 60; // 2 minute
   late String timeString;
-  late TimeOfDay _time ;
+  late TimeOfDay _time;
 
-  late DateTime timeOfActivationInBackground ;
-  late DateTime timeOfActivationInResume ;
-  late Duration diff ;
+  late DateTime timeOfActivationInBackground;
+  late DateTime timeOfActivationInResume;
+  late Duration diff;
   late int _currentTimer;
 
   @override
@@ -53,28 +54,24 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
     super.initState();
   }
 
-  void startTimer(int _start) {
+  void startTimer(int start) {
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
-          (Timer timer) {
-        print(_start);
-        if (_start == 0 || _start < 0) {
-
+      (Timer timer) {
+        print(start);
+        if (start == 0 || start < 0) {
           clear();
           Navigator.of(context).pop();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => BannerScreen()));
-
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const BannerScreen()));
         } else {
-
           if (mounted) {
             setState(() {
-              _start--;
-              _currentTimer = _start;
+              start--;
+              _currentTimer = start;
             });
           }
-
         }
       },
     );
@@ -87,10 +84,11 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
         if (!_timer.isActive) {
           setState(() {
             timeOfActivationInResume = DateTime.now();
-            diff = timeOfActivationInResume.difference(timeOfActivationInBackground);
+            diff = timeOfActivationInResume
+                .difference(timeOfActivationInBackground);
           });
-          print(diff.inSeconds.toString()  + " in seconds");
-          print(diff.inMinutes.toString()  + " in minutes");
+          print("${diff.inSeconds} in seconds");
+          print("${diff.inMinutes} in minutes");
           print("Activated Mode : ZoneHome Timer Restarted in Background");
           print(_currentTimer - diff.inSeconds);
           startTimer(_currentTimer - diff.inSeconds);
@@ -183,17 +181,15 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
   //   }
   // }
 
-
   @override
   Widget build(BuildContext context) {
-
     // SystemChrome.setPreferredOrientations([
     //   DeviceOrientation.landscapeLeft,
     //   DeviceOrientation.landscapeRight,
     // ]);
 
-    final double height_size = MediaQuery.of(context).size.height;
-    final double width_size = MediaQuery.of(context).size.width;
+    final double heightSize = MediaQuery.of(context).size.height;
+    final double widthSize = MediaQuery.of(context).size.width;
     //print(height_size.toString() + " * " + width_size.toString());
     print("ZoneHome Screen");
 
@@ -2259,1164 +2255,104 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
               //   ),
               // ),
 
-              width_size < 900
+              widthSize < 900
                   ? SingleChildScrollView(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/Background.png"),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                padding: EdgeInsets.fromLTRB(20, 120, 0, 0),
-                                child: Text(
-                                  "SUD Life Experience Zone",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      fontFamily: defaultFontFamily,
-                                      fontWeight: FontWeight.w800,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ),
-                            // const Spacer(),
-                            // Expanded(
-                            //   child: InkWell(
-                            //     onTap: () {
-                            //       // Navigator.push(
-                            //       //   context,
-                            //       //   MaterialPageRoute(
-                            //       //       // builder: (context) => ChessGame()),
-                            //       //       builder: (context) => SplashScrenn()),
-                            //       // );
-                            //     },
-                            //     child: Container(
-                            //       height: 60,
-                            //       width: 70,
-                            //       decoration: const BoxDecoration(
-                            //         color: Colors.white,
-                            //         borderRadius: BorderRadius.only(
-                            //             // topRight: Radius.circular(40.0),
-                            //             // bottomRight: Radius.circular(40.0),
-                            //             topLeft: Radius.circular(20.0),
-                            //             bottomLeft:
-                            //                 Radius.circular(20.0)),
-                            //       ),
-                            //       child: Container(
-                            //         height: 50,
-                            //         width: 100,
-                            //         margin: const EdgeInsets.all(12),
-                            //         decoration: const BoxDecoration(
-                            //           color: Colors.white,
-                            //           image: DecorationImage(
-                            //             image: AssetImage(
-                            //                 "assets/images/site-logo.png"),
-                            //             fit: BoxFit.contain,
-                            //           ),
-                            //         ),
-                            //         child: null,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // )
-                          ],
-                        ),
-
-                        const SizedBox(
-                          height: 10,
-                        ),
-
-                        Column(
-                          children: [
-                            const SizedBox(
-                              height: 20,
-                            ),
-
-                            Row(
-                              children: [
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Expanded(
-                                  child: OpenContainer(
-                                    // transitionType: transitionType,
-                                    transitionType:
-                                    ContainerTransitionType.fade,
-                                    transitionDuration:
-                                    const Duration(milliseconds: 500),
-                                    tappable: false,
-
-                                    closedBuilder: (context,
-                                        VoidCallback openContainer) =>
-                                        GestureDetector(
-                                          onTap: () {
-                                            restartTimer();
-                                            print('Clicker : ');
-                                            openContainer();
-                                            // your onOpen code
-                                          },
-                                          child: Container(
-                                            height: 160,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              // borderRadius: BorderRadius
-                                              //     .only(
-                                              //     topRight:
-                                              //     Radius.circular(0.0),
-                                              //     bottomRight:
-                                              //     Radius.circular(0.0),
-                                              //     topLeft:
-                                              //     Radius.circular(0.0),
-                                              //     bottomLeft:
-                                              //     Radius.circular(0.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 5,
-                                                  blurRadius: 7,
-                                                  offset: const Offset(0,
-                                                      3), // changes position of shadow
-                                                ),
-                                              ],
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  margin: const EdgeInsets
-                                                      .fromLTRB(
-                                                      30, 20, 30, 10),
-                                                  decoration:
-                                                  const BoxDecoration(
-                                                    color: Colors.white,
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/images/Group 3.png"),
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 60,
-                                                  width: 160,
-                                                  color: Colors.white,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Buy \nOnline',
-                                                      textAlign:
-                                                      TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontFamily:
-                                                          defaultFontFamily,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Color(
-                                                              0xff2474b9)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-
-                                    closedElevation: 6.0,
-                                    closedShape:
-                                    const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(26 / 2),
-                                      ),
-                                    ),
-                                    openBuilder: (context,
-                                        VoidCallback _) =>
-                                        WebViewScreen(
-                                            key: _scaffoldKey,
-                                            title: 'Buy Online',
-                                            url_link:
-                                            'https://bol.sudlife.in/ProductSelection/ProductSelectionPage'),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Expanded(
-                                  child: OpenContainer(
-                                    // transitionType: transitionType,
-                                    transitionType:
-                                    ContainerTransitionType.fade,
-                                    transitionDuration:
-                                    const Duration(milliseconds: 500),
-                                    tappable: false,
-
-                                    closedBuilder: (context,
-                                        VoidCallback openContainer) =>
-                                        GestureDetector(
-                                          onTap: () {
-                                            restartTimer();
-                                            print('Clicker : ');
-                                            openContainer();
-                                            // your onOpen code
-                                          },
-                                          child: Container(
-                                            height: 160,
-                                            width: 80,
-                                            //width: 200,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              // borderRadius: const BorderRadius
-                                              //     .only(
-                                              //     topRight:
-                                              //     Radius.circular(20.0),
-                                              //     bottomRight:
-                                              //     Radius.circular(20.0),
-                                              //     topLeft:
-                                              //     Radius.circular(20.0),
-                                              //     bottomLeft:
-                                              //     Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 5,
-                                                  blurRadius: 7,
-                                                  offset: Offset(0,
-                                                      3), // changes position of shadow
-                                                ),
-                                              ],
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  margin: const EdgeInsets
-                                                      .fromLTRB(
-                                                      30, 20, 30, 10),
-                                                  decoration:
-                                                  const BoxDecoration(
-                                                    color: Colors.white,
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/images/Path 92.png"),
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 60,
-                                                  width: 160,
-                                                  color: Colors.white,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Pay \nPremiums',
-                                                      textAlign:
-                                                      TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontFamily:
-                                                          defaultFontFamily,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Color(
-                                                              0xff2474b9)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-
-                                    closedElevation: 6.0,
-                                    closedShape:
-                                    const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(26 / 2),
-                                      ),
-                                    ),
-                                    openBuilder: (context,
-                                        VoidCallback _) =>
-                                        WebViewScreen(
-                                            key: _scaffoldKey,
-                                            title: 'Pay Premiums',
-                                            url_link:
-                                            'https://www.sudlife.in/customer-service/premium-payment-options'),
-
-
-
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(
-                              height: 40,
-                            ),
-
-                            Row(
-                              children: [
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Expanded(
-                                  child: OpenContainer(
-                                    // transitionType: transitionType,
-                                    transitionType:
-                                    ContainerTransitionType.fade,
-                                    transitionDuration:
-                                    const Duration(milliseconds: 500),
-                                    tappable: false,
-
-                                    closedBuilder: (context,
-                                        VoidCallback openContainer) =>
-                                        GestureDetector(
-                                          onTap: () {
-                                            restartTimer();
-                                            print('Clicker : ');
-                                            openContainer();
-                                            // your onOpen code
-                                          },
-                                          child: Container(
-                                            height: 160,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              // borderRadius: const BorderRadius
-                                              //     .only(
-                                              //     topRight:
-                                              //     Radius.circular(20.0),
-                                              //     bottomRight:
-                                              //     Radius.circular(20.0),
-                                              //     topLeft:
-                                              //     Radius.circular(20.0),
-                                              //     bottomLeft:
-                                              //     Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 5,
-                                                  blurRadius: 7,
-                                                  offset: const Offset(0,
-                                                      3), // changes position of shadow
-                                                ),
-                                              ],
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  margin: const EdgeInsets
-                                                      .fromLTRB(
-                                                      30, 20, 30, 10),
-                                                  decoration:
-                                                  const BoxDecoration(
-                                                    color: Colors.white,
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/images/Group 3.png"),
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 60,
-                                                  width: 160,
-                                                  color: Colors.white,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Insurance \nPlans',
-                                                      textAlign:
-                                                      TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontFamily:
-                                                          defaultFontFamily,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Color(
-                                                              0xff2474b9)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-
-                                    closedElevation: 6.0,
-                                    closedShape:
-                                    const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(26 / 2),
-                                      ),
-                                    ),
-                                    openBuilder: (context,
-                                        VoidCallback _) =>
-                                        WebViewScreen(
-                                            key: _scaffoldKey,
-                                            title: 'Insurance Plans',
-                                            url_link:
-                                            'https://www.sudlife.in/products/life-insurance'),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Expanded(
-                                  child: OpenContainer(
-                                    // transitionType: transitionType,
-                                    transitionType:
-                                    ContainerTransitionType.fade,
-                                    transitionDuration:
-                                    const Duration(milliseconds: 500),
-                                    tappable: false,
-
-                                    closedBuilder: (context,
-                                        VoidCallback openContainer) =>
-                                        GestureDetector(
-                                          onTap: () {
-                                            restartTimer();
-                                            print('Clicker : ');
-                                            openContainer();
-                                            // your onOpen code
-                                          },
-                                          child: Container(
-                                            height: 160,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              // borderRadius: const BorderRadius
-                                              //     .only(
-                                              //     topRight:
-                                              //     Radius.circular(20.0),
-                                              //     bottomRight:
-                                              //     Radius.circular(20.0),
-                                              //     topLeft:
-                                              //     Radius.circular(20.0),
-                                              //     bottomLeft:
-                                              //     Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 5,
-                                                  blurRadius: 7,
-                                                  offset: const Offset(0,
-                                                      3), // changes position of shadow
-                                                ),
-                                              ],
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  margin: const EdgeInsets
-                                                      .fromLTRB(
-                                                      30, 20, 30, 10),
-                                                  decoration:
-                                                  const BoxDecoration(
-                                                    color: Colors.white,
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/images/Path 107.png"),
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 60,
-                                                  width: 160,
-                                                  color: Colors.white,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Calculate Your \nPremiums',
-                                                      textAlign:
-                                                      TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontFamily:
-                                                          defaultFontFamily,
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Color(
-                                                              0xff2474b9)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-
-                                    closedElevation: 6.0,
-                                    closedShape:
-                                    const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(26 / 2),
-                                      ),
-                                    ),
-                                    openBuilder: (context, VoidCallback _) =>
-                                        WebViewScreen(
-                                            key: _scaffoldKey,
-                                            title:
-                                            'Calculate Your Premiums',
-                                            url_link:
-                                            'https://si.sudlife.in/SalesIllustration/ProductPage.aspx'),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                // Expanded(
-                                //   child: OpenContainer(
-                                //     // transitionType: transitionType,
-                                //     transitionType:
-                                //     ContainerTransitionType.fade,
-                                //     transitionDuration:
-                                //     const Duration(milliseconds: 500),
-                                //     tappable: false,
-                                //
-                                //     closedBuilder: (context,
-                                //         VoidCallback openContainer) =>
-                                //         GestureDetector(
-                                //           onTap: () {
-                                //             print('Clicker : ');
-                                //             openContainer();
-                                //             // your onOpen code
-                                //           },
-                                //           child: Container(
-                                //             height: 160,
-                                //             width: 80,
-                                //             //width: 200,
-                                //             decoration: BoxDecoration(
-                                //               color: Colors.white,
-                                //               // borderRadius: const BorderRadius
-                                //               //     .only(
-                                //               //     topRight:
-                                //               //     Radius.circular(20.0),
-                                //               //     bottomRight:
-                                //               //     Radius.circular(20.0),
-                                //               //     topLeft:
-                                //               //     Radius.circular(20.0),
-                                //               //     bottomLeft:
-                                //               //     Radius.circular(20.0)),
-                                //               boxShadow: [
-                                //                 BoxShadow(
-                                //                   color: Colors.white
-                                //                       .withOpacity(0.5),
-                                //                   spreadRadius: 5,
-                                //                   blurRadius: 7,
-                                //                   offset: Offset(0,
-                                //                       3), // changes position of shadow
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //             child: Column(
-                                //               children: [
-                                //                 Container(
-                                //                   height: 40,
-                                //                   width: 40,
-                                //                   margin: const EdgeInsets
-                                //                       .fromLTRB(
-                                //                       30, 20, 30, 10),
-                                //                   decoration:
-                                //                   const BoxDecoration(
-                                //                     color: Colors.white,
-                                //                     image: DecorationImage(
-                                //                       image: AssetImage(
-                                //                           "assets/images/Path 92.png"),
-                                //                       fit: BoxFit.contain,
-                                //                     ),
-                                //                   ),
-                                //                 ),
-                                //                 Container(
-                                //                   height: 60,
-                                //                   width: 160,
-                                //                   color: Colors.white,
-                                //                   child: Center(
-                                //                     child: Text(
-                                //                       'Pay \nPremiums',
-                                //                       textAlign:
-                                //                       TextAlign.center,
-                                //                       style: TextStyle(
-                                //                           fontSize: 16,
-                                //                           fontFamily:
-                                //                           defaultFontFamily,
-                                //                           fontWeight:
-                                //                           FontWeight.bold,
-                                //                           color: Colors
-                                //                               .blueAccent
-                                //                               .shade400),
-                                //                     ),
-                                //                   ),
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //         ),
-                                //
-                                //     closedElevation: 6.0,
-                                //     closedShape:
-                                //     const RoundedRectangleBorder(
-                                //       borderRadius: BorderRadius.all(
-                                //         Radius.circular(56 / 2),
-                                //       ),
-                                //     ),
-                                //     openBuilder: (context,
-                                //         VoidCallback _) =>
-                                //         WebViewScreen(
-                                //             key: _scaffoldKey,
-                                //             title: 'Pay Premiums',
-                                //             url_link:
-                                //             'https://www.sudlife.in/customer-service/premium-payment-options'),
-                                //   ),
-                                // ),
-                                // const SizedBox(
-                                //   width: 20,
-                                // ),
-                                // Expanded(
-                                //   child: OpenContainer(
-                                //     // transitionType: transitionType,
-                                //     transitionType:
-                                //     ContainerTransitionType.fade,
-                                //     transitionDuration:
-                                //     const Duration(milliseconds: 500),
-                                //     tappable: false,
-                                //
-                                //     closedBuilder: (context,
-                                //         VoidCallback openContainer) =>
-                                //         GestureDetector(
-                                //           onTap: () {
-                                //             print('Clicker : ');
-                                //             openContainer();
-                                //             // your onOpen code
-                                //           },
-                                //           child: Container(
-                                //             height: 160,
-                                //             width: 80,
-                                //             decoration: BoxDecoration(
-                                //               color: Colors.white,
-                                //               // borderRadius: const BorderRadius
-                                //               //     .only(
-                                //               //     topRight:
-                                //               //     Radius.circular(20.0),
-                                //               //     bottomRight:
-                                //               //     Radius.circular(20.0),
-                                //               //     topLeft:
-                                //               //     Radius.circular(20.0),
-                                //               //     bottomLeft:
-                                //               //     Radius.circular(20.0)),
-                                //               boxShadow: [
-                                //                 BoxShadow(
-                                //                   color: Colors.white
-                                //                       .withOpacity(0.5),
-                                //                   spreadRadius: 5,
-                                //                   blurRadius: 7,
-                                //                   offset: const Offset(0,
-                                //                       3), // changes position of shadow
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //             child: Column(
-                                //               children: [
-                                //                 Container(
-                                //                   height: 40,
-                                //                   width: 40,
-                                //                   margin: const EdgeInsets
-                                //                       .fromLTRB(
-                                //                       30, 20, 30, 10),
-                                //                   decoration:
-                                //                   const BoxDecoration(
-                                //                     color: Colors.white,
-                                //                     image: DecorationImage(
-                                //                       image: AssetImage(
-                                //                           "assets/images/Group 3.png"),
-                                //                       fit: BoxFit.contain,
-                                //                     ),
-                                //                   ),
-                                //                 ),
-                                //                 Container(
-                                //                   height: 60,
-                                //                   width: 160,
-                                //                   color: Colors.white,
-                                //                   child: Center(
-                                //                     child: Text(
-                                //                       'Insurance \nPlans',
-                                //                       textAlign:
-                                //                       TextAlign.center,
-                                //                       style: TextStyle(
-                                //                           fontSize: 16,
-                                //                           fontFamily:
-                                //                           defaultFontFamily,
-                                //                           fontWeight:
-                                //                           FontWeight.bold,
-                                //                           color: Colors
-                                //                               .blueAccent
-                                //                               .shade400),
-                                //                     ),
-                                //                   ),
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //         ),
-                                //
-                                //     closedElevation: 6.0,
-                                //     closedShape:
-                                //     const RoundedRectangleBorder(
-                                //       borderRadius: BorderRadius.all(
-                                //         Radius.circular(56 / 2),
-                                //       ),
-                                //     ),
-                                //     openBuilder: (context,
-                                //         VoidCallback _) =>
-                                //         WebViewScreen(
-                                //
-                                //             key: _scaffoldKey,
-                                //             title: 'Insurance Plans',
-                                //             url_link:
-                                //             'https://www.sudlife.in/products/life-insurance'),
-                                //   ),
-                                // ),
-                                // const SizedBox(
-                                //   width: 20,
-                                // ),
-                              ],
-                            ),
-
-                            const SizedBox(
-                              height: 40,
-                            ),
-
-                            Row(
-                              children: [
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                // Expanded(
-                                //   child: OpenContainer(
-                                //     // transitionType: transitionType,
-                                //     transitionType:
-                                //     ContainerTransitionType.fade,
-                                //     transitionDuration:
-                                //     const Duration(milliseconds: 500),
-                                //     tappable: false,
-                                //
-                                //     closedBuilder: (context,
-                                //         VoidCallback openContainer) =>
-                                //         GestureDetector(
-                                //           onTap: () {
-                                //             print('Clicker : ');
-                                //             openContainer();
-                                //             // your onOpen code
-                                //           },
-                                //           child: Container(
-                                //             height: 160,
-                                //             width: 80,
-                                //             decoration: BoxDecoration(
-                                //               color: Colors.white,
-                                //               // borderRadius: const BorderRadius
-                                //               //     .only(
-                                //               //     topRight:
-                                //               //     Radius.circular(20.0),
-                                //               //     bottomRight:
-                                //               //     Radius.circular(20.0),
-                                //               //     topLeft:
-                                //               //     Radius.circular(20.0),
-                                //               //     bottomLeft:
-                                //               //     Radius.circular(20.0)),
-                                //               boxShadow: [
-                                //                 BoxShadow(
-                                //                   color: Colors.white
-                                //                       .withOpacity(0.5),
-                                //                   spreadRadius: 5,
-                                //                   blurRadius: 7,
-                                //                   offset: const Offset(0,
-                                //                       3), // changes position of shadow
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //             child: Column(
-                                //               children: [
-                                //                 Container(
-                                //                   height: 40,
-                                //                   width: 40,
-                                //                   margin: const EdgeInsets
-                                //                       .fromLTRB(
-                                //                       30, 20, 30, 10),
-                                //                   decoration:
-                                //                   const BoxDecoration(
-                                //                     color: Colors.white,
-                                //                     image: DecorationImage(
-                                //                       image: AssetImage(
-                                //                           "assets/images/Path 107.png"),
-                                //                       fit: BoxFit.contain,
-                                //                     ),
-                                //                   ),
-                                //                 ),
-                                //                 Container(
-                                //                   height: 60,
-                                //                   width: 160,
-                                //                   color: Colors.white,
-                                //                   child: Center(
-                                //                     child: Text(
-                                //                       'Calculate Your \nPremiums',
-                                //                       textAlign:
-                                //                       TextAlign.center,
-                                //                       style: TextStyle(
-                                //                           fontFamily:
-                                //                           defaultFontFamily,
-                                //                           fontSize: 16,
-                                //                           fontWeight:
-                                //                           FontWeight.bold,
-                                //                           color: Colors
-                                //                               .blueAccent
-                                //                               .shade400),
-                                //                     ),
-                                //                   ),
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //         ),
-                                //
-                                //     closedElevation: 6.0,
-                                //     closedShape:
-                                //     const RoundedRectangleBorder(
-                                //       borderRadius: BorderRadius.all(
-                                //         Radius.circular(56 / 2),
-                                //       ),
-                                //     ),
-                                //     openBuilder: (context,
-                                //         VoidCallback _) =>
-                                //         WebViewScreen(
-                                //             key: _scaffoldKey,
-                                //             title: 'Calculate Your Premiums',
-                                //             url_link:
-                                //             'https://si.sudlife.in/SalesIllustration/ProductPage.aspx'),
-                                //   ),
-                                // ),
-                                // const SizedBox(
-                                //   width: 20,
-                                // ),
-                                Expanded(
-                                  child: OpenContainer(
-                                    // transitionType: transitionType,
-                                    transitionType:
-                                    ContainerTransitionType.fade,
-                                    transitionDuration:
-                                    const Duration(milliseconds: 500),
-                                    tappable: false,
-
-                                    closedBuilder: (context,
-                                        VoidCallback openContainer) =>
-                                        GestureDetector(
-                                          onTap: () {
-                                            restartTimer();
-                                            print('Clicker : ');
-                                            openContainer();
-                                            // your onOpen code
-                                          },
-                                          child: Container(
-                                            height: 160,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              // borderRadius: const BorderRadius
-                                              //     .only(
-                                              //     topRight:
-                                              //     Radius.circular(20.0),
-                                              //     bottomRight:
-                                              //     Radius.circular(20.0),
-                                              //     topLeft:
-                                              //     Radius.circular(20.0),
-                                              //     bottomLeft:
-                                              //     Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 5,
-                                                  blurRadius: 7,
-                                                  offset: const Offset(0,
-                                                      3), // changes position of shadow
-                                                ),
-                                              ],
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  margin: const EdgeInsets
-                                                      .fromLTRB(
-                                                      30, 20, 30, 10),
-                                                  decoration:
-                                                  const BoxDecoration(
-                                                    color: Colors.white,
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/images/Group 6.png"),
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 60,
-                                                  width: 160,
-                                                  color: Colors.white,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Customer Portal\n (Self-Help)',
-                                                      textAlign:
-                                                      TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontFamily:
-                                                          defaultFontFamily,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Color(
-                                                              0xff2474b9)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-
-                                    closedElevation: 6.0,
-                                    closedShape:
-                                    const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(26 / 2),
-                                      ),
-                                    ),
-                                    openBuilder: (context,
-                                        VoidCallback _) =>
-                                        WebViewScreen(
-                                            key: _scaffoldKey,
-                                            title: 'Customer Portal (Self-Help)',
-                                            url_link:
-                                            // 'https://customer.sudlife.in'),
-                                            'https://www.sudlife.in/contact-us'),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                                Expanded(
-                                  child: OpenContainer(
-                                    // transitionType: transitionType,
-                                    transitionType:
-                                    ContainerTransitionType.fade,
-                                    transitionDuration:
-                                    const Duration(milliseconds: 500),
-                                    tappable: false,
-
-                                    closedBuilder: (context,
-                                        VoidCallback openContainer) =>
-                                        GestureDetector(
-                                          onTap: () {
-                                            restartTimer();
-                                            print('Clicker : ');
-                                            openContainer();
-                                            // your onOpen code
-                                          },
-                                          child: Container(
-                                            height: 160,
-                                            width: 80,
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              // borderRadius: const BorderRadius
-                                              //     .only(
-                                              //     topRight:
-                                              //     Radius.circular(20.0),
-                                              //     bottomRight:
-                                              //     Radius.circular(20.0),
-                                              //     topLeft:
-                                              //     Radius.circular(20.0),
-                                              //     bottomLeft:
-                                              //     Radius.circular(20.0)),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.white
-                                                      .withOpacity(0.5),
-                                                  spreadRadius: 5,
-                                                  blurRadius: 7,
-                                                  offset: const Offset(0,
-                                                      3), // changes position of shadow
-                                                ),
-                                              ],
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 40,
-                                                  width: 40,
-                                                  margin: const EdgeInsets
-                                                      .fromLTRB(
-                                                      30, 20, 30, 10),
-                                                  decoration:
-                                                  const BoxDecoration(
-                                                    color: Colors.white,
-                                                    image: DecorationImage(
-                                                      image: AssetImage(
-                                                          "assets/images/claims.png"),
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  height: 60,
-                                                  width: 160,
-                                                  color: Colors.white,
-                                                  child: Center(
-                                                    child: Text(
-                                                      'Claims',
-                                                      textAlign:
-                                                      TextAlign.center,
-                                                      style: TextStyle(
-                                                          fontSize: 16,
-                                                          fontFamily:
-                                                          defaultFontFamily,
-                                                          fontWeight:
-                                                          FontWeight.bold,
-                                                          color: Color(
-                                                              0xff2474b9)),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-
-                                    closedElevation: 6.0,
-                                    closedShape:
-                                    const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(26 / 2),
-                                      ),
-                                    ),
-                                    openBuilder: (context,
-                                        VoidCallback _) =>
-                                        WebViewScreen(
-                                            key: _scaffoldKey,
-                                            title: 'Claims',
-                                            url_link:
-                                            //'https://www.sudlife.in/contact-us'),
-                                            'https://www.sudlife.in/claims'),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 20,
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(
-                              height: 40,
-                            ),
-
-                          ],
-                        ),
-
-                      ],
-                    ),
-                  ),
-                ),
-              )
-                  : SingleChildScrollView(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage("assets/images/Background.png"),
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 80,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/Background.png"),
+                            fit: BoxFit.fill,
                           ),
-
-                          Row(
+                        ),
+                        child: SingleChildScrollView(
+                          child: Column(
                             children: [
-                              Expanded(
-                                child: Container(
-                                  padding:
-                                  EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                  child: Text(
-                                    "SUD Life Experience Zone",
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        fontSize: 24,
-                                        fontFamily: defaultFontFamily,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(
-                            height: 20,
-                          ),
-
-                          Column(
-                            children: [
-
-                              const SizedBox(
-                                height: 40,
-                              ),
-
                               Row(
                                 children: [
-                                  const SizedBox(
-                                    width: 70,
-                                  ),
                                   Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          20, 120, 0, 0),
+                                      child: Text(
+                                        "SUD Life Experience Zone",
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 22,
+                                            fontFamily: defaultFontFamily,
+                                            fontWeight: FontWeight.w800,
+                                            color: Colors.white),
+                                      ),
+                                    ),
+                                  ),
+                                  // const Spacer(),
+                                  // Expanded(
+                                  //   child: InkWell(
+                                  //     onTap: () {
+                                  //       // Navigator.push(
+                                  //       //   context,
+                                  //       //   MaterialPageRoute(
+                                  //       //       // builder: (context) => ChessGame()),
+                                  //       //       builder: (context) => SplashScrenn()),
+                                  //       // );
+                                  //     },
+                                  //     child: Container(
+                                  //       height: 60,
+                                  //       width: 70,
+                                  //       decoration: const BoxDecoration(
+                                  //         color: Colors.white,
+                                  //         borderRadius: BorderRadius.only(
+                                  //             // topRight: Radius.circular(40.0),
+                                  //             // bottomRight: Radius.circular(40.0),
+                                  //             topLeft: Radius.circular(20.0),
+                                  //             bottomLeft:
+                                  //                 Radius.circular(20.0)),
+                                  //       ),
+                                  //       child: Container(
+                                  //         height: 50,
+                                  //         width: 100,
+                                  //         margin: const EdgeInsets.all(12),
+                                  //         decoration: const BoxDecoration(
+                                  //           color: Colors.white,
+                                  //           image: DecorationImage(
+                                  //             image: AssetImage(
+                                  //                 "assets/images/site-logo.png"),
+                                  //             fit: BoxFit.contain,
+                                  //           ),
+                                  //         ),
+                                  //         child: null,
+                                  //       ),
+                                  //     ),
+                                  //   ),
+                                  // )
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                        child: OpenContainer(
+                                          // transitionType: transitionType,
+                                          transitionType:
+                                              ContainerTransitionType.fade,
+                                          transitionDuration:
+                                              const Duration(milliseconds: 500),
+                                          tappable: false,
 
-                                    child: OpenContainer(
-                                      // transitionType: transitionType,
-                                      transitionType:
-                                      ContainerTransitionType.fade,
-                                      transitionDuration: const Duration(
-                                          milliseconds: 500),
-                                      tappable: false,
-
-                                      closedBuilder: (context,
-                                          VoidCallback
-                                          openContainer) =>
-                                          GestureDetector(
+                                          closedBuilder: (context,
+                                                  VoidCallback openContainer) =>
+                                              GestureDetector(
                                             onTap: () {
                                               restartTimer();
                                               print('Clicker : ');
@@ -3424,23 +2360,20 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               // your onOpen code
                                             },
                                             child: Container(
-                                              margin:
-                                              const EdgeInsets.all(10),
-                                              height: 190,
-                                              //width: 200,
-
+                                              height: 160,
+                                              width: 80,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
-                                                // borderRadius: const BorderRadius
-                                                //         .only(
+                                                // borderRadius: BorderRadius
+                                                //     .only(
                                                 //     topRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(0.0),
                                                 //     bottomRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(0.0),
                                                 //     topLeft:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(0.0),
                                                 //     bottomLeft:
-                                                //         Radius.circular(20.0)),
+                                                //     Radius.circular(0.0)),
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.white
@@ -3455,13 +2388,13 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               child: Column(
                                                 children: [
                                                   Container(
-                                                    height: 50,
-                                                    width: 50,
+                                                    height: 40,
+                                                    width: 40,
                                                     margin: const EdgeInsets
-                                                        .fromLTRB(
-                                                        30, 30, 30, 10),
+                                                            .fromLTRB(
+                                                        30, 20, 30, 10),
                                                     decoration:
-                                                    const BoxDecoration(
+                                                        const BoxDecoration(
                                                       color: Colors.white,
                                                       image: DecorationImage(
                                                         image: AssetImage(
@@ -3471,22 +2404,21 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                                     ),
                                                   ),
                                                   Container(
-                                                    height: 80,
-                                                    //width: 160,
+                                                    height: 60,
+                                                    width: 160,
                                                     color: Colors.white,
                                                     child: Center(
                                                       child: Text(
-                                                        'Buy Online',
+                                                        'Buy \nOnline',
                                                         textAlign:
-                                                        TextAlign.center,
+                                                            TextAlign.center,
                                                         style: TextStyle(
-                                                            fontSize: 24,
+                                                            fontSize: 16,
                                                             fontFamily:
-                                                            defaultFontFamily,
+                                                                defaultFontFamily,
                                                             fontWeight:
-                                                            FontWeight
-                                                                .bold,
-                                                            color: Color(
+                                                                FontWeight.bold,
+                                                            color: const Color(
                                                                 0xff2474b9)),
                                                       ),
                                                     ),
@@ -3496,39 +2428,37 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                             ),
                                           ),
 
-                                      closedElevation: 6.0,
-                                      closedShape:
-                                      const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(26 / 2),
+                                          closedElevation: 6.0,
+                                          closedShape:
+                                              const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(26 / 2),
+                                            ),
+                                          ),
+                                          openBuilder: (context,
+                                                  VoidCallback _) =>
+                                              WebViewScreen(
+                                                  key: _scaffoldKey,
+                                                  title: 'Buy Online',
+                                                  url_link:
+                                                      'https://bol.sudlife.in/ProductSelection/ProductSelectionPage'),
                                         ),
                                       ),
-                                      openBuilder: (context,
-                                          VoidCallback _) =>
-                                          WebViewScreen(
-                                              key: _scaffoldKey,
-                                              title: 'Buy Online',
-                                              url_link:
-                                              'https://bol.sudlife.in/ProductSelection/ProductSelectionPage'),
-                                    ),
-                                    //),
-                                  ),
-                                  const SizedBox(
-                                    width: 70,
-                                  ),
-                                  Expanded(
-                                    child: OpenContainer(
-                                      // transitionType: transitionType,
-                                      transitionType:
-                                      ContainerTransitionType.fade,
-                                      transitionDuration: const Duration(
-                                          milliseconds: 500),
-                                      tappable: false,
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                        child: OpenContainer(
+                                          // transitionType: transitionType,
+                                          transitionType:
+                                              ContainerTransitionType.fade,
+                                          transitionDuration:
+                                              const Duration(milliseconds: 500),
+                                          tappable: false,
 
-                                      closedBuilder: (context,
-                                          VoidCallback
-                                          openContainer) =>
-                                          GestureDetector(
+                                          closedBuilder: (context,
+                                                  VoidCallback openContainer) =>
+                                              GestureDetector(
                                             onTap: () {
                                               restartTimer();
                                               print('Clicker : ');
@@ -3536,29 +2466,28 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               // your onOpen code
                                             },
                                             child: Container(
-                                              margin:
-                                              const EdgeInsets.all(10),
-                                              height: 190,
+                                              height: 160,
+                                              width: 80,
                                               //width: 200,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 // borderRadius: const BorderRadius
-                                                //         .only(
+                                                //     .only(
                                                 //     topRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     topLeft:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomLeft:
-                                                //         Radius.circular(20.0)),
+                                                //     Radius.circular(20.0)),
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.white
                                                         .withOpacity(0.5),
                                                     spreadRadius: 5,
                                                     blurRadius: 7,
-                                                    offset: Offset(0,
+                                                    offset: const Offset(0,
                                                         3), // changes position of shadow
                                                   ),
                                                 ],
@@ -3566,13 +2495,13 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               child: Column(
                                                 children: [
                                                   Container(
-                                                    height: 50,
-                                                    width: 50,
+                                                    height: 40,
+                                                    width: 40,
                                                     margin: const EdgeInsets
-                                                        .fromLTRB(
-                                                        30, 30, 30, 10),
+                                                            .fromLTRB(
+                                                        30, 20, 30, 10),
                                                     decoration:
-                                                    const BoxDecoration(
+                                                        const BoxDecoration(
                                                       color: Colors.white,
                                                       image: DecorationImage(
                                                         image: AssetImage(
@@ -3582,22 +2511,21 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                                     ),
                                                   ),
                                                   Container(
-                                                    height: 80,
+                                                    height: 60,
                                                     width: 160,
                                                     color: Colors.white,
                                                     child: Center(
                                                       child: Text(
-                                                        'Pay Premiums',
+                                                        'Pay \nPremiums',
                                                         textAlign:
-                                                        TextAlign.center,
+                                                            TextAlign.center,
                                                         style: TextStyle(
-                                                            fontSize: 20,
+                                                            fontSize: 16,
                                                             fontFamily:
-                                                            defaultFontFamily,
+                                                                defaultFontFamily,
                                                             fontWeight:
-                                                            FontWeight
-                                                                .bold,
-                                                            color: Color(
+                                                                FontWeight.bold,
+                                                            color: const Color(
                                                                 0xff2474b9)),
                                                       ),
                                                     ),
@@ -3607,38 +2535,47 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                             ),
                                           ),
 
-                                      closedElevation: 6.0,
-                                      closedShape:
-                                      const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(26 / 2),
+                                          closedElevation: 6.0,
+                                          closedShape:
+                                              const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(26 / 2),
+                                            ),
+                                          ),
+                                          openBuilder: (context,
+                                                  VoidCallback _) =>
+                                              WebViewScreen(
+                                                  key: _scaffoldKey,
+                                                  title: 'Pay Premiums',
+                                                  url_link:
+                                                      'https://www.sudlife.in/customer-service/premium-payment-options'),
                                         ),
                                       ),
-                                      openBuilder: (context,
-                                          VoidCallback _) =>
-                                          WebViewScreen(
-                                              key: _scaffoldKey,
-                                              title: 'Pay Premiums',
-                                              url_link:
-                                              'https://www.sudlife.in/customer-service/premium-payment-options'),
-                                    ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                    ],
                                   ),
                                   const SizedBox(
-                                    width: 70,
+                                    height: 40,
                                   ),
-                                  Expanded(
-                                    child: OpenContainer(
-                                      // transitionType: transitionType,
-                                      transitionType:
-                                      ContainerTransitionType.fade,
-                                      transitionDuration: const Duration(
-                                          milliseconds: 500),
-                                      tappable: false,
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                        child: OpenContainer(
+                                          // transitionType: transitionType,
+                                          transitionType:
+                                              ContainerTransitionType.fade,
+                                          transitionDuration:
+                                              const Duration(milliseconds: 500),
+                                          tappable: false,
 
-                                      closedBuilder: (context,
-                                          VoidCallback
-                                          openContainer) =>
-                                          GestureDetector(
+                                          closedBuilder: (context,
+                                                  VoidCallback openContainer) =>
+                                              GestureDetector(
                                             onTap: () {
                                               restartTimer();
                                               print('Clicker : ');
@@ -3646,22 +2583,20 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               // your onOpen code
                                             },
                                             child: Container(
-                                              margin:
-                                              const EdgeInsets.all(10),
-                                              height: 190,
-                                              //width: 200,
+                                              height: 160,
+                                              width: 80,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 // borderRadius: const BorderRadius
-                                                //         .only(
+                                                //     .only(
                                                 //     topRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     topLeft:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomLeft:
-                                                //         Radius.circular(20.0)),
+                                                //     Radius.circular(20.0)),
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.white
@@ -3676,13 +2611,13 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               child: Column(
                                                 children: [
                                                   Container(
-                                                    height: 50,
-                                                    width: 50,
+                                                    height: 40,
+                                                    width: 40,
                                                     margin: const EdgeInsets
-                                                        .fromLTRB(
-                                                        30, 30, 30, 10),
+                                                            .fromLTRB(
+                                                        30, 20, 30, 10),
                                                     decoration:
-                                                    const BoxDecoration(
+                                                        const BoxDecoration(
                                                       color: Colors.white,
                                                       image: DecorationImage(
                                                         image: AssetImage(
@@ -3692,22 +2627,21 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                                     ),
                                                   ),
                                                   Container(
-                                                    height: 80,
-                                                    //width: 160,
+                                                    height: 60,
+                                                    width: 160,
                                                     color: Colors.white,
                                                     child: Center(
                                                       child: Text(
-                                                        'Insurance Plans',
+                                                        'Insurance \nPlans',
                                                         textAlign:
-                                                        TextAlign.center,
+                                                            TextAlign.center,
                                                         style: TextStyle(
-                                                            fontSize: 20,
+                                                            fontSize: 16,
                                                             fontFamily:
-                                                            defaultFontFamily,
+                                                                defaultFontFamily,
                                                             fontWeight:
-                                                            FontWeight
-                                                                .bold,
-                                                            color: Color(
+                                                                FontWeight.bold,
+                                                            color: const Color(
                                                                 0xff2474b9)),
                                                       ),
                                                     ),
@@ -3717,50 +2651,37 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                             ),
                                           ),
 
-                                      closedElevation: 6.0,
-                                      closedShape:
-                                      const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(26 / 2),
+                                          closedElevation: 6.0,
+                                          closedShape:
+                                              const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(26 / 2),
+                                            ),
+                                          ),
+                                          openBuilder: (context,
+                                                  VoidCallback _) =>
+                                              WebViewScreen(
+                                                  key: _scaffoldKey,
+                                                  title: 'Insurance Plans',
+                                                  url_link:
+                                                      'https://www.sudlife.in/products/life-insurance'),
                                         ),
                                       ),
-                                      openBuilder: (context,
-                                          VoidCallback _) =>
-                                          WebViewScreen(
-                                              key: _scaffoldKey,
-                                              title: 'Insurance Plans',
-                                              url_link:
-                                              'https://www.sudlife.in/products/life-insurance'),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 70,
-                                  ),
-                                ],
-                              ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                        child: OpenContainer(
+                                          // transitionType: transitionType,
+                                          transitionType:
+                                              ContainerTransitionType.fade,
+                                          transitionDuration:
+                                              const Duration(milliseconds: 500),
+                                          tappable: false,
 
-                              const SizedBox(
-                                height: 50,
-                              ),
-
-                              Row(
-                                children: [
-                                  const SizedBox(
-                                    width: 70,
-                                  ),
-                                  Expanded(
-                                    child: OpenContainer(
-                                      // transitionType: transitionType,
-                                      transitionType:
-                                      ContainerTransitionType.fade,
-                                      transitionDuration: const Duration(
-                                          milliseconds: 500),
-                                      tappable: false,
-
-                                      closedBuilder: (context,
-                                          VoidCallback
-                                          openContainer) =>
-                                          GestureDetector(
+                                          closedBuilder: (context,
+                                                  VoidCallback openContainer) =>
+                                              GestureDetector(
                                             onTap: () {
                                               restartTimer();
                                               print('Clicker : ');
@@ -3768,22 +2689,20 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               // your onOpen code
                                             },
                                             child: Container(
-                                              margin:
-                                              const EdgeInsets.all(10),
-                                              height: 190,
-                                              //width: 200,
+                                              height: 160,
+                                              width: 80,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 // borderRadius: const BorderRadius
-                                                //         .only(
+                                                //     .only(
                                                 //     topRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     topLeft:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomLeft:
-                                                //         Radius.circular(20.0)),
+                                                //     Radius.circular(20.0)),
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.white
@@ -3798,13 +2717,13 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               child: Column(
                                                 children: [
                                                   Container(
-                                                    height: 50,
-                                                    width: 50,
+                                                    height: 40,
+                                                    width: 40,
                                                     margin: const EdgeInsets
-                                                        .fromLTRB(
-                                                        30, 30, 30, 10),
+                                                            .fromLTRB(
+                                                        30, 20, 30, 10),
                                                     decoration:
-                                                    const BoxDecoration(
+                                                        const BoxDecoration(
                                                       color: Colors.white,
                                                       image: DecorationImage(
                                                         image: AssetImage(
@@ -3814,20 +2733,21 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                                     ),
                                                   ),
                                                   Container(
-                                                    height: 80,
+                                                    height: 60,
                                                     width: 160,
                                                     color: Colors.white,
                                                     child: Center(
                                                       child: Text(
                                                         'Calculate Your \nPremiums',
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
                                                             fontFamily:
-                                                            defaultFontFamily,
-                                                            fontSize: 20,
+                                                                defaultFontFamily,
+                                                            fontSize: 16,
                                                             fontWeight:
-                                                            FontWeight
-                                                                .bold,
-                                                            color: Color(
+                                                                FontWeight.bold,
+                                                            color: const Color(
                                                                 0xff2474b9)),
                                                       ),
                                                     ),
@@ -3837,39 +2757,367 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                             ),
                                           ),
 
-                                      closedElevation: 6.0,
-                                      closedShape:
-                                      const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(26 / 2),
+                                          closedElevation: 6.0,
+                                          closedShape:
+                                              const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(26 / 2),
+                                            ),
+                                          ),
+                                          openBuilder: (context, VoidCallback _) =>
+                                              WebViewScreen(
+                                                  key: _scaffoldKey,
+                                                  title:
+                                                      'Calculate Your Premiums',
+                                                  url_link:
+                                                      'https://si.sudlife.in/SalesIllustration/ProductPage.aspx'),
                                         ),
                                       ),
-                                      openBuilder: (context,
-                                          VoidCallback _) =>
-                                          WebViewScreen(
-                                              key: _scaffoldKey,
-                                              title:
-                                              'Calculate Your Premiums',
-                                              url_link:
-                                              'https://si.sudlife.in/SalesIllustration/ProductPage.aspx'),
-                                    ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      // Expanded(
+                                      //   child: OpenContainer(
+                                      //     // transitionType: transitionType,
+                                      //     transitionType:
+                                      //     ContainerTransitionType.fade,
+                                      //     transitionDuration:
+                                      //     const Duration(milliseconds: 500),
+                                      //     tappable: false,
+                                      //
+                                      //     closedBuilder: (context,
+                                      //         VoidCallback openContainer) =>
+                                      //         GestureDetector(
+                                      //           onTap: () {
+                                      //             print('Clicker : ');
+                                      //             openContainer();
+                                      //             // your onOpen code
+                                      //           },
+                                      //           child: Container(
+                                      //             height: 160,
+                                      //             width: 80,
+                                      //             //width: 200,
+                                      //             decoration: BoxDecoration(
+                                      //               color: Colors.white,
+                                      //               // borderRadius: const BorderRadius
+                                      //               //     .only(
+                                      //               //     topRight:
+                                      //               //     Radius.circular(20.0),
+                                      //               //     bottomRight:
+                                      //               //     Radius.circular(20.0),
+                                      //               //     topLeft:
+                                      //               //     Radius.circular(20.0),
+                                      //               //     bottomLeft:
+                                      //               //     Radius.circular(20.0)),
+                                      //               boxShadow: [
+                                      //                 BoxShadow(
+                                      //                   color: Colors.white
+                                      //                       .withOpacity(0.5),
+                                      //                   spreadRadius: 5,
+                                      //                   blurRadius: 7,
+                                      //                   offset: Offset(0,
+                                      //                       3), // changes position of shadow
+                                      //                 ),
+                                      //               ],
+                                      //             ),
+                                      //             child: Column(
+                                      //               children: [
+                                      //                 Container(
+                                      //                   height: 40,
+                                      //                   width: 40,
+                                      //                   margin: const EdgeInsets
+                                      //                       .fromLTRB(
+                                      //                       30, 20, 30, 10),
+                                      //                   decoration:
+                                      //                   const BoxDecoration(
+                                      //                     color: Colors.white,
+                                      //                     image: DecorationImage(
+                                      //                       image: AssetImage(
+                                      //                           "assets/images/Path 92.png"),
+                                      //                       fit: BoxFit.contain,
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //                 Container(
+                                      //                   height: 60,
+                                      //                   width: 160,
+                                      //                   color: Colors.white,
+                                      //                   child: Center(
+                                      //                     child: Text(
+                                      //                       'Pay \nPremiums',
+                                      //                       textAlign:
+                                      //                       TextAlign.center,
+                                      //                       style: TextStyle(
+                                      //                           fontSize: 16,
+                                      //                           fontFamily:
+                                      //                           defaultFontFamily,
+                                      //                           fontWeight:
+                                      //                           FontWeight.bold,
+                                      //                           color: Colors
+                                      //                               .blueAccent
+                                      //                               .shade400),
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //               ],
+                                      //             ),
+                                      //           ),
+                                      //         ),
+                                      //
+                                      //     closedElevation: 6.0,
+                                      //     closedShape:
+                                      //     const RoundedRectangleBorder(
+                                      //       borderRadius: BorderRadius.all(
+                                      //         Radius.circular(56 / 2),
+                                      //       ),
+                                      //     ),
+                                      //     openBuilder: (context,
+                                      //         VoidCallback _) =>
+                                      //         WebViewScreen(
+                                      //             key: _scaffoldKey,
+                                      //             title: 'Pay Premiums',
+                                      //             url_link:
+                                      //             'https://www.sudlife.in/customer-service/premium-payment-options'),
+                                      //   ),
+                                      // ),
+                                      // const SizedBox(
+                                      //   width: 20,
+                                      // ),
+                                      // Expanded(
+                                      //   child: OpenContainer(
+                                      //     // transitionType: transitionType,
+                                      //     transitionType:
+                                      //     ContainerTransitionType.fade,
+                                      //     transitionDuration:
+                                      //     const Duration(milliseconds: 500),
+                                      //     tappable: false,
+                                      //
+                                      //     closedBuilder: (context,
+                                      //         VoidCallback openContainer) =>
+                                      //         GestureDetector(
+                                      //           onTap: () {
+                                      //             print('Clicker : ');
+                                      //             openContainer();
+                                      //             // your onOpen code
+                                      //           },
+                                      //           child: Container(
+                                      //             height: 160,
+                                      //             width: 80,
+                                      //             decoration: BoxDecoration(
+                                      //               color: Colors.white,
+                                      //               // borderRadius: const BorderRadius
+                                      //               //     .only(
+                                      //               //     topRight:
+                                      //               //     Radius.circular(20.0),
+                                      //               //     bottomRight:
+                                      //               //     Radius.circular(20.0),
+                                      //               //     topLeft:
+                                      //               //     Radius.circular(20.0),
+                                      //               //     bottomLeft:
+                                      //               //     Radius.circular(20.0)),
+                                      //               boxShadow: [
+                                      //                 BoxShadow(
+                                      //                   color: Colors.white
+                                      //                       .withOpacity(0.5),
+                                      //                   spreadRadius: 5,
+                                      //                   blurRadius: 7,
+                                      //                   offset: const Offset(0,
+                                      //                       3), // changes position of shadow
+                                      //                 ),
+                                      //               ],
+                                      //             ),
+                                      //             child: Column(
+                                      //               children: [
+                                      //                 Container(
+                                      //                   height: 40,
+                                      //                   width: 40,
+                                      //                   margin: const EdgeInsets
+                                      //                       .fromLTRB(
+                                      //                       30, 20, 30, 10),
+                                      //                   decoration:
+                                      //                   const BoxDecoration(
+                                      //                     color: Colors.white,
+                                      //                     image: DecorationImage(
+                                      //                       image: AssetImage(
+                                      //                           "assets/images/Group 3.png"),
+                                      //                       fit: BoxFit.contain,
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //                 Container(
+                                      //                   height: 60,
+                                      //                   width: 160,
+                                      //                   color: Colors.white,
+                                      //                   child: Center(
+                                      //                     child: Text(
+                                      //                       'Insurance \nPlans',
+                                      //                       textAlign:
+                                      //                       TextAlign.center,
+                                      //                       style: TextStyle(
+                                      //                           fontSize: 16,
+                                      //                           fontFamily:
+                                      //                           defaultFontFamily,
+                                      //                           fontWeight:
+                                      //                           FontWeight.bold,
+                                      //                           color: Colors
+                                      //                               .blueAccent
+                                      //                               .shade400),
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //               ],
+                                      //             ),
+                                      //           ),
+                                      //         ),
+                                      //
+                                      //     closedElevation: 6.0,
+                                      //     closedShape:
+                                      //     const RoundedRectangleBorder(
+                                      //       borderRadius: BorderRadius.all(
+                                      //         Radius.circular(56 / 2),
+                                      //       ),
+                                      //     ),
+                                      //     openBuilder: (context,
+                                      //         VoidCallback _) =>
+                                      //         WebViewScreen(
+                                      //
+                                      //             key: _scaffoldKey,
+                                      //             title: 'Insurance Plans',
+                                      //             url_link:
+                                      //             'https://www.sudlife.in/products/life-insurance'),
+                                      //   ),
+                                      // ),
+                                      // const SizedBox(
+                                      //   width: 20,
+                                      // ),
+                                    ],
                                   ),
                                   const SizedBox(
-                                    width: 70,
+                                    height: 40,
                                   ),
-                                  Expanded(
-                                    child: OpenContainer(
-                                      // transitionType: transitionType,
-                                      transitionType:
-                                      ContainerTransitionType.fade,
-                                      transitionDuration: const Duration(
-                                          milliseconds: 500),
-                                      tappable: false,
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      // Expanded(
+                                      //   child: OpenContainer(
+                                      //     // transitionType: transitionType,
+                                      //     transitionType:
+                                      //     ContainerTransitionType.fade,
+                                      //     transitionDuration:
+                                      //     const Duration(milliseconds: 500),
+                                      //     tappable: false,
+                                      //
+                                      //     closedBuilder: (context,
+                                      //         VoidCallback openContainer) =>
+                                      //         GestureDetector(
+                                      //           onTap: () {
+                                      //             print('Clicker : ');
+                                      //             openContainer();
+                                      //             // your onOpen code
+                                      //           },
+                                      //           child: Container(
+                                      //             height: 160,
+                                      //             width: 80,
+                                      //             decoration: BoxDecoration(
+                                      //               color: Colors.white,
+                                      //               // borderRadius: const BorderRadius
+                                      //               //     .only(
+                                      //               //     topRight:
+                                      //               //     Radius.circular(20.0),
+                                      //               //     bottomRight:
+                                      //               //     Radius.circular(20.0),
+                                      //               //     topLeft:
+                                      //               //     Radius.circular(20.0),
+                                      //               //     bottomLeft:
+                                      //               //     Radius.circular(20.0)),
+                                      //               boxShadow: [
+                                      //                 BoxShadow(
+                                      //                   color: Colors.white
+                                      //                       .withOpacity(0.5),
+                                      //                   spreadRadius: 5,
+                                      //                   blurRadius: 7,
+                                      //                   offset: const Offset(0,
+                                      //                       3), // changes position of shadow
+                                      //                 ),
+                                      //               ],
+                                      //             ),
+                                      //             child: Column(
+                                      //               children: [
+                                      //                 Container(
+                                      //                   height: 40,
+                                      //                   width: 40,
+                                      //                   margin: const EdgeInsets
+                                      //                       .fromLTRB(
+                                      //                       30, 20, 30, 10),
+                                      //                   decoration:
+                                      //                   const BoxDecoration(
+                                      //                     color: Colors.white,
+                                      //                     image: DecorationImage(
+                                      //                       image: AssetImage(
+                                      //                           "assets/images/Path 107.png"),
+                                      //                       fit: BoxFit.contain,
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //                 Container(
+                                      //                   height: 60,
+                                      //                   width: 160,
+                                      //                   color: Colors.white,
+                                      //                   child: Center(
+                                      //                     child: Text(
+                                      //                       'Calculate Your \nPremiums',
+                                      //                       textAlign:
+                                      //                       TextAlign.center,
+                                      //                       style: TextStyle(
+                                      //                           fontFamily:
+                                      //                           defaultFontFamily,
+                                      //                           fontSize: 16,
+                                      //                           fontWeight:
+                                      //                           FontWeight.bold,
+                                      //                           color: Colors
+                                      //                               .blueAccent
+                                      //                               .shade400),
+                                      //                     ),
+                                      //                   ),
+                                      //                 ),
+                                      //               ],
+                                      //             ),
+                                      //           ),
+                                      //         ),
+                                      //
+                                      //     closedElevation: 6.0,
+                                      //     closedShape:
+                                      //     const RoundedRectangleBorder(
+                                      //       borderRadius: BorderRadius.all(
+                                      //         Radius.circular(56 / 2),
+                                      //       ),
+                                      //     ),
+                                      //     openBuilder: (context,
+                                      //         VoidCallback _) =>
+                                      //         WebViewScreen(
+                                      //             key: _scaffoldKey,
+                                      //             title: 'Calculate Your Premiums',
+                                      //             url_link:
+                                      //             'https://si.sudlife.in/SalesIllustration/ProductPage.aspx'),
+                                      //   ),
+                                      // ),
+                                      // const SizedBox(
+                                      //   width: 20,
+                                      // ),
+                                      Expanded(
+                                        child: OpenContainer(
+                                          // transitionType: transitionType,
+                                          transitionType:
+                                              ContainerTransitionType.fade,
+                                          transitionDuration:
+                                              const Duration(milliseconds: 500),
+                                          tappable: false,
 
-                                      closedBuilder: (context,
-                                          VoidCallback
-                                          openContainer) =>
-                                          GestureDetector(
+                                          closedBuilder: (context,
+                                                  VoidCallback openContainer) =>
+                                              GestureDetector(
                                             onTap: () {
                                               restartTimer();
                                               print('Clicker : ');
@@ -3877,22 +3125,20 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               // your onOpen code
                                             },
                                             child: Container(
-                                              margin:
-                                              const EdgeInsets.all(10),
-                                              height: 190,
-                                              //width: 200,
+                                              height: 160,
+                                              width: 80,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 // borderRadius: const BorderRadius
-                                                //         .only(
+                                                //     .only(
                                                 //     topRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     topLeft:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomLeft:
-                                                //         Radius.circular(20.0)),
+                                                //     Radius.circular(20.0)),
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.white
@@ -3907,13 +3153,13 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               child: Column(
                                                 children: [
                                                   Container(
-                                                    height: 50,
-                                                    width: 50,
+                                                    height: 40,
+                                                    width: 40,
                                                     margin: const EdgeInsets
-                                                        .fromLTRB(
-                                                        30, 30, 30, 10),
+                                                            .fromLTRB(
+                                                        30, 20, 30, 10),
                                                     decoration:
-                                                    const BoxDecoration(
+                                                        const BoxDecoration(
                                                       color: Colors.white,
                                                       image: DecorationImage(
                                                         image: AssetImage(
@@ -3923,22 +3169,21 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                                     ),
                                                   ),
                                                   Container(
-                                                    height: 80,
-                                                    //width: 160,
+                                                    height: 60,
+                                                    width: 160,
                                                     color: Colors.white,
                                                     child: Center(
                                                       child: Text(
-                                                        'Customer Portal \n(Self-Help)',
+                                                        'Customer Portal\n (Self-Help)',
                                                         textAlign:
-                                                        TextAlign.center,
+                                                            TextAlign.center,
                                                         style: TextStyle(
-                                                            fontSize: 20,
+                                                            fontSize: 16,
                                                             fontFamily:
-                                                            defaultFontFamily,
+                                                                defaultFontFamily,
                                                             fontWeight:
-                                                            FontWeight
-                                                                .bold,
-                                                            color: Color(
+                                                                FontWeight.bold,
+                                                            color: const Color(
                                                                 0xff2474b9)),
                                                       ),
                                                     ),
@@ -3948,61 +3193,60 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                             ),
                                           ),
 
-                                      closedElevation: 6.0,
-                                      closedShape:
-                                      const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(26 / 2),
+                                          closedElevation: 6.0,
+                                          closedShape:
+                                              const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(26 / 2),
+                                            ),
+                                          ),
+                                          openBuilder: (context,
+                                                  VoidCallback _) =>
+                                              WebViewScreen(
+                                                  key: _scaffoldKey,
+                                                  title:
+                                                      'Customer Portal (Self-Help)',
+                                                  url_link:
+                                                      // 'https://customer.sudlife.in'),
+                                                      'https://www.sudlife.in/contact-us'),
                                         ),
                                       ),
-                                      openBuilder: (context,
-                                          VoidCallback _) =>
-                                          WebViewScreen(
-                                              key: _scaffoldKey,
-                                              title: 'Customer Portal (Self-Help)',
-                                              url_link:
-                                              //'https://customer.sudlife.in'),
-                                              'https://www.sudlife.in/contact-us'),
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                    width: 70,
-                                  ),
-                                  Expanded(
-                                    child: OpenContainer(
-                                      // transitionType: transitionType,
-                                      transitionType:
-                                      ContainerTransitionType.fade,
-                                      transitionDuration: const Duration(
-                                          milliseconds: 500),
-                                      tappable: false,
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                      Expanded(
+                                        child: OpenContainer(
+                                          // transitionType: transitionType,
+                                          transitionType:
+                                              ContainerTransitionType.fade,
+                                          transitionDuration:
+                                              const Duration(milliseconds: 500),
+                                          tappable: false,
 
-                                      closedBuilder: (context,
-                                          VoidCallback
-                                          openContainer) =>
-                                          GestureDetector(
+                                          closedBuilder: (context,
+                                                  VoidCallback openContainer) =>
+                                              GestureDetector(
                                             onTap: () {
                                               restartTimer();
-                                              print('Claims Clicker : ');
+                                              print('Clicker : ');
                                               openContainer();
+                                              // your onOpen code
                                             },
                                             child: Container(
-                                              margin:
-                                              const EdgeInsets.all(10),
-                                              height: 190,
-                                              //width: 200,
+                                              height: 160,
+                                              width: 80,
                                               decoration: BoxDecoration(
                                                 color: Colors.white,
                                                 // borderRadius: const BorderRadius
-                                                //         .only(
+                                                //     .only(
                                                 //     topRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomRight:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     topLeft:
-                                                //         Radius.circular(20.0),
+                                                //     Radius.circular(20.0),
                                                 //     bottomLeft:
-                                                //         Radius.circular(20.0)),
+                                                //     Radius.circular(20.0)),
                                                 boxShadow: [
                                                   BoxShadow(
                                                     color: Colors.white
@@ -4017,13 +3261,13 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                               child: Column(
                                                 children: [
                                                   Container(
-                                                    height: 50,
-                                                    width: 50,
+                                                    height: 40,
+                                                    width: 40,
                                                     margin: const EdgeInsets
-                                                        .fromLTRB(
-                                                        30, 30, 30, 10),
+                                                            .fromLTRB(
+                                                        30, 20, 30, 10),
                                                     decoration:
-                                                    const BoxDecoration(
+                                                        const BoxDecoration(
                                                       color: Colors.white,
                                                       image: DecorationImage(
                                                         image: AssetImage(
@@ -4033,21 +3277,21 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                                     ),
                                                   ),
                                                   Container(
-                                                    height: 80,
+                                                    height: 60,
                                                     width: 160,
                                                     color: Colors.white,
                                                     child: Center(
                                                       child: Text(
-                                                        //'Office Locator',
                                                         'Claims',
+                                                        textAlign:
+                                                            TextAlign.center,
                                                         style: TextStyle(
-                                                            fontSize: 20,
+                                                            fontSize: 16,
                                                             fontFamily:
-                                                            defaultFontFamily,
+                                                                defaultFontFamily,
                                                             fontWeight:
-                                                            FontWeight
-                                                                .bold,
-                                                            color: Color(
+                                                                FontWeight.bold,
+                                                            color: const Color(
                                                                 0xff2474b9)),
                                                       ),
                                                     ),
@@ -4057,338 +3301,1064 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                                             ),
                                           ),
 
-                                      closedElevation: 6.0,
-                                      closedShape:
-                                      const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(26 / 2),
+                                          closedElevation: 6.0,
+                                          closedShape:
+                                              const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                              Radius.circular(26 / 2),
+                                            ),
+                                          ),
+                                          openBuilder: (context,
+                                                  VoidCallback _) =>
+                                              WebViewScreen(
+                                                  key: _scaffoldKey,
+                                                  title: 'Claims',
+                                                  url_link:
+                                                      //'https://www.sudlife.in/contact-us'),
+                                                      'https://www.sudlife.in/claims'),
                                         ),
                                       ),
-                                      openBuilder: (context,
-                                          VoidCallback _) =>
-                                          WebViewScreen(
-                                              key: _scaffoldKey,
-                                              title: 'Claims',
-                                              url_link:
-                                              'https://www.sudlife.in/claims'),
-                                    ),
+                                      const SizedBox(
+                                        width: 20,
+                                      ),
+                                    ],
                                   ),
                                   const SizedBox(
-                                    width: 70,
+                                    height: 40,
                                   ),
                                 ],
                               ),
-
-                              const SizedBox(
-                                height: 40,
-                              ),
                             ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : SingleChildScrollView(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height,
+                        decoration: const BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/Background.png"),
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                        child: Center(
+                          child: SingleChildScrollView(
+                            child: Column(
+                              children: [
+                                const SizedBox(
+                                  height: 80,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            20, 0, 0, 0),
+                                        child: Text(
+                                          "SUD Life Experience Zone",
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                              fontSize: 24,
+                                              fontFamily: defaultFontFamily,
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Column(
+                                  children: [
+                                    const SizedBox(
+                                      height: 40,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const SizedBox(
+                                          width: 70,
+                                        ),
+                                        Expanded(
+                                          child: OpenContainer(
+                                            // transitionType: transitionType,
+                                            transitionType:
+                                                ContainerTransitionType.fade,
+                                            transitionDuration: const Duration(
+                                                milliseconds: 500),
+                                            tappable: false,
+
+                                            closedBuilder: (context,
+                                                    VoidCallback
+                                                        openContainer) =>
+                                                GestureDetector(
+                                              onTap: () {
+                                                restartTimer();
+                                                print('Clicker : ');
+                                                openContainer();
+                                                // your onOpen code
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                height: 190,
+                                                //width: 200,
+
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  // borderRadius: const BorderRadius
+                                                  //         .only(
+                                                  //     topRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     topLeft:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomLeft:
+                                                  //         Radius.circular(20.0)),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.white
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 5,
+                                                      blurRadius: 7,
+                                                      offset: const Offset(0,
+                                                          3), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      margin: const EdgeInsets
+                                                              .fromLTRB(
+                                                          30, 30, 30, 10),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.white,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              "assets/images/Group 3.png"),
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 80,
+                                                      //width: 160,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Buy Online',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 24,
+                                                              fontFamily:
+                                                                  defaultFontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: const Color(
+                                                                  0xff2474b9)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                            closedElevation: 6.0,
+                                            closedShape:
+                                                const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(26 / 2),
+                                              ),
+                                            ),
+                                            openBuilder: (context,
+                                                    VoidCallback _) =>
+                                                WebViewScreen(
+                                                    key: _scaffoldKey,
+                                                    title: 'Buy Online',
+                                                    url_link:
+                                                        'https://bol.sudlife.in/ProductSelection/ProductSelectionPage'),
+                                          ),
+                                          //),
+                                        ),
+                                        const SizedBox(
+                                          width: 70,
+                                        ),
+                                        Expanded(
+                                          child: OpenContainer(
+                                            // transitionType: transitionType,
+                                            transitionType:
+                                                ContainerTransitionType.fade,
+                                            transitionDuration: const Duration(
+                                                milliseconds: 500),
+                                            tappable: false,
+
+                                            closedBuilder: (context,
+                                                    VoidCallback
+                                                        openContainer) =>
+                                                GestureDetector(
+                                              onTap: () {
+                                                restartTimer();
+                                                print('Clicker : ');
+                                                openContainer();
+                                                // your onOpen code
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                height: 190,
+                                                //width: 200,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  // borderRadius: const BorderRadius
+                                                  //         .only(
+                                                  //     topRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     topLeft:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomLeft:
+                                                  //         Radius.circular(20.0)),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.white
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 5,
+                                                      blurRadius: 7,
+                                                      offset: const Offset(0,
+                                                          3), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      margin: const EdgeInsets
+                                                              .fromLTRB(
+                                                          30, 30, 30, 10),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.white,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              "assets/images/Path 92.png"),
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 80,
+                                                      width: 160,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Pay Premiums',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                                  defaultFontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: const Color(
+                                                                  0xff2474b9)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                            closedElevation: 6.0,
+                                            closedShape:
+                                                const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(26 / 2),
+                                              ),
+                                            ),
+                                            openBuilder: (context,
+                                                    VoidCallback _) =>
+                                                WebViewScreen(
+                                                    key: _scaffoldKey,
+                                                    title: 'Pay Premiums',
+                                                    url_link:
+                                                        'https://www.sudlife.in/customer-service/premium-payment-options'),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 70,
+                                        ),
+                                        Expanded(
+                                          child: OpenContainer(
+                                            // transitionType: transitionType,
+                                            transitionType:
+                                                ContainerTransitionType.fade,
+                                            transitionDuration: const Duration(
+                                                milliseconds: 500),
+                                            tappable: false,
+
+                                            closedBuilder: (context,
+                                                    VoidCallback
+                                                        openContainer) =>
+                                                GestureDetector(
+                                              onTap: () {
+                                                restartTimer();
+                                                print('Clicker : ');
+                                                openContainer();
+                                                // your onOpen code
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                height: 190,
+                                                //width: 200,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  // borderRadius: const BorderRadius
+                                                  //         .only(
+                                                  //     topRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     topLeft:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomLeft:
+                                                  //         Radius.circular(20.0)),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.white
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 5,
+                                                      blurRadius: 7,
+                                                      offset: const Offset(0,
+                                                          3), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      margin: const EdgeInsets
+                                                              .fromLTRB(
+                                                          30, 30, 30, 10),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.white,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              "assets/images/Group 3.png"),
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 80,
+                                                      //width: 160,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Insurance Plans',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                                  defaultFontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: const Color(
+                                                                  0xff2474b9)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                            closedElevation: 6.0,
+                                            closedShape:
+                                                const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(26 / 2),
+                                              ),
+                                            ),
+                                            openBuilder: (context,
+                                                    VoidCallback _) =>
+                                                WebViewScreen(
+                                                    key: _scaffoldKey,
+                                                    title: 'Insurance Plans',
+                                                    url_link:
+                                                        'https://www.sudlife.in/products/life-insurance'),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 70,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 50,
+                                    ),
+                                    Row(
+                                      children: [
+                                        const SizedBox(
+                                          width: 70,
+                                        ),
+                                        Expanded(
+                                          child: OpenContainer(
+                                            // transitionType: transitionType,
+                                            transitionType:
+                                                ContainerTransitionType.fade,
+                                            transitionDuration: const Duration(
+                                                milliseconds: 500),
+                                            tappable: false,
+
+                                            closedBuilder: (context,
+                                                    VoidCallback
+                                                        openContainer) =>
+                                                GestureDetector(
+                                              onTap: () {
+                                                restartTimer();
+                                                print('Clicker : ');
+                                                openContainer();
+                                                // your onOpen code
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                height: 190,
+                                                //width: 200,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  // borderRadius: const BorderRadius
+                                                  //         .only(
+                                                  //     topRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     topLeft:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomLeft:
+                                                  //         Radius.circular(20.0)),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.white
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 5,
+                                                      blurRadius: 7,
+                                                      offset: const Offset(0,
+                                                          3), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      margin: const EdgeInsets
+                                                              .fromLTRB(
+                                                          30, 30, 30, 10),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.white,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              "assets/images/Path 107.png"),
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 80,
+                                                      width: 160,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Calculate Your \nPremiums',
+                                                          style: TextStyle(
+                                                              fontFamily:
+                                                                  defaultFontFamily,
+                                                              fontSize: 20,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: const Color(
+                                                                  0xff2474b9)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                            closedElevation: 6.0,
+                                            closedShape:
+                                                const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(26 / 2),
+                                              ),
+                                            ),
+                                            openBuilder: (context,
+                                                    VoidCallback _) =>
+                                                WebViewScreen(
+                                                    key: _scaffoldKey,
+                                                    title:
+                                                        'Calculate Your Premiums',
+                                                    url_link:
+                                                        'https://si.sudlife.in/SalesIllustration/ProductPage.aspx'),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 70,
+                                        ),
+                                        Expanded(
+                                          child: OpenContainer(
+                                            // transitionType: transitionType,
+                                            transitionType:
+                                                ContainerTransitionType.fade,
+                                            transitionDuration: const Duration(
+                                                milliseconds: 500),
+                                            tappable: false,
+
+                                            closedBuilder: (context,
+                                                    VoidCallback
+                                                        openContainer) =>
+                                                GestureDetector(
+                                              onTap: () {
+                                                restartTimer();
+                                                print('Clicker : ');
+                                                openContainer();
+                                                // your onOpen code
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                height: 190,
+                                                //width: 200,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  // borderRadius: const BorderRadius
+                                                  //         .only(
+                                                  //     topRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     topLeft:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomLeft:
+                                                  //         Radius.circular(20.0)),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.white
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 5,
+                                                      blurRadius: 7,
+                                                      offset: const Offset(0,
+                                                          3), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      margin: const EdgeInsets
+                                                              .fromLTRB(
+                                                          30, 30, 30, 10),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.white,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              "assets/images/Group 6.png"),
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 80,
+                                                      //width: 160,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'Customer Portal \n(Self-Help)',
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                                  defaultFontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: const Color(
+                                                                  0xff2474b9)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                            closedElevation: 6.0,
+                                            closedShape:
+                                                const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(26 / 2),
+                                              ),
+                                            ),
+                                            openBuilder: (context,
+                                                    VoidCallback _) =>
+                                                WebViewScreen(
+                                                    key: _scaffoldKey,
+                                                    title:
+                                                        'Customer Portal (Self-Help)',
+                                                    url_link:
+                                                        //'https://customer.sudlife.in'),
+                                                        'https://www.sudlife.in/contact-us'),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 70,
+                                        ),
+                                        Expanded(
+                                          child: OpenContainer(
+                                            // transitionType: transitionType,
+                                            transitionType:
+                                                ContainerTransitionType.fade,
+                                            transitionDuration: const Duration(
+                                                milliseconds: 500),
+                                            tappable: false,
+
+                                            closedBuilder: (context,
+                                                    VoidCallback
+                                                        openContainer) =>
+                                                GestureDetector(
+                                              onTap: () {
+                                                restartTimer();
+                                                print('Claims Clicker : ');
+                                                openContainer();
+                                              },
+                                              child: Container(
+                                                margin:
+                                                    const EdgeInsets.all(10),
+                                                height: 190,
+                                                //width: 200,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  // borderRadius: const BorderRadius
+                                                  //         .only(
+                                                  //     topRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomRight:
+                                                  //         Radius.circular(20.0),
+                                                  //     topLeft:
+                                                  //         Radius.circular(20.0),
+                                                  //     bottomLeft:
+                                                  //         Radius.circular(20.0)),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.white
+                                                          .withOpacity(0.5),
+                                                      spreadRadius: 5,
+                                                      blurRadius: 7,
+                                                      offset: const Offset(0,
+                                                          3), // changes position of shadow
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      height: 50,
+                                                      width: 50,
+                                                      margin: const EdgeInsets
+                                                              .fromLTRB(
+                                                          30, 30, 30, 10),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.white,
+                                                        image: DecorationImage(
+                                                          image: AssetImage(
+                                                              "assets/images/claims.png"),
+                                                          fit: BoxFit.contain,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Container(
+                                                      height: 80,
+                                                      width: 160,
+                                                      color: Colors.white,
+                                                      child: Center(
+                                                        child: Text(
+                                                          //'Office Locator',
+                                                          'Claims',
+                                                          style: TextStyle(
+                                                              fontSize: 20,
+                                                              fontFamily:
+                                                                  defaultFontFamily,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              color: const Color(
+                                                                  0xff2474b9)),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+
+                                            closedElevation: 6.0,
+                                            closedShape:
+                                                const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(26 / 2),
+                                              ),
+                                            ),
+                                            openBuilder: (context,
+                                                    VoidCallback _) =>
+                                                WebViewScreen(
+                                                    key: _scaffoldKey,
+                                                    title: 'Claims',
+                                                    url_link:
+                                                        'https://www.sudlife.in/claims'),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 70,
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(
+                                      height: 40,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+              Platform.isAndroid
+                  ? Positioned(
+                      top: 30.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(30, 10, 30, 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              // height: 70,
+                              // width: 160,
+                              padding: const EdgeInsets.all(14),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    bottomRight: Radius.circular(15.0),
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0)),
+                              ),
+                              child: Container(
+                                // height: 50,
+                                // width: 100,
+                                padding:
+                                    const EdgeInsets.fromLTRB(60, 15, 60, 15),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/site-logo.png"),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                child: null,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Positioned(
+                      top: 50.0,
+                      left: 0.0,
+                      right: 0.0,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              // height: 70,
+                              // width: 160,
+                              padding: const EdgeInsets.all(14),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    bottomRight: Radius.circular(15.0),
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0)),
+                              ),
+                              child: Container(
+                                // height: 50,
+                                // width: 100,
+                                padding:
+                                    const EdgeInsets.fromLTRB(60, 15, 60, 15),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/site-logo.png"),
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                child: null,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+              widthSize < 900
+                  ? Positioned(
+                      bottom: 80.0,
+                      left: 10,
+                      right: 10,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(
+                            width: 40,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              dispose();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    // builder: (context) => ChessGame()),
+                                    builder: (context) =>
+                                        const FunFacts_Screen()),
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              height: 80,
+                              width: 60,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage("assets/games/Fun Facts.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 40,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              dispose();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    // builder: (context) => ChessGame()),
+                                    builder: (context) => const Quiz_Screen()),
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              height: 80,
+                              width: 60,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage("assets/games/Quiz Time.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 40,
+                          ),
+                        ],
+                      ),
+                    )
+                  : Positioned(
+                      top: 30.0,
+                      right: 30.0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const SizedBox(
+                            width: 40,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              dispose();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    // builder: (context) => ChessGame()),
+                                    builder: (context) =>
+                                        const FunFacts_Screen()),
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              height: 80,
+                              width: 60,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage("assets/games/Fun Facts.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 40,
+                          ),
+                          InkWell(
+                            onTap: () {
+                              dispose();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    // builder: (context) => ChessGame()),
+                                    builder: (context) => const Quiz_Screen()),
+                              );
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(10),
+                              height: 80,
+                              width: 60,
+                              decoration: const BoxDecoration(
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage("assets/games/Quiz Time.png"),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 40,
                           ),
                         ],
                       ),
                     ),
-                  ),
-                ),
-              ),
 
-              Platform.isAndroid
+              widthSize < 900
                   ? Positioned(
-                top: 30.0,
-                left: 0.0,
-                right: 0.0,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(30, 10, 30, 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        // height: 70,
-                        // width: 160,
-                        padding: const EdgeInsets.all(14),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15.0),
-                              bottomRight: Radius.circular(15.0),
-                              topLeft: Radius.circular(15.0),
-                              bottomLeft: Radius.circular(15.0)),
-                        ),
-                        child: Container(
-                          // height: 50,
-                          // width: 100,
-                          padding:
-                          const EdgeInsets.fromLTRB(60, 15, 60, 15),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  "assets/images/site-logo.png"),
-                              fit: BoxFit.contain,
+                      bottom: 30.0,
+                      left: 30,
+                      right: 30,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                        child: SizedBox(
+                          height: 45,
+                          width: 180,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              side: const BorderSide(
+                                width: 2,
+                                color: Color(0xff0F5A93),
+                              ),
                             ),
-                          ),
-                          child: null,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-                  : Positioned(
-                top: 50.0,
-                left: 0.0,
-                right: 0.0,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(30, 0, 30, 30),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        // height: 70,
-                        // width: 160,
-                        padding: const EdgeInsets.all(14),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15.0),
-                              bottomRight: Radius.circular(15.0),
-                              topLeft: Radius.circular(15.0),
-                              bottomLeft: Radius.circular(15.0)),
-                        ),
-                        child: Container(
-                          // height: 50,
-                          // width: 100,
-                          padding:
-                          const EdgeInsets.fromLTRB(60, 15, 60, 15),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  "assets/images/site-logo.png"),
-                              fit: BoxFit.contain,
+                            child: const Text(
+                              "Exit The Zone",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                              ),
                             ),
-                          ),
-                          child: null,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              width_size < 900
-                  ? Positioned(
-                bottom: 80.0,
-                left: 10,
-                right: 10,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    InkWell(
-                      onTap: () {
-
-                        dispose();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            // builder: (context) => ChessGame()),
-                              builder: (context) =>
-                              const FunFacts_Screen()),
-                        );
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        height: 80,
-                        width: 60,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image:
-                            AssetImage("assets/games/Fun Facts.png"),
-                            fit: BoxFit.fill,
+                            onPressed: () async {
+                              _showMyDialog();
+                            },
                           ),
                         ),
                       ),
-                    ),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        dispose();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            // builder: (context) => ChessGame()),
-                              builder: (context) => const Quiz_Screen()),
-                        );
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        height: 80,
-                        width: 60,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image:
-                            AssetImage("assets/games/Quiz Time.png"),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                  ],
-                ),
-              )
+                    )
                   : Positioned(
-                top: 30.0,
-                right: 30.0,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    InkWell(
-                      onTap: () {
+                      bottom: 30.0,
+                      right: 30.0,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
+                        child: SizedBox(
+                          height: 45,
+                          width: 180,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              side: const BorderSide(
+                                width: 2,
+                                color: Color(0xff0F5A93),
+                              ),
+                            ),
+                            child: const Text(
+                              "Exit The Zone",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                            onPressed: () async {
+                              _showMyDialog();
 
-                        dispose();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            // builder: (context) => ChessGame()),
-                              builder: (context) =>
-                              const FunFacts_Screen()),
-                        );
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        height: 80,
-                        width: 60,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image:
-                            AssetImage("assets/games/Fun Facts.png"),
-                            fit: BoxFit.fill,
+                              // clear();
+                              // Navigator.pop(context);
+                              // Navigator.push(
+                              //     context,
+                              //     MaterialPageRoute(
+                              //         builder: (context) => BannerScreen()));
+                            },
                           ),
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        dispose();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            // builder: (context) => ChessGame()),
-                              builder: (context) => const Quiz_Screen()),
-                        );
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.all(10),
-                        height: 80,
-                        width: 60,
-                        decoration: const BoxDecoration(
-                          image: DecorationImage(
-                            image:
-                            AssetImage("assets/games/Quiz Time.png"),
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 40,
-                    ),
-                  ],
-                ),
-              ),
-
-              width_size < 900
-                  ? Positioned(
-                bottom: 30.0,
-                left: 30,
-                right: 30,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                  child: Container(
-                    height: 45,
-                    width: 180,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        side: const BorderSide(
-                          width: 2,
-                          color: Color(0xff0F5A93),
-                        ),
-                      ),
-                      child: const Text(
-                        "Exit The Zone",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.redAccent,
-                        ),
-                      ),
-                      onPressed: () async {
-
-
-                        _showMyDialog();
-
-                      },
-                    ),
-                  ),
-                ),
-              )
-                  : Positioned(
-                bottom: 30.0,
-                right: 30.0,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 0, 0),
-                  child: Container(
-                    height: 45,
-                    width: 180,
-                    child: OutlinedButton(
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0)),
-                        side: const BorderSide(
-                          width: 2,
-                          color: Color(0xff0F5A93),
-                        ),
-                      ),
-                      child: const Text(
-                        "Exit The Zone",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.redAccent,
-                        ),
-                      ),
-                      onPressed: () async {
-
-                        _showMyDialog();
-
-                        // clear();
-                        // Navigator.pop(context);
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => BannerScreen()));
-                      },
-                    ),
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -4396,7 +4366,7 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
     );
   }
 
-  void restartTimer(){
+  void restartTimer() {
     if (_timer.isActive) {
       _timer.cancel();
       print("ZoneHome Timer Restarted ");
@@ -4422,8 +4392,7 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => BannerScreen()));
-
+                        builder: (context) => const BannerScreen()));
               },
               child: const Text('Yes'),
             ),
@@ -4578,7 +4547,7 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
 
   @override
   void dispose() {
-    if(_timer.isActive){
+    if (_timer.isActive) {
       _timer.cancel();
       print("ZoneHome Timer Canceled in Dispose() ");
     }
@@ -4619,5 +4588,4 @@ class ZoneHomeScreenState extends State<ZoneHomeScreen>
       _stackToView = 0;
     });
   }
-
 }

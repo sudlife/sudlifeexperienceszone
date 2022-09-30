@@ -1,15 +1,19 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
 import 'banner_screen.dart';
 
 class GameWebViewScreen extends StatefulWidget {
   static const routeName = '/webview_screen';
-  final String url_link, title;
-  GameWebViewScreen({required Key key, required this.url_link, required this.title})
+  final String urlLink, title;
+  const GameWebViewScreen(
+      {required Key key, required this.urlLink, required this.title})
       : super(key: key);
 
   @override
@@ -17,43 +21,49 @@ class GameWebViewScreen extends StatefulWidget {
 }
 
 class _GameWebViewState extends State<GameWebViewScreen> {
-
   int _stackToView = 1;
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
 
   late Timer _timer;
-  int _start = 360; // 5 minute
+  int _start = 60; // 2 minute
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
     _timer = Timer.periodic(
       oneSec,
-          (Timer timer) {
+      (Timer timer) {
         if (_start == 0) {
-          clear();
-          Navigator.of(context).pop();
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => BannerScreen()));
-        } else {
-          if (mounted) {
-            setState(() {
-              _start--;
-            });
+          if (FirebaseAuth.instance.currentUser != null) {
+            logOutUser(context);
+            _timer.cancel();
+            Navigator.pop(context);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => const BannerScreen()));
           }
+        } else {
+          _start--;
+          print(_start);
         }
       },
     );
   }
 
+  void logOutUser(BuildContext context) {
+    clear();
+    FirebaseAuth.instance.signOut();
+    setState(() {});
+  }
+
   @override
   void initState() {
-  //  startTimer();
+    //startTimer();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    String url = widget.url_link;
+    String url = widget.urlLink;
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
@@ -61,7 +71,6 @@ class _GameWebViewState extends State<GameWebViewScreen> {
     ]);
 
     return Scaffold(
-        appBar: buildAppBar(),
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.transparent,
         body: IndexedStack(
@@ -71,34 +80,59 @@ class _GameWebViewState extends State<GameWebViewScreen> {
               children: <Widget>[
                 Expanded(
                     child: WebView(
-                      initialUrl: widget.url_link,
-                      gestureNavigationEnabled: false,
-                      javascriptMode: JavascriptMode.unrestricted,
-                      javascriptChannels: <JavascriptChannel>{
-                        JavascriptChannel(
-                            name: 'onExitToMainMenu',
-                            onMessageReceived: (s) {
-                              Navigator.of(context).pop();
-                              Navigator.push(
-                                  context, MaterialPageRoute(builder: (context) => BannerScreen()));
-                              // Scaffold.of(context).showSnackBar(SnackBar(
-                              //   content: Text(s.message),
-                              // ));
-                            }),
-                      },
-                      onPageFinished: _handleLoad,
-                      onWebViewCreated: (WebViewController webViewController) {
-                        _controller.complete(webViewController);
-                      },
-                    ))
+                  initialUrl: widget.urlLink,
+                  gestureNavigationEnabled: false,
+                  navigationDelegate: (request) {
+                    print("Alok Dubey ");
+                    print(request.url);
+                    if (request.url.contains(
+                        'https://d1jm9hpbqnjqwi.cloudfront.net/exit')) {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            // builder: (context) => ChessGame()),
+                            //  builder: (context) => ZoneHomeScreen()),
+                            builder: (context) => const BannerScreen()),
+                      ); // Close current window
+                      return NavigationDecision.prevent; // Prevent opening url
+                    } else if (request.url.contains(
+                        'https://bol.sudlife.in/ProductSelection/ProductSelectionPage')) {
+                      _launchUrl(request.url);
+                      return NavigationDecision.prevent; // Prevent opening url
+                    } else {
+                      return NavigationDecision.navigate; // Default decision
+                    }
+                  },
+                  javascriptMode: JavascriptMode.unrestricted,
+                  onPageFinished: _handleLoad,
+                  onWebViewCreated: (WebViewController webViewController) {
+                    _controller.complete(webViewController);
+                  },
+                ))
               ],
             ),
-            Container(
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                )),
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
           ],
         ));
+  }
+
+  Future<void> _launchUrl(String url) async {
+    try {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } catch (e) {
+      throw 'Could not launch $url';
+    }
+    /*
+    *   if (await canLaunchUrl(Uri.parse(link.url))) {
+                        await launchUrl(Uri.parse(link.url),
+                            mode: LaunchMode.externalApplication);
+                      } else {
+                        throw 'Could not launch $link';
+                      }
+                      * */
   }
 
   Future<void> clear() async {
@@ -249,24 +283,22 @@ class _GameWebViewState extends State<GameWebViewScreen> {
   AppBar buildAppBar() {
     return AppBar(
       leading: IconButton(
-        icon: Icon(Icons.keyboard_arrow_left, color: Colors.white),
-        onPressed: () {
-          Navigator.of(context).pop();
-          Navigator.of(context).push(PageRouteBuilder(
-              pageBuilder: (context, animation, secondaryAnimation) {
-                return BannerScreen();
-              },
-              transitionDuration: const Duration(milliseconds: 500),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                return FadeTransition(
-                  opacity: animation,
-                  child: child,
-                );
-              }));
-    }
-
-      ),
+          icon: const Icon(Icons.keyboard_arrow_left, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pop();
+            Navigator.of(context).push(PageRouteBuilder(
+                pageBuilder: (context, animation, secondaryAnimation) {
+                  return const BannerScreen();
+                },
+                transitionDuration: const Duration(milliseconds: 500),
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                }));
+          }),
       // elevation: 0,
       // title: Text(
       //   widget.title,
@@ -275,7 +307,7 @@ class _GameWebViewState extends State<GameWebViewScreen> {
       //backgroundColor: Color(0x44000000),
       elevation: 0,
       backgroundColor: Colors.transparent,
-      brightness: Brightness.light,
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
     );
   }
 }

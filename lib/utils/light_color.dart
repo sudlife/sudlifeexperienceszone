@@ -50,14 +50,14 @@ class LightColor {
   static const Color yboxbackgreen = Color(0xffC3FF77);
   static const Color yboxdarkbackgreen = Color(0xff00B232);
 
-  static const Color colorOne = Color(0xff002DB18);
-  static const Color colorTwo = Color(0xff0BB0000);
-  static const Color colorThr = Color(0xff0F6F6F6);
+  static const Color colorOne = Color(0xff002db18);
+  static const Color colorTwo = Color(0xff0bb0000);
+  static const Color colorThr = Color(0xff0f6f6f6);
 
-  static const Color titleTextColor = const Color(0xff5a5d85);
-  static const Color subTitleTextColor = const Color(0xff797878);
+  static const Color titleTextColor = Color(0xff5a5d85);
+  static const Color subTitleTextColor = Color(0xff797878);
 
-  static const Color bottonTitleTextColor = const Color(0xffd4d4ea);
+  static const Color bottonTitleTextColor = Color(0xffd4d4ea);
 
   static const Color grey = Color(0xff9D99A7);
   static const Color darkgrey = Color(0xff625f6a);

@@ -7,13 +7,13 @@ class CrossClipper extends CustomClipper<Path> {
   late double _lowerEnding;
 
   CrossClipper({this.showTop = true, this.clipHeightRatio = 0.5}) {
-    this._higherEnding = clipHeightRatio + 0.0;
-    this._lowerEnding = clipHeightRatio - 0.0;
+    _higherEnding = clipHeightRatio + 0.0;
+    _lowerEnding = clipHeightRatio - 0.0;
   }
 
   @override
   Path getClip(Size size) {
-    if (this.showTop) {
+    if (showTop) {
       return clipBottom(size);
     } else {
       return clipTop(size);
