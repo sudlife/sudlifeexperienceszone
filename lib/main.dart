@@ -2,9 +2,11 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:responsive_framework/responsive_wrapper.dart';
 import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'package:sudlifeexperienceszone/screens/splash_screen.dart';
+import 'package:toast/toast.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
@@ -69,6 +71,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    ToastContext().init(context);
     return MaterialApp(
       builder: (context, widget) => ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(context, widget!),
@@ -82,7 +85,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       ),
       title: 'Experience Zone',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+        fontFamily: GoogleFonts.poppins().fontFamily,
+        brightness: Brightness.dark,
+      ),
       //home: ZoneHomeScreen(),
       home: const SplashScreen(),
     );

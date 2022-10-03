@@ -432,20 +432,14 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
     //   DeviceOrientation.landscapeRight,
     // ]);
 
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
         extendBodyBehindAppBar: false,
-        // appBar: AppBar(
-        //   //backgroundColor: Colors.black,
-        //   backgroundColor: Colors.transparent,
-        //   leading: IconButton(
-        //     icon: Icon(Icons.arrow_back, color: Colors.white),
-        //     onPressed: () => Navigator.of(context).pop(),
-        //   ),
-        //   title: Text(""),
-        //   centerTitle: false,
-        // ),
         body: GestureDetector(
           onTap: () {
             if (FirebaseAuth.instance.currentUser != null) {
@@ -477,47 +471,6 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
-                            //
-                            // Padding(
-                            //   padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       Container(
-                            //         // height: 70,
-                            //         // width: 160,
-                            //         padding: const EdgeInsets.all(14),
-                            //         decoration: const BoxDecoration(
-                            //           color: Colors.white,
-                            //           borderRadius: BorderRadius.only(
-                            //               topRight: Radius.circular(15.0),
-                            //               bottomRight: Radius.circular(15.0),
-                            //               topLeft: Radius.circular(15.0),
-                            //               bottomLeft: Radius.circular(15.0)),
-                            //         ),
-                            //         child: Container(
-                            //           // height: 50,
-                            //           // width: 100,
-                            //           padding:
-                            //               const EdgeInsets.fromLTRB(60, 20, 60, 20),
-                            //           decoration: const BoxDecoration(
-                            //             color: Colors.white,
-                            //             image: DecorationImage(
-                            //               image: AssetImage(
-                            //                   "assets/images/site-logo.png"),
-                            //               fit: BoxFit.contain,
-                            //             ),
-                            //           ),
-                            //           child: null,
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                            // const SizedBox(
-                            //   height: 10,
-                            // ),
-
                             SingleChildScrollView(
                               child: Container(
                                 padding: const EdgeInsets.fromLTRB(0, 60, 0, 0),

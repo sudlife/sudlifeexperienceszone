@@ -8,11 +8,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudlifeexperienceszone/screens/quiz_screen.dart';
 import 'package:sudlifeexperienceszone/screens/webview_screen.dart';
 import 'package:sudlifeexperienceszone/utils/root_check.dart';
+import 'package:toast/toast.dart';
 
 import '../animation/fadeAnimation.dart';
 import '../utils/light_color.dart';
@@ -83,7 +86,7 @@ class BannerScreenState extends State<BannerScreen>
   late Animation<double> curtainOffset;
   TextEditingController root_controller = TextEditingController();
 
-  String defaultFontFamily = 'Montserrat';
+  String defaultFontFamily = GoogleFonts.poppins().fontFamily!;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   final TextEditingController _nameController = TextEditingController();
@@ -123,9 +126,11 @@ class BannerScreenState extends State<BannerScreen>
     );
   }
 
+  var version = "1.2.0 (3)".obs;
   @override
   void initState() {
     checkRoot();
+    getVersion();
     clear();
     if (FirebaseAuth.instance.currentUser != null) {
       startTimer();
@@ -135,6 +140,7 @@ class BannerScreenState extends State<BannerScreen>
   }
 
   late double widthSize;
+  late double heightSize;
 
   List<Item> users = [
     const Item('Self-Help', 'assets/images/Group 3.png'),
@@ -166,11 +172,11 @@ class BannerScreenState extends State<BannerScreen>
   @override
   Widget build(BuildContext context) {
     widthSize = MediaQuery.of(context).size.width;
-    if (widthSize > 500) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-      ]);
-    }
+    heightSize = MediaQuery.of(context).size.height;
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
 
     return WillPopScope(
       onWillPop: () async => false,
@@ -196,9 +202,11 @@ class BannerScreenState extends State<BannerScreen>
               ? Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/images/game_bg.png"),
+                      image: AssetImage(widthSize < 500
+                          ? "assets/images/game_bg.png"
+                          : "assets/images/game_bg_tab.png"),
                       fit: BoxFit.fill,
                     ),
                   ),
@@ -351,7 +359,7 @@ class BannerScreenState extends State<BannerScreen>
                                   ),
                                   child: Text(
                                     FirebaseAuth.instance.currentUser != null
-                                        ? "Exit"
+                                        ? "Logout"
                                         : "Login",
                                     style: const TextStyle(
                                       fontSize: 16,
@@ -380,9 +388,14 @@ class BannerScreenState extends State<BannerScreen>
                                     color: Colors.white),
                               ),
                             ),
+                            Obx(() => Text(
+                                  version.value,
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 12),
+                                )),
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ))
               : Container(
@@ -493,7 +506,6 @@ class BannerScreenState extends State<BannerScreen>
     _femaleChecked = false.obs;
     _maleChecked = true.obs;
     _continuePressed = false.obs;
-    _otpDone = false.obs;
     _continuePressed.value = false;
     _otpDone.value = false;
     _nameController.clear();
@@ -828,9 +840,8 @@ class BannerScreenState extends State<BannerScreen>
                               showSnackBar("Only Number are allowed");
                             } else {
                               _continuePressed.value = true;
-
-                              // showSnackBar("Processing...");
                               _submitPhoneNumber();
+                              // showSnackBar("Processing...");
                             }
                           },
                           child: Container(
@@ -1192,27 +1203,27 @@ class BannerScreenState extends State<BannerScreen>
       //     TargetPlatform.macOS == defaultTargetPlatform) {
 
       try {
-        final result = await InternetAddress.lookup('example.com');
+        final result = await InternetAddress.lookup('google.com');
         if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
           await FirebaseAuth.instance.verifyPhoneNumber(
             phoneNumber: phoneNumber,
             timeout: const Duration(seconds: 120),
-            verificationFailed: (Exception error) {
+            verificationFailed: (FirebaseAuthException error) {
               if (kDebugMode) {
-                print("Error => ${error.toString()}");
+                print("Error => ${error.message}");
               }
               _continuePressed.value = false;
-              showSnackBar("Something went wrong, please try again.");
+              showSnackBar("${error.message}");
             },
             codeSent: (String verificationId, int? resendToken) async {
               showSnackBar("OTP sent!");
               _start = 60;
-
               _otpSent.value = true;
               verification_id = verificationId;
               Navigator.pop(context);
-              Future.delayed(
-                  const Duration(milliseconds: 200), () => loginView(context));
+              WidgetsBinding.instance
+                  .addPostFrameCallback((timeStamp) => loginView(context));
+              // Future.delayed(const Duration(milliseconds: 200), () => loginView(context));
             },
             verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
               showSnackBar("Verified.");
@@ -1253,15 +1264,15 @@ class BannerScreenState extends State<BannerScreen>
           TargetPlatform.iOS == defaultTargetPlatform ||
           TargetPlatform.macOS == defaultTargetPlatform) {
         try {
-          final result = await InternetAddress.lookup('example.com');
+          final result = await InternetAddress.lookup('google.com');
           if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
             await FirebaseAuth.instance.verifyPhoneNumber(
               phoneNumber: phoneNumber,
               timeout: const Duration(seconds: 120),
-              verificationFailed: (Exception error) {
+              verificationFailed: (FirebaseAuthException error) {
                 print(error);
                 _continuePressed.value = false;
-                showSnackBar("Something went wrong, please try again.");
+                showSnackBar("${error.message}");
               },
               codeSent: (String verificationId, int? resendToken) async {
                 showSnackBar("Resent OTP !");
@@ -1270,8 +1281,9 @@ class BannerScreenState extends State<BannerScreen>
                 _continuePressed.value = true;
                 verification_id = verificationId;
                 Navigator.pop(context);
-                Future.delayed(const Duration(milliseconds: 200),
-                    () => loginView(context));
+                WidgetsBinding.instance
+                    .addPostFrameCallback((timeStamp) => loginView(context));
+                //Future.delayed(const Duration(milliseconds: 200), () => loginView(context));
               },
               verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
                 showSnackBar("Verified.");
@@ -1282,6 +1294,7 @@ class BannerScreenState extends State<BannerScreen>
                 //showSnackBar("Timeout!");
               },
             );
+
             print('connected');
           }
         } on SocketException catch (_) {
@@ -1351,11 +1364,17 @@ class BannerScreenState extends State<BannerScreen>
         showSnackBar("Enter Correct OTP");
       }
     } on FirebaseAuthException catch (authError) {
+      print("CDE REQUEST");
       print(authError.code);
       print(authError.message);
       switch (authError.code) {
         case 'invalid-verification-code':
           showSnackBar("OTP Mismatch!");
+          break;
+        case 'session-expired':
+          _otpSent.value = false;
+          Navigator.pop(context);
+          showSnackBar("Session Expired");
           break;
         default:
           showSnackBar("Something went wrong!");
@@ -1426,7 +1445,13 @@ class BannerScreenState extends State<BannerScreen>
 
   Future showSnackBar(String error) async {
     HapticFeedback.vibrate();
-    final snackBar = SnackBar(
+    ToastContext().init(context);
+    Toast.show(error,
+        duration: Toast.lengthLong,
+        gravity: Toast.bottom,
+        backgroundColor: Colors.blueAccent,
+        textStyle: const TextStyle(color: Colors.white));
+    /* final snackBar = SnackBar(
       backgroundColor: LightColor.appBlue,
       content: Text(
         error,
@@ -1445,7 +1470,7 @@ class BannerScreenState extends State<BannerScreen>
     // and use it to show a SnackBar.
     ScaffoldMessenger.of(context).showSnackBar(snackBar).closed.then((value) {
       ScaffoldMessenger.of(context).clearSnackBars();
-    });
+    });*/
   }
 
   void redirectToWeb({required String value}) async {
@@ -1535,6 +1560,11 @@ class BannerScreenState extends State<BannerScreen>
     _otpSent.value = false;
     _otpDone.value = false;
     setState(() {});
+  }
+
+  Future<void> getVersion() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    version.value = "${packageInfo.version} (${packageInfo.buildNumber})";
   }
 }
 

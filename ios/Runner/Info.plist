@@ -2,12 +2,11 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 	<dict>
-
-        <key>LSApplicationQueriesSchemes</key>
-        <array>
-          <string>sms</string>
-          <string>tel</string>
-        </array>
+		<key>LSApplicationQueriesSchemes</key>
+		<array>
+			<string>sms</string>
+			<string>tel</string>
+		</array>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
 		<key>CFBundleDevelopmentRegion</key>
@@ -69,10 +68,9 @@
 		<false/>
 		<key>UIStatusBarHidden</key>
 		<false/>
-        
-        <key>BGTaskSchedulerPermittedIdentifiers</key>
-        <array>
-            <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-        </array>
+		<key>BGTaskSchedulerPermittedIdentifiers</key>
+		<array>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+		</array>
 	</dict>
 </plist>

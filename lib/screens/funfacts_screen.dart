@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_chat_bubble/bubble_type.dart';
 import 'package:flutter_chat_bubble/chat_bubble.dart';
 import 'package:flutter_chat_bubble/clippers/chat_bubble_clipper_6.dart';
@@ -322,6 +323,10 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
     //   DeviceOrientation.landscapeLeft,
     //   DeviceOrientation.landscapeRight,
     // ]);
+
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
 
     return WillPopScope(
       onWillPop: () async => false,

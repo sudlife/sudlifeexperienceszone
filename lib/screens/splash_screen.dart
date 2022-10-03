@@ -21,6 +21,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(

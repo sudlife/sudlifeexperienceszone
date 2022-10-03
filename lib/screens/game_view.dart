@@ -63,8 +63,6 @@ class _GameWebViewState extends State<GameWebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String url = widget.urlLink;
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
@@ -83,8 +81,6 @@ class _GameWebViewState extends State<GameWebViewScreen> {
                   initialUrl: widget.urlLink,
                   gestureNavigationEnabled: false,
                   navigationDelegate: (request) {
-                    print("Alok Dubey ");
-                    print(request.url);
                     if (request.url.contains(
                         'https://d1jm9hpbqnjqwi.cloudfront.net/exit')) {
                       Navigator.pop(context);

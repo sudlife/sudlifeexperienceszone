@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sudlifeexperienceszone/screens/quiz_screen.dart';
 
@@ -54,7 +55,9 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print("ScoreBoard Screen");
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
