@@ -31,32 +31,25 @@ class Item {
 class GameBox {
   late String url;
   late String name;
-  late String image_url;
+  late String imageUrl;
 
-  GameBox({required this.url, required this.name, required this.image_url});
+  GameBox({required this.url, required this.name, required this.imageUrl});
 }
 
 List<GameBox> gameList = [
   GameBox(
-      url: "https://d1jm9hpbqnjqwi.cloudfront.net",
-      name: "Coin Saver",
-      image_url: "assets/game/coin Saver.png"),
+      url: "null", name: "Coin Saver", imageUrl: "assets/game/coin Saver.png"),
   GameBox(
       url: "https://d1jm9hpbqnjqwi.cloudfront.net",
       name: "Aimvestment",
-      image_url: "assets/game/Aimvestment.png"),
+      imageUrl: "assets/game/Aimvestment.png"),
   GameBox(
-      url: "https://d1jm9hpbqnjqwi.cloudfront.net",
+      url: "null",
       name: "Protection Rush",
-      image_url: "assets/game/Protection Rush.png"),
+      imageUrl: "assets/game/Protection Rush.png"),
+  GameBox(url: "null", name: "Fun Facts", imageUrl: "assets/game/Funfacts.png"),
   GameBox(
-      url: "https://d1jm9hpbqnjqwi.cloudfront.net",
-      name: "Fun Facts",
-      image_url: "assets/game/Funfacts.png"),
-  GameBox(
-      url: "https://d1jm9hpbqnjqwi.cloudfront.net",
-      name: "Quiz Time",
-      image_url: "assets/game/Quiz Time.png"),
+      url: "null", name: "Quiz Time", imageUrl: "assets/game/Quiz Time.png"),
 ];
 
 class BannerScreen extends StatefulWidget {
@@ -79,6 +72,7 @@ class BannerScreenState extends State<BannerScreen>
   var _maleChecked = true.obs;
   var _continuePressed = false.obs;
   var _otpDone = false.obs;
+  var version = "1.2.0 (3)".obs;
 
   var _otpSent = false.obs;
   late CurvedAnimation curve;
@@ -126,7 +120,6 @@ class BannerScreenState extends State<BannerScreen>
     );
   }
 
-  var version = "1.2.0 (3)".obs;
   @override
   void initState() {
     checkRoot();
@@ -173,7 +166,6 @@ class BannerScreenState extends State<BannerScreen>
   Widget build(BuildContext context) {
     widthSize = MediaQuery.of(context).size.width;
     heightSize = MediaQuery.of(context).size.height;
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
@@ -210,7 +202,8 @@ class BannerScreenState extends State<BannerScreen>
                       fit: BoxFit.fill,
                     ),
                   ),
-                  child: ListView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(30, 50, 30, 0),
@@ -248,11 +241,8 @@ class BannerScreenState extends State<BannerScreen>
                         child: Text(
                           "SUD Life Experience Zone",
                           textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 22,
-                              fontFamily: defaultFontFamily,
-                              fontWeight: FontWeight.w800,
-                              color: Colors.white),
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w700, fontSize: 26),
                         ),
                       ),
                       Align(
@@ -269,7 +259,7 @@ class BannerScreenState extends State<BannerScreen>
                                 bottomLeft: Radius.circular(15.0)),
                           ),
                           padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                          margin: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                          margin: const EdgeInsets.fromLTRB(0, 0, 20, 10),
                           child: DropdownButton(
                             dropdownColor: Colors.white,
                             iconSize: 24,
@@ -322,8 +312,27 @@ class BannerScreenState extends State<BannerScreen>
                           ),
                         ),
                       ),
+                      const Expanded(
+                        child: SizedBox(
+                          height: 10,
+                        ),
+                      ),
+                      /*    SizedBox(
+                        height: 300,
+                        child: Swiper(
+                          itemBuilder: (BuildContext context, int index) {
+                            return gameBox(context, gameList[index].url,
+                                gameList[index].name, gameList[index].imageUrl);
+                          },
+                          itemCount: gameList.length,
+                          viewportFraction: 0.8,
+                          scale: 0.9,
+                        ),
+                      ),*/
+
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
                         padding: const EdgeInsets.all(10),
                         child: Row(
                           children: [
@@ -331,69 +340,61 @@ class BannerScreenState extends State<BannerScreen>
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: gameBox(context, element.url,
-                                    element.name, element.image_url),
+                                    element.name, element.imageUrl),
                               ),
                             }
                           ],
                         ),
                       ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                              child: SizedBox(
-                                height: 45,
-                                width: 180,
-                                child: OutlinedButton(
-                                  style: OutlinedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    side: const BorderSide(
-                                      width: 2,
-                                      color: Color(0xff0F5A93),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    FirebaseAuth.instance.currentUser != null
-                                        ? "Logout"
-                                        : "Login",
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    // _showMyDialog();
-                                    FirebaseAuth.instance.currentUser != null
-                                        ? _showMyDialog()
-                                        : loginView(context);
-                                  },
-                                ),
+                      const Expanded(
+                        child: SizedBox(
+                          height: 10,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                        child: SizedBox(
+                          height: 60,
+                          width: 160,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              side: const BorderSide(
+                                width: 2,
+                                color: Color(0xff0F5A93),
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
-                              child: Text(
-                                "Protecting Families, Enriching Lives",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: 24,
-                                    fontFamily: defaultFontFamily,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.white),
+                            child: Text(
+                              FirebaseAuth.instance.currentUser != null
+                                  ? "Logout"
+                                  : "Login",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
                               ),
                             ),
-                            Obx(() => Text(
-                                  version.value,
-                                  style: TextStyle(
-                                      color: Colors.grey, fontSize: 12),
-                                )),
-                          ],
+                            onPressed: () async {
+                              // _showMyDialog();
+                              FirebaseAuth.instance.currentUser != null
+                                  ? _showMyDialog()
+                                  : loginView(context);
+                            },
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0, 40, 0, 40),
+                        child: Text(
+                          "Protecting Families, Enriching Lives",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -428,7 +429,6 @@ class BannerScreenState extends State<BannerScreen>
               onPressed: () async {
                 if (_timer.isActive) {
                   _timer.cancel();
-                  print("Timer Canceled");
                 }
 
                 await FirebaseAuth.instance.signOut();
@@ -485,19 +485,27 @@ class BannerScreenState extends State<BannerScreen>
     if (_timer.isActive) {
       _timer.cancel();
     }
-    Navigator.of(context).pop();
-    await Navigator.of(context).push(PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) {
-          return GameWebViewScreen(
-              key: _scaffoldKey, title: name, urlLink: url);
-        },
-        transitionDuration: const Duration(milliseconds: 500),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        }));
+
+    if (url != "null") {
+      Navigator.of(context).pop();
+      await Navigator.of(context).push(PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) {
+            return GameWebViewScreen(
+                key: _scaffoldKey, title: name, urlLink: url);
+          },
+          transitionDuration: const Duration(milliseconds: 500),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          }));
+      await SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+      ]);
+    } else {
+      showSnackBar("Coming Soon!");
+    }
   }
 
   Object loginView(context) {
@@ -546,7 +554,7 @@ class BannerScreenState extends State<BannerScreen>
                                         fontFamily: defaultFontFamily,
                                         color: Colors.blueAccent,
                                         //Color.fromRGBO(113, 56, 208, 1.0),
-                                        fontWeight: FontWeight.normal,
+                                        fontWeight: FontWeight.bold,
                                         fontSize: 18),
                                   ),
                                 ],
@@ -570,7 +578,7 @@ class BannerScreenState extends State<BannerScreen>
                                         color: Colors.blueAccent,
                                         //Color.fromRGBO(113, 56, 208, 1.0),
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 15),
+                                        fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -617,11 +625,11 @@ class BannerScreenState extends State<BannerScreen>
                               decoration: const InputDecoration(
                                   counter: SizedBox.shrink(),
                                   border: InputBorder.none,
-                                  hintText: "  Enter Your Full Name",
+                                  hintText: "Enter Your Full Name",
                                   filled: false,
                                   // fillColor: LightColor.yboxbackpurple,
                                   hintStyle: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       // fontFamily:
                                       // defaultFontFamily,
                                       color: Colors.grey)),
@@ -644,7 +652,7 @@ class BannerScreenState extends State<BannerScreen>
                                         fontFamily: defaultFontFamily,
                                         color: Colors.blueAccent,
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 15),
+                                        fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -704,7 +712,7 @@ class BannerScreenState extends State<BannerScreen>
                                   filled: false,
                                   // fillColor: LightColor.yboxbackpurple,
                                   hintStyle: TextStyle(
-                                      fontSize: 14,
+                                      fontSize: 12,
                                       // fontFamily:
                                       // defaultFontFamily,
                                       color: Colors.grey)),
@@ -727,7 +735,7 @@ class BannerScreenState extends State<BannerScreen>
                                         fontFamily: defaultFontFamily,
                                         color: Colors.blueAccent,
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 15),
+                                        fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -874,6 +882,11 @@ class BannerScreenState extends State<BannerScreen>
                             ),
                           ),
                         ),
+                        Obx(() => Text(
+                              "Version: ${version.value}",
+                              style: GoogleFonts.poppins(
+                                  fontSize: 12, color: Colors.black26),
+                            ))
                       ],
                     ),
                   )
@@ -969,7 +982,6 @@ class BannerScreenState extends State<BannerScreen>
                               },
                               onChanged: (value) {},
                               beforeTextPaste: (text) {
-                                print("Allowing to paste $text");
                                 //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
                                 //but you can show anything you want here, like your pop up saying wrong paste format or etc
                                 return true;
@@ -1364,9 +1376,6 @@ class BannerScreenState extends State<BannerScreen>
         showSnackBar("Enter Correct OTP");
       }
     } on FirebaseAuthException catch (authError) {
-      print("CDE REQUEST");
-      print(authError.code);
-      print(authError.message);
       switch (authError.code) {
         case 'invalid-verification-code':
           showSnackBar("OTP Mismatch!");
@@ -1383,7 +1392,6 @@ class BannerScreenState extends State<BannerScreen>
       _otpDone.value = false;
       _continuePressed.value = false;
     } catch (error) {
-      print("Error $error");
       _otpDone.value = false;
       _continuePressed.value = false;
 
@@ -1395,9 +1403,6 @@ class BannerScreenState extends State<BannerScreen>
   void dispose() {
     if (_timer.isActive) {
       _timer.cancel();
-      print("Banner Timer Canceled in Dispose() ");
-    } else {
-      print("Banner Timer Not Canceled in Dispose() ");
     }
     _controller.dispose();
     controller.dispose();

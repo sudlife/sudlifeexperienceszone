@@ -2,11 +2,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/quiz_screen.dart';
 
-
 class Common {
-
   List<Questionz> quizList = [
-
     Questionz(
       false,
       "Q1. What is the purpose of Life insurances ?",
@@ -240,7 +237,6 @@ class Common {
     //   "Yes",
     //   "No",
     // ),
-
   ];
 
   // ///  Question 1
@@ -537,7 +533,6 @@ class Common {
   //   return prefs.getString('6answerD');
   // }
 
-
   ///  Question 0
 
   static Future<bool> setQuestion0CorrectedA(bool answer) async {
@@ -589,7 +584,6 @@ class Common {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('0pressed');
   }
-
 
   ///  Question 1
 
@@ -694,7 +688,6 @@ class Common {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString('2pressed');
   }
-
 
   ///  Question 3
 
@@ -1049,7 +1042,6 @@ class Common {
     return prefs.getString('8pressed');
   }
 
-
   ///  Question 9
   ///
 
@@ -1187,23 +1179,6 @@ class Common {
     return prefs.getString('11answerD');
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   static Future<bool> setComplete(bool area) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.setBool('complete', area);
@@ -1213,103 +1188,4 @@ class Common {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool('complete');
   }
-
-
-  //
-  // /// User Profile Data
-  // static Future<bool?> setAllUserData(Map<String, dynamic> data) async {
-  //   try{
-  //    // print(data);
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     return prefs.setString('allData', json.encode(data));
-  //   }catch(e){
-  //     print(e.toString());
-  //   }
-  //
-  // }
-  //
-  // static Future<Map<String, dynamic>?> getAllUserData() async {
-  //
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     String? info = prefs.getString('allData');
-  //    // print(info);
-  //     return json.decode(info!) as Map<String, dynamic>;
-  //   } catch (err) {
-  //
-  //   }
-  // }
-  //
-  // static Future<bool?> setNationdData(Map<String, dynamic> data) async {
-  //   try{
-  //    // print(data);
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     return prefs.setString('NationData', json.encode(data));
-  //   }catch(e){
-  //     print(e.toString());
-  //   }
-  //
-  // }
-  //
-  // static Future<Map<String, dynamic>?> getNationData() async {
-  //
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     String? info = prefs.getString('NationData');
-  //    // print(info);
-  //     return json.decode(info!) as Map<String, dynamic>;
-  //   } catch (err) {
-  //     return Future(() => null);
-  //   }
-  // }
-  //
-  // /// State
-  // static Future<bool?> setStateData(Map<String, dynamic> data) async {
-  //   try{
-  //    // print(data);
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     return prefs.setString('StateData', json.encode(data));
-  //   }catch(e){
-  //     return Future(() => null);
-  //     print(e.toString());
-  //   }
-  //
-  // }
-  //
-  // static Future<Map<String, dynamic>?> getStateData() async {
-  //
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     String? info = prefs.getString('StateData');
-  //    // print(info);
-  //     return json.decode(info!) as Map<String, dynamic>;
-  //   } catch (err) {
-  //     return Future(() => null);
-  //   }
-  // }
-  //
-  // static Future<bool?> setDistrictData(Map<String, dynamic> data) async {
-  //   try{
-  //   //  print(data);
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     return prefs.setString('DistrictData', json.encode(data));
-  //   }catch(e){
-  //     print(e.toString());
-  //   }
-  //
-  // }
-  //
-  // static Future<Map<String, dynamic>?> getDistrictData() async {
-  //
-  //   try {
-  //     SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     String? info = prefs.getString('DistrictData');
-  //   //  print(info);
-  //     return json.decode(info!) as Map<String, dynamic>;
-  //   } catch (err) {
-  //     return Future(() => null);
-  //   }
-  // }
-
-
 }

@@ -79,6 +79,7 @@ dependencies:
   flutter_native_splash: ^2.2.10+1
   toast: ^0.3.0
   google_fonts: ^3.0.1
+  flutter_swiper_view: ^1.1.8
 
 flutter_native_splash:
   color: "#FFFFFF"
