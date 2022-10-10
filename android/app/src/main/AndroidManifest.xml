@@ -29,7 +29,7 @@
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
-            android:usesCleartextTraffic="false"
+            android:usesCleartextTraffic="true"
             android:largeHeap="true"
             android:allowBackup="false"
             android:hardwareAccelerated="true"

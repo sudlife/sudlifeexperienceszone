@@ -82,6 +82,7 @@ dependencies:
   flutter_swiper_view: ^1.1.8
   safe_device: ^1.1.1
   lottie: ^1.4.3
+  animate_do: ^2.1.0
 
 
 dev_dependencies:

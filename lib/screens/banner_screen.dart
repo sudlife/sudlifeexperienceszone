@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -433,24 +434,27 @@ class BannerScreenState extends State<BannerScreen>
   }
 
   Widget gameBox(context, String url, String name, String imageUrl) {
-    return InkWell(
-      onTap: () {
-        if (FirebaseAuth.instance.currentUser == null) {
-          loginView(context);
-        } else {
-          name != "Quiz Time" && name != "Fun Facts"
-              ? redirectToGame(name, url)
-              : redirectToScreen(name, url);
-        }
-      },
-      child: ClipRRect(
-          borderRadius: BorderRadius.circular(20),
-          child: Image.asset(
-            imageUrl,
-            fit: BoxFit.fill,
-            width: 300,
-            height: 300,
-          )),
+    return ZoomIn(
+      duration: const Duration(milliseconds: 1000),
+      child: InkWell(
+        onTap: () {
+          if (FirebaseAuth.instance.currentUser == null) {
+            loginView(context);
+          } else {
+            name != "Quiz Time" && name != "Fun Facts"
+                ? redirectToGame(name, url)
+                : redirectToScreen(name, url);
+          }
+        },
+        child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.asset(
+              imageUrl,
+              fit: BoxFit.fill,
+              width: 300,
+              height: 300,
+            )),
+      ),
     );
   }
 
