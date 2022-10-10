@@ -1303,26 +1303,10 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
     );
   }
 
-  // void restartTime(){
-  //
-  //       if(_timer.isActive){
-  //         _timer.cancel();
-  //         startTimer();
-  //         print("FunFacts Timer Canceled and ReStart ");
-  //       }else{
-  //         print("FunFacts Timer ReStart");
-  //         startTimer();
-  //       }
-  //
-  //
-  //
-  // }
-
   @override
   void dispose() {
     if (_timer.isActive) {
       _timer.cancel();
-      print("FunFacts Timer Canceled and Start in Dispose() ");
     }
 
     super.dispose();

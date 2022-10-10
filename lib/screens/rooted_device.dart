@@ -20,7 +20,7 @@ class RootedDevice extends StatelessWidget {
               height: 20,
             ),
             const Text(
-              "For your security, This app only run in real devices and can't be opened on a rooted phone.",
+              "For your security, This app is restricted on rooted devices.",
               style: TextStyle(fontSize: 20),
               textAlign: TextAlign.center,
             ),
