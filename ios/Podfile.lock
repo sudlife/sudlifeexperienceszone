@@ -21,26 +21,26 @@ PODS:
   - Firebase/Storage (9.6.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 9.6.0)
-  - firebase_analytics (9.3.7):
+  - firebase_analytics (9.3.8):
     - Firebase/Analytics (= 9.6.0)
     - firebase_core
     - Flutter
-  - firebase_auth (3.11.0):
+  - firebase_auth (3.11.2):
     - Firebase/Auth (= 9.6.0)
     - firebase_core
     - Flutter
   - firebase_core (1.24.0):
     - Firebase/CoreOnly (= 9.6.0)
     - Flutter
-  - firebase_database (9.1.6):
+  - firebase_database (9.1.7):
     - Firebase/Database (= 9.6.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (13.0.4):
+  - firebase_messaging (13.1.0):
     - Firebase/Messaging (= 9.6.0)
     - firebase_core
     - Flutter
-  - firebase_storage (10.3.10):
+  - firebase_storage (10.3.11):
     - Firebase/Storage (= 9.6.0)
     - firebase_core
     - Flutter
@@ -172,6 +172,9 @@ PODS:
   - path_provider_ios (0.0.1):
     - Flutter
   - PromisesObjC (2.1.1)
+  - safe_device (1.0.0):
+    - DTTJailbreakDetection
+    - Flutter
   - shared_preferences_ios (0.0.1):
     - Flutter
   - url_launcher_ios (0.0.1):
@@ -193,6 +196,7 @@ DEPENDENCIES:
   - flutter_root_detection (from `.symlinks/plugins/flutter_root_detection/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - safe_device (from `.symlinks/plugins/safe_device/ios`)
   - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
@@ -249,6 +253,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_ios:
     :path: ".symlinks/plugins/path_provider_ios/ios"
+  safe_device:
+    :path: ".symlinks/plugins/safe_device/ios"
   shared_preferences_ios:
     :path: ".symlinks/plugins/shared_preferences_ios/ios"
   url_launcher_ios:
@@ -260,12 +266,12 @@ SPEC CHECKSUMS:
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   DTTJailbreakDetection: 5e356c5badc17995f65a83ed9483f787a0057b71
   Firebase: 5ae8b7cf8efce559a653aef0ad95bab3f427c351
-  firebase_analytics: 80b63bd6ff50095e908feba5070aa8dd75ccdfbc
-  firebase_auth: 659d792742e05dc223afc033f008e2f335f8f276
+  firebase_analytics: 9937a91df25cce5b0ee19eaf65277ff8bf0f88e5
+  firebase_auth: 07a4db69cfa447ac42cb7faa560fc100708b707c
   firebase_core: 7c28ecc1e5dd74e03829ac3e9ff5ba3314e737a9
-  firebase_database: 94413825cc5a295fb026dee09fe51a9ac1c08ad3
-  firebase_messaging: a42787dea8e7a8f96458ef8b1c159495f8aa1c97
-  firebase_storage: 015e4eeb3b9ac2f25ad84c4032c6897d0dc2026e
+  firebase_database: 115298eac49923a9b69a10c56f6ecf8eee10601c
+  firebase_messaging: a2a8c6db6d799c7f59b1c0d7c68a2f0027bfa2c4
+  firebase_storage: d1d5bb4959e97b203e5076d4d0edbb7028b711fd
   FirebaseAnalytics: 89ad762c6c3852a685794174757e2c60a36b6a82
   FirebaseAppCheckInterop: d5ecda0c09f8069406643d6e0fa12c09d1b736e3
   FirebaseAuth: e4a5d3c36e778e41141b91cc861103a441d80bcc
@@ -292,6 +298,7 @@ SPEC CHECKSUMS:
   package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
+  safe_device: 4539eb6bdbeb4b61a763a51c4e73e6b37dea4e3d
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
   webview_flutter_wkwebview: b7e70ef1ddded7e69c796c7390ee74180182971f

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:safe_device/safe_device.dart';
+import 'package:sudlifeexperienceszone/screens/rooted_device.dart';
 
 import 'banner_screen.dart';
 
@@ -50,11 +52,36 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> init() async {
+    if (await getRooted()) {
+      Timer(const Duration(milliseconds: 2000), () {
+        HapticFeedback.vibrate();
+        //Navigator.pop(context);
+
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const RootedDevice()),
+            (route) => false);
+      });
+      return;
+    }
     Timer(const Duration(milliseconds: 2000), () {
       HapticFeedback.vibrate();
-      Navigator.pop(context);
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => const BannerScreen()));
+      //Navigator.pop(context);
+
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const BannerScreen()),
+          (route) => false);
     });
+  }
+
+  Future<bool> getRooted() async {
+    if (await SafeDevice.isJailBroken) {
+      return true;
+    }
+    if (!await SafeDevice.isRealDevice) {
+      return true;
+    }
+    return false;
   }
 }

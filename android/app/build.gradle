@@ -45,7 +45,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.sudlife.sudlifeexperienceszone"
-        minSdkVersion 19
+        minSdkVersion 21
         //targetSdkVersion flutter.targetSdkVersion
         targetSdkVersion 33
         multiDexEnabled true

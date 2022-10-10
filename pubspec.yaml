@@ -24,7 +24,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  animations: ^2.0.5
+  animations: ^2.0.7
   animated_widgets: ^1.1.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,11 +40,11 @@ dependencies:
   flutter_wall_layout: ^2.1.1
 
   firebase_core: ^1.24.0
-  firebase_auth: ^3.10.0
-  firebase_storage: ^10.3.10
-  firebase_database: ^9.1.6
-  firebase_analytics: ^9.3.7
-  firebase_messaging: ^13.0.4
+  firebase_auth: ^3.11.2
+  firebase_storage: ^10.3.11
+  firebase_database: ^9.1.7
+  firebase_analytics: ^9.3.8
+  firebase_messaging: ^13.1.0
   flutter_chat_bubble: ^2.0.0
   flutter_launcher_icons: ^0.10.0
   package_info_plus: ^1.4.3+1
@@ -68,7 +68,7 @@ dependencies:
   flutter_emoji: ^2.4.0
   flutter_svg: ^1.1.5
   loading_animations: ^2.2.0
-  audioplayers: ^1.1.0
+  audioplayers: ^1.1.1
   screenshot: ^1.2.3
   #share_plus: ^3.1.0
   path_provider: ^2.0.11
@@ -76,20 +76,12 @@ dependencies:
   provider: ^6.0.3
   responsive_framework: ^0.2.0
   get: ^4.6.5
-  flutter_native_splash: ^2.2.10+1
+  flutter_native_splash: ^2.2.11
   toast: ^0.3.0
   google_fonts: ^3.0.1
   flutter_swiper_view: ^1.1.8
-
-flutter_native_splash:
-  color: "#FFFFFF"
-  android: true
-  ios: true
-  web: false
-  android_gravity: fill
-  ios_content_mode: scaleAspectFill
-  color_dark: "#000000"
-  fullscreen: true
+  safe_device: ^1.1.1
+  lottie: ^1.4.3
 
 
 dev_dependencies:
@@ -136,6 +128,7 @@ flutter:
     - assets/audio/button_click.wav
     - assets/audio/game_enter.wav
     - assets/audio/switch.mp3
+    - assets/json/not_auth_mobile.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

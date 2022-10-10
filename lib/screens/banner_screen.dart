@@ -823,7 +823,6 @@ class BannerScreenState extends State<BannerScreen>
                                       child: Text(
                                         "I hereby consent to receive policy related  communication from SUD Life Insurance  Ltd or its authorized representatives via Call, SMS, Email & Voice over Internet Protocol (VoIP) including WhatsApp and agree to waive my registration on NCPR (National Customer Preference Registry) in this regard.",
                                         textAlign: TextAlign.left,
-                                        maxLines: 5,
                                         style: TextStyle(
                                             fontFamily: defaultFontFamily,
                                             color: Colors.blueAccent,
