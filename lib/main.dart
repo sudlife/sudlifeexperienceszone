@@ -9,6 +9,8 @@ import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'package:sudlifeexperienceszone/screens/splash_screen.dart';
 import 'package:toast/toast.dart';
 
+import 'firebase_options.dart';
+
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
 class MyHttpOverrides extends HttpOverrides {
@@ -24,7 +26,7 @@ class MyHttpOverrides extends HttpOverrides {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   if (isProduction) {
     debugPrint = (String? message, {int? wrapWidth}) => null;
   }

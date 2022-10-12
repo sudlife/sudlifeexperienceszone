@@ -13,9 +13,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sudlifeexperienceszone/screens/app_web_view.dart';
 import 'package:sudlifeexperienceszone/screens/quiz_screen.dart';
 import 'package:sudlifeexperienceszone/screens/webview_screen.dart';
 import 'package:toast/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../animation/fadeAnimation.dart';
 import '../utils/light_color.dart';
@@ -76,9 +78,9 @@ class BannerScreenState extends State<BannerScreen>
 
   var _otpSent = false.obs;
   late CurvedAnimation curve;
-  late AnimationController controller;
   late Animation<double> curtainOffset;
   TextEditingController root_controller = TextEditingController();
+  User? user = FirebaseAuth.instance.currentUser;
 
   String defaultFontFamily = GoogleFonts.poppins().fontFamily!;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -88,8 +90,6 @@ class BannerScreenState extends State<BannerScreen>
 
   final TextEditingController textController = TextEditingController();
 
-  late AnimationController _controller;
-
   late bool autoFocus;
   var _timeout = false.obs;
 
@@ -98,6 +98,9 @@ class BannerScreenState extends State<BannerScreen>
 
   late Timer _timer;
   int _start = 60; // 2 minute
+
+  var loginLogoutText =
+      FirebaseAuth.instance.currentUser != null ? "Logout".obs : "Login".obs;
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -119,12 +122,11 @@ class BannerScreenState extends State<BannerScreen>
 
   @override
   void initState() {
+    user = FirebaseAuth.instance.currentUser;
     getVersion();
     clear();
-    if (FirebaseAuth.instance.currentUser != null) {
-      startTimer();
-    }
-
+    Future.delayed(const Duration(seconds: 1), () => setState(() {}));
+    loginLogoutText.value = user != null ? "Logout" : "Login";
     super.initState();
   }
 
@@ -148,12 +150,20 @@ class BannerScreenState extends State<BannerScreen>
 
   @override
   Widget build(BuildContext context) {
+    user = FirebaseAuth.instance.currentUser;
+    print('build Called');
+    print(user != null);
+
+    if (FirebaseAuth.instance.currentUser != null) {
+      startTimer();
+    }
     widthSize = MediaQuery.of(context).size.width;
     heightSize = MediaQuery.of(context).size.height;
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
-
+    loginLogoutText.value = user != null ? "Logout" : "Login";
+    setState(() {});
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -283,7 +293,9 @@ class BannerScreenState extends State<BannerScreen>
                         underline:
                             DropdownButtonHideUnderline(child: Container()),
                         onChanged: (newValue) {
-                          if (FirebaseAuth.instance.currentUser != null) {
+                          user = FirebaseAuth.instance.currentUser;
+                          setState(() {});
+                          if (user != null) {
                             newValue = newValue as Item;
                             redirectToWeb(value: newValue.name);
                           } else {
@@ -348,9 +360,7 @@ class BannerScreenState extends State<BannerScreen>
                           ),
                         ),
                         child: Text(
-                          FirebaseAuth.instance.currentUser != null
-                              ? "Logout"
-                              : "Login",
+                          loginLogoutText.value,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -358,10 +368,9 @@ class BannerScreenState extends State<BannerScreen>
                           ),
                         ),
                         onPressed: () async {
-                          // _showMyDialog();
-                          FirebaseAuth.instance.currentUser != null
-                              ? _showMyDialog()
-                              : loginView(context);
+                          setState(() {});
+                          user = FirebaseAuth.instance.currentUser;
+                          user != null ? _showMyDialog() : loginView(context);
                         },
                       ),
                     ),
@@ -386,6 +395,7 @@ class BannerScreenState extends State<BannerScreen>
   }
 
   Future<void> _showMyDialog() async {
+    user = FirebaseAuth.instance.currentUser;
     showCupertinoDialog<void>(
       context: context,
       barrierDismissible: true, // user must tap button!
@@ -400,10 +410,6 @@ class BannerScreenState extends State<BannerScreen>
           actions: [
             TextButton(
               onPressed: () async {
-                if (_timer.isActive) {
-                  _timer.cancel();
-                }
-
                 await FirebaseAuth.instance.signOut();
                 showSnackBar("Logged out successfully!!");
 
@@ -411,10 +417,14 @@ class BannerScreenState extends State<BannerScreen>
                 _phoneController.clear();
                 _otpSent.value = false;
                 _otpDone.value = false;
+                loginLogoutText.value = "Login";
 
                 setState(() {});
                 Navigator.of(context).pop();
                 //SystemNavigator.pop();
+                if (_timer.isActive) {
+                  _timer.cancel();
+                }
               },
               child:
                   const Text('Yes', style: TextStyle(color: Colors.blueAccent)),
@@ -434,11 +444,14 @@ class BannerScreenState extends State<BannerScreen>
   }
 
   Widget gameBox(context, String url, String name, String imageUrl) {
+    user = FirebaseAuth.instance.currentUser;
+    setState(() {});
     return ZoomIn(
       duration: const Duration(milliseconds: 1000),
       child: InkWell(
         onTap: () {
-          if (FirebaseAuth.instance.currentUser == null) {
+          user = FirebaseAuth.instance.currentUser;
+          if (user == null) {
             loginView(context);
           } else {
             name != "Quiz Time" && name != "Fun Facts"
@@ -459,11 +472,31 @@ class BannerScreenState extends State<BannerScreen>
   }
 
   void redirectToGame(String name, String url) async {
-    if (_timer.isActive) {
-      _timer.cancel();
-    }
-
     if (url != "null") {
+      if (kIsWeb) {
+        //  openUrl(url: url);
+
+        Navigator.of(context).pop();
+        await Navigator.of(context).push(PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) {
+              return AppWebView(
+                key: _scaffoldKey,
+                url: url,
+              );
+            },
+            transitionDuration: const Duration(milliseconds: 500),
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
+              return FadeTransition(
+                opacity: animation,
+                child: child,
+              );
+            }));
+
+        // js.context.callMethod('open', [url, '_self']);
+        return;
+      }
+
       Navigator.of(context).pop();
       await Navigator.of(context).push(PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
@@ -482,6 +515,9 @@ class BannerScreenState extends State<BannerScreen>
       ]);
     } else {
       showSnackBar("Coming Soon!");
+    }
+    if (_timer.isActive) {
+      _timer.cancel();
     }
   }
 
@@ -892,7 +928,8 @@ class BannerScreenState extends State<BannerScreen>
                                           color: Colors.grey),
                                       onPressed: () {
                                         HapticFeedback.vibrate();
-
+                                        loginLogoutText.value =
+                                            user != null ? "Logout" : "Login";
                                         _otpSent.value = false;
                                         _timeout.value = false;
                                       },
@@ -1191,42 +1228,39 @@ class BannerScreenState extends State<BannerScreen>
       //     TargetPlatform.macOS == defaultTargetPlatform) {
 
       try {
-        final result = await InternetAddress.lookup('google.com');
-        if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-          await FirebaseAuth.instance.verifyPhoneNumber(
-            phoneNumber: phoneNumber,
-            timeout: const Duration(seconds: 120),
-            verificationFailed: (FirebaseAuthException error) {
-              if (kDebugMode) {
-                print("Error => ${error.message}");
-              }
-              _continuePressed.value = false;
-              showSnackBar("${error.message}");
-            },
-            codeSent: (String verificationId, int? resendToken) async {
-              showSnackBar("OTP sent!");
-              _start = 60;
-              _otpSent.value = true;
-              verification_id = verificationId;
-              Navigator.pop(context);
-              WidgetsBinding.instance
-                  .addPostFrameCallback((timeStamp) => loginView(context));
-              // Future.delayed(const Duration(milliseconds: 200), () => loginView(context));
-            },
-            verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
-              showSnackBar("Verified.");
-              _start = 60;
-            },
-            codeAutoRetrievalTimeout: (String verificationId) {
-              _continuePressed.value = false;
-              _timeout.value = true;
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
+          timeout: const Duration(seconds: 120),
+          verificationFailed: (FirebaseAuthException error) {
+            if (kDebugMode) {
+              print("Error => ${error.message}");
+            }
+            _continuePressed.value = false;
+            showSnackBar("${error.message}");
+          },
+          codeSent: (String verificationId, int? resendToken) async {
+            showSnackBar("OTP sent!");
+            _start = 60;
+            _otpSent.value = true;
+            verification_id = verificationId;
+            Navigator.pop(context);
+            WidgetsBinding.instance
+                .addPostFrameCallback((timeStamp) => loginView(context));
+            // Future.delayed(const Duration(milliseconds: 200), () => loginView(context));
+          },
+          verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
+            showSnackBar("Verified.");
+            _start = 60;
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {
+            _continuePressed.value = false;
+            _timeout.value = true;
 
-              showSnackBar("Timed out!");
-            },
-          );
-          if (kDebugMode) {
-            print('connected');
-          }
+            showSnackBar("Timed out!");
+          },
+        );
+        if (kDebugMode) {
+          print('connected');
         }
       } on SocketException catch (_) {
         _continuePressed.value = false;
@@ -1252,39 +1286,34 @@ class BannerScreenState extends State<BannerScreen>
           TargetPlatform.iOS == defaultTargetPlatform ||
           TargetPlatform.macOS == defaultTargetPlatform) {
         try {
-          final result = await InternetAddress.lookup('google.com');
-          if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-            await FirebaseAuth.instance.verifyPhoneNumber(
-              phoneNumber: phoneNumber,
-              timeout: const Duration(seconds: 120),
-              verificationFailed: (FirebaseAuthException error) {
-                print(error);
-                _continuePressed.value = false;
-                showSnackBar("${error.message}");
-              },
-              codeSent: (String verificationId, int? resendToken) async {
-                showSnackBar("Resent OTP !");
-                _timeout.value = false;
-                _otpSent.value = true;
-                _continuePressed.value = true;
-                verification_id = verificationId;
-                Navigator.pop(context);
-                WidgetsBinding.instance
-                    .addPostFrameCallback((timeStamp) => loginView(context));
-                //Future.delayed(const Duration(milliseconds: 200), () => loginView(context));
-              },
-              verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
-                showSnackBar("Verified.");
-              },
-              codeAutoRetrievalTimeout: (String verificationId) {
-                _timeout.value = true;
+          await FirebaseAuth.instance.verifyPhoneNumber(
+            phoneNumber: phoneNumber,
+            timeout: const Duration(seconds: 120),
+            verificationFailed: (FirebaseAuthException error) {
+              print(error);
+              _continuePressed.value = false;
+              showSnackBar("${error.message}");
+            },
+            codeSent: (String verificationId, int? resendToken) async {
+              showSnackBar("Resent OTP !");
+              _timeout.value = false;
+              _otpSent.value = true;
+              _continuePressed.value = true;
+              verification_id = verificationId;
+              Navigator.pop(context);
+              WidgetsBinding.instance
+                  .addPostFrameCallback((timeStamp) => loginView(context));
+              //Future.delayed(const Duration(milliseconds: 200), () => loginView(context));
+            },
+            verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
+              showSnackBar("Verified.");
+            },
+            codeAutoRetrievalTimeout: (String verificationId) {
+              _timeout.value = true;
 
-                //showSnackBar("Timeout!");
-              },
-            );
-
-            print('connected');
-          }
+              //showSnackBar("Timeout!");
+            },
+          );
         } on SocketException catch (_) {
           _otpDone.value = false;
           _continuePressed.value = false;
@@ -1380,8 +1409,6 @@ class BannerScreenState extends State<BannerScreen>
     if (_timer.isActive) {
       _timer.cancel();
     }
-    _controller.dispose();
-    controller.dispose();
     super.dispose();
   }
 
@@ -1455,11 +1482,19 @@ class BannerScreenState extends State<BannerScreen>
   }
 
   void redirectToWeb({required String value}) async {
-    if (_timer.isActive) {
-      _timer.cancel();
-    }
-    _start = 60;
+    user = FirebaseAuth.instance.currentUser;
+    setState(() {});
     if (value == "Pay Premium") {
+      if (kIsWeb) {
+        launchUrl(Uri.parse(
+            'https://www.sudlife.in/customer-service/premium-payment-options'));
+        /*  js.context.callMethod('open', [
+          'https://www.sudlife.in/customer-service/premium-payment-options',
+          '_self'
+        ]);*/
+        return;
+      }
+
       await Navigator.push(
           context,
           MaterialPageRoute(
@@ -1468,10 +1503,20 @@ class BannerScreenState extends State<BannerScreen>
                   title: 'Pay Premium',
                   url_link:
                       'https://www.sudlife.in/customer-service/premium-payment-options')));
-      if (FirebaseAuth.instance.currentUser != null) {
+      if (user != null) {
         startTimer();
       }
     } else if (value == "Buy Online") {
+      if (kIsWeb) {
+        launchUrl(Uri.parse(
+            'https://bol.sudlife.in/ProductSelection/ProductSelectionPage'));
+        /*   js.context.callMethod('open', [
+          'https://bol.sudlife.in/ProductSelection/ProductSelectionPage',
+          '_self'
+        ]);*/
+        return;
+      }
+
       await Navigator.push(
           context,
           MaterialPageRoute(
@@ -1484,6 +1529,14 @@ class BannerScreenState extends State<BannerScreen>
         startTimer();
       }
     } else if (value == "Insurance Plan") {
+      if (kIsWeb) {
+        launchUrl(Uri.parse('https://www.sudlife.in/products/life-insurance'));
+
+        /* js.context.callMethod('open',
+            ['https://www.sudlife.in/products/life-insurance', '_self']);*/
+        return;
+      }
+
       await Navigator.push(
           context,
           MaterialPageRoute(
@@ -1495,6 +1548,12 @@ class BannerScreenState extends State<BannerScreen>
         startTimer();
       }
     } else if (value == "Calculate Premium") {
+      if (kIsWeb) {
+        launchUrl(Uri.parse(
+            'https://si.sudlife.in/SalesIllustration/ProductPage.aspx'));
+        return;
+      }
+
       await Navigator.push(
           context,
           MaterialPageRoute(
@@ -1507,6 +1566,14 @@ class BannerScreenState extends State<BannerScreen>
         startTimer();
       }
     } else if (value == "Claims") {
+      if (kIsWeb) {
+        launchUrl(Uri.parse('https://www.sudlife.in/claims'));
+
+        /* js.context
+            .callMethod('open', ['https://www.sudlife.in/claims', '_self']);*/
+        return;
+      }
+
       await Navigator.push(
           context,
           MaterialPageRoute(
@@ -1518,6 +1585,13 @@ class BannerScreenState extends State<BannerScreen>
         startTimer();
       }
     } else if (value == "Customer Portal") {
+      if (kIsWeb) {
+        launchUrl(Uri.parse('https://www.sudlife.in/contact-us'));
+        /*js.context
+            .callMethod('open', ['https://www.sudlife.in/contact-us', '_self']);*/
+        return;
+      }
+
       await Navigator.push(
           context,
           MaterialPageRoute(
@@ -1529,9 +1603,11 @@ class BannerScreenState extends State<BannerScreen>
         startTimer();
       }
     } else {}
-    setState(() {
-      // dropdownValue = newValue! as Item;
-    });
+
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
+    _start = 60;
   }
 
   void logOutUser(BuildContext context) async {
@@ -1540,6 +1616,7 @@ class BannerScreenState extends State<BannerScreen>
     showSnackBar("Session Timed out!!");
     _otpSent.value = false;
     _otpDone.value = false;
+    loginLogoutText.value = "Login";
     setState(() {});
   }
 

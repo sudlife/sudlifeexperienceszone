@@ -1,12 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
-import 'banner_screen.dart';
 
 class WebViewScreen extends StatefulWidget {
   static const routeName = '/webview_screen';
@@ -23,40 +21,11 @@ class _WebViewState extends State<WebViewScreen> {
   int _stackToView = 1;
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
-
-  late Timer _timer;
-  int _start = 60; // 2 minute
-
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start == 0) {
-          if (FirebaseAuth.instance.currentUser != null) {
-            logOutUser(context);
-            _timer.cancel();
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => const BannerScreen()));
-          }
-        } else {
-          _start--;
-          print(_start);
-        }
-      },
-    );
-  }
-
-  void logOutUser(BuildContext context) {
-    clear();
-    FirebaseAuth.instance.signOut();
-    setState(() {});
-  }
-
   @override
   void initState() {
     // TODO: implement initState
+    if (Platform.isAndroid) WebView.platform = AndroidWebView();
+
     //  startTimer();
     super.initState();
   }

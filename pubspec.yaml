@@ -31,13 +31,12 @@ dependencies:
   cupertino_icons: ^1.0.5
   chess_vectors_flutter: ^1.0.18
   chess: ^0.8.0
-  #dropdown_button2: ^1.8.0
-  #  webview_flutter: ^0.3.20+2
-  #  flutter_inappwebview: ^5.4.3
   wp_chessboard: ^0.0.3
-  #webview_flutter: ^1.0.7
   webview_flutter: ^3.0.4
+  #webviewx: ^0.2.1
+  #webview_flutter_web: ^0.1.0+4
   flutter_wall_layout: ^2.1.1
+  js: ^0.6.4
 
   firebase_core: ^1.24.0
   firebase_auth: ^3.11.2
@@ -47,7 +46,7 @@ dependencies:
   firebase_messaging: ^13.1.0
   flutter_chat_bubble: ^2.0.0
   flutter_launcher_icons: ^0.10.0
-  package_info_plus: ^1.4.3+1
+  package_info_plus: ^2.0.0
 
   simple_animations: ^4.2.0
   shared_preferences: ^2.0.15
@@ -70,10 +69,9 @@ dependencies:
   loading_animations: ^2.2.0
   audioplayers: ^1.1.1
   screenshot: ^1.2.3
-  #share_plus: ^3.1.0
   path_provider: ^2.0.11
 
-  provider: ^6.0.3
+  provider: ^6.0.4
   responsive_framework: ^0.2.0
   get: ^4.6.5
   flutter_native_splash: ^2.2.11
