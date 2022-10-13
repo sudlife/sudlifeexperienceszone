@@ -56,29 +56,25 @@ class BannerScreen extends StatefulWidget {
   const BannerScreen({Key? key}) : super(key: key);
 
   @override
-  BannerScreenState createState() {
-    return BannerScreenState();
-  }
+  State<BannerScreen> createState() => _BannerScreenState();
 }
 
 const imageAsset = AssetImage("assets/images/new.png");
 
-class BannerScreenState extends State<BannerScreen>
+class _BannerScreenState extends State<BannerScreen>
     with TickerProviderStateMixin {
   String url = "";
   double progress = 0;
-  var _policyChecked = false.obs;
-  var _femaleChecked = false.obs;
-  var _maleChecked = true.obs;
-  var _continuePressed = false.obs;
-  var _otpDone = false.obs;
+  var policyChecked = false.obs;
+  var femaleChecked = false.obs;
+  var maleChecked = true.obs;
+  var continuePressed = false.obs;
+  var otpDone = false.obs;
   var version = "1.2.0 (3)".obs;
 
-  var _otpSent = false.obs;
+  var otpSent = false.obs;
   late CurvedAnimation curve;
-  late AnimationController controller;
-  late Animation<double> curtainOffset;
-  TextEditingController root_controller = TextEditingController();
+  TextEditingController rootController = TextEditingController();
 
   String defaultFontFamily = GoogleFonts.poppins().fontFamily!;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -88,13 +84,9 @@ class BannerScreenState extends State<BannerScreen>
 
   final TextEditingController textController = TextEditingController();
 
-  late AnimationController _controller;
+  var timeout = false.obs;
 
-  late bool autoFocus;
-  var _timeout = false.obs;
-
-  late String verification_id;
-  late ConfirmationResult NewConfirmationResult;
+  late String verificationid;
 
   late Timer _timer;
   int _start = 60; // 2 minute
@@ -111,7 +103,7 @@ class BannerScreenState extends State<BannerScreen>
           }
         } else {
           _start--;
-          print(_start);
+          debugPrint("_start $_start");
         }
       },
     );
@@ -409,11 +401,12 @@ class BannerScreenState extends State<BannerScreen>
 
                 _nameController.clear();
                 _phoneController.clear();
-                _otpSent.value = false;
-                _otpDone.value = false;
+                otpSent.value = false;
+                otpDone.value = false;
 
                 setState(() {});
-                Navigator.of(context).pop();
+                if (!mounted) return;
+                Navigator.pop(context);
                 //SystemNavigator.pop();
               },
               child:
@@ -448,11 +441,26 @@ class BannerScreenState extends State<BannerScreen>
         },
         child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.asset(
-              imageUrl,
-              fit: BoxFit.fill,
-              width: 300,
-              height: 300,
+            child: Stack(
+              alignment: Alignment.bottomLeft,
+              children: [
+                Image.asset(
+                  imageUrl,
+                  fit: BoxFit.fill,
+                  width: 300,
+                  height: 300,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0, left: 15),
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                )
+              ],
             )),
       ),
     );
@@ -465,18 +473,21 @@ class BannerScreenState extends State<BannerScreen>
 
     if (url != "null") {
       Navigator.of(context).pop();
-      await Navigator.of(context).push(PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) {
-            return GameWebViewScreen(
-                key: _scaffoldKey, title: name, urlLink: url);
-          },
-          transitionDuration: const Duration(milliseconds: 500),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          }));
+      await Navigator.of(context).pushAndRemoveUntil(
+          PageRouteBuilder(
+              pageBuilder: (context, animation, secondaryAnimation) {
+                return GameWebViewScreen(
+                    key: _scaffoldKey, title: name, urlLink: url);
+              },
+              transitionDuration: const Duration(milliseconds: 500),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
+                return FadeTransition(
+                  opacity: animation,
+                  child: child,
+                );
+              }),
+          (routes) => false);
       await SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
       ]);
@@ -487,12 +498,12 @@ class BannerScreenState extends State<BannerScreen>
 
   Object loginView(context) {
     TextEditingController otpController = TextEditingController();
-    _policyChecked = false.obs;
-    _femaleChecked = false.obs;
-    _maleChecked = true.obs;
-    _continuePressed = false.obs;
-    _continuePressed.value = false;
-    _otpDone.value = false;
+    policyChecked = false.obs;
+    femaleChecked = false.obs;
+    maleChecked = true.obs;
+    continuePressed = false.obs;
+    continuePressed.value = false;
+    otpDone.value = false;
     _nameController.clear();
     _phoneController.clear();
     return showDialog(
@@ -502,7 +513,7 @@ class BannerScreenState extends State<BannerScreen>
         return SimpleDialog(
           backgroundColor: Colors.white,
           children: [
-            Obx(() => !_otpSent.value
+            Obx(() => !otpSent.value
                 ? Container(
                     width: 300,
                     decoration: BoxDecoration(
@@ -734,11 +745,11 @@ class BannerScreenState extends State<BannerScreen>
                                   child: Obx(() => Checkbox(
                                         checkColor: Colors.green,
                                         activeColor: Colors.white,
-                                        value: _maleChecked.value,
+                                        value: maleChecked.value,
                                         onChanged: (value) {
                                           setState(() {
-                                            _maleChecked.value = value!;
-                                            _femaleChecked.value = false;
+                                            maleChecked.value = value!;
+                                            femaleChecked.value = false;
                                           });
                                         },
                                       )),
@@ -754,10 +765,10 @@ class BannerScreenState extends State<BannerScreen>
                                   child: Obx(() => Checkbox(
                                         checkColor: Colors.green,
                                         activeColor: Colors.white,
-                                        value: _femaleChecked.value,
+                                        value: femaleChecked.value,
                                         onChanged: (value) {
-                                          _femaleChecked.value = value!;
-                                          _maleChecked.value = false;
+                                          femaleChecked.value = value!;
+                                          maleChecked.value = false;
                                         },
                                       )),
                                 ),
@@ -783,9 +794,9 @@ class BannerScreenState extends State<BannerScreen>
                                   child: Obx(() => Checkbox(
                                         checkColor: Colors.blueAccent,
                                         activeColor: Colors.white,
-                                        value: _policyChecked.value,
+                                        value: policyChecked.value,
                                         onChanged: (value) {
-                                          _policyChecked.value = value!;
+                                          policyChecked.value = value!;
                                         },
                                       )),
                                 ),
@@ -817,13 +828,13 @@ class BannerScreenState extends State<BannerScreen>
                               showSnackBar("Please Enter Name");
                             } else if (_phoneController.text == "") {
                               showSnackBar("Please Enter Phone Number");
-                            } else if (!_policyChecked.value) {
+                            } else if (!policyChecked.value) {
                               showSnackBar("Please Accept the policy ");
                             } else if (int.tryParse(_phoneController.text) ==
                                 null) {
                               showSnackBar("Only Number are allowed");
                             } else {
-                              _continuePressed.value = true;
+                              continuePressed.value = true;
                               _submitPhoneNumber();
                               // showSnackBar("Processing...");
                             }
@@ -840,7 +851,7 @@ class BannerScreenState extends State<BannerScreen>
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Center(
-                              child: Obx(() => _continuePressed.value
+                              child: Obx(() => continuePressed.value
                                   ? const SizedBox(
                                       height: 25,
                                       width: 25,
@@ -893,8 +904,8 @@ class BannerScreenState extends State<BannerScreen>
                                       onPressed: () {
                                         HapticFeedback.vibrate();
 
-                                        _otpSent.value = false;
-                                        _timeout.value = false;
+                                        otpSent.value = false;
+                                        timeout.value = false;
                                       },
                                     ),
                                   ],
@@ -953,8 +964,8 @@ class BannerScreenState extends State<BannerScreen>
                               enableActiveFill: false,
                               controller: otpController,
                               onCompleted: (value) {
-                                _otpDone.value = true;
-                                _submitOTP(verification_id, value);
+                                otpDone.value = true;
+                                _submitOTP(verificationid, value);
                               },
                               onChanged: (value) {},
                               beforeTextPaste: (text) {
@@ -973,10 +984,10 @@ class BannerScreenState extends State<BannerScreen>
                             1.1,
                             InkWell(
                               onTap: () {
-                                if (_timeout.value) {
+                                if (timeout.value) {
                                   HapticFeedback.vibrate();
 
-                                  _timeout.value = false;
+                                  timeout.value = false;
                                   //_timer.cancel();
 
                                   _resubmitPhoneNumber();
@@ -993,12 +1004,12 @@ class BannerScreenState extends State<BannerScreen>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      _timeout.value
+                                      timeout.value
                                           ? "Resend Otp"
                                           : "Didn't receive OTP! Resend in 2 minutes",
                                       style: TextStyle(
                                           fontFamily: defaultFontFamily,
-                                          color: _timeout.value
+                                          color: timeout.value
                                               ? Colors.blueAccent
                                               : Colors.grey,
                                           fontWeight: FontWeight.normal,
@@ -1015,8 +1026,8 @@ class BannerScreenState extends State<BannerScreen>
                           onTap: () {
                             HapticFeedback.vibrate();
 
-                            _otpDone.value = true;
-                            _submitOTP(verification_id, otpController.text);
+                            otpDone.value = true;
+                            _submitOTP(verificationid, otpController.text);
                           },
                           child: Container(
                             margin: const EdgeInsets.fromLTRB(50, 10, 50, 20),
@@ -1034,7 +1045,7 @@ class BannerScreenState extends State<BannerScreen>
                                   bottomLeft: Radius.circular(20.0)),
                             ),
                             child: Center(
-                              child: Obx(() => _otpDone.value
+                              child: Obx(() => otpDone.value
                                   ? const SizedBox(
                                       height: 25,
                                       width: 25,
@@ -1066,7 +1077,7 @@ class BannerScreenState extends State<BannerScreen>
       Navigator.of(context).pop();
       Navigator.of(context).push(PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return const FunFacts_Screen();
+            return const FunFactsScreen();
           },
           transitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -1079,7 +1090,7 @@ class BannerScreenState extends State<BannerScreen>
       Navigator.of(context).pop();
       Navigator.of(context).push(PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return const Quiz_Screen();
+            return const QuizScreen();
           },
           transitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -1182,10 +1193,6 @@ class BannerScreenState extends State<BannerScreen>
     } else {
       phoneNumber = "+91 ${_phoneController.text.toString().trim()}";
 
-      if (kDebugMode) {
-        print(defaultTargetPlatform);
-      }
-
       // if (TargetPlatform.android == defaultTargetPlatform ||
       //     TargetPlatform.iOS == defaultTargetPlatform ||
       //     TargetPlatform.macOS == defaultTargetPlatform) {
@@ -1197,17 +1204,14 @@ class BannerScreenState extends State<BannerScreen>
             phoneNumber: phoneNumber,
             timeout: const Duration(seconds: 120),
             verificationFailed: (FirebaseAuthException error) {
-              if (kDebugMode) {
-                print("Error => ${error.message}");
-              }
-              _continuePressed.value = false;
+              continuePressed.value = false;
               showSnackBar("${error.message}");
             },
             codeSent: (String verificationId, int? resendToken) async {
               showSnackBar("OTP sent!");
               _start = 60;
-              _otpSent.value = true;
-              verification_id = verificationId;
+              otpSent.value = true;
+              verificationid = verificationId;
               Navigator.pop(context);
               WidgetsBinding.instance
                   .addPostFrameCallback((timeStamp) => loginView(context));
@@ -1218,18 +1222,15 @@ class BannerScreenState extends State<BannerScreen>
               _start = 60;
             },
             codeAutoRetrievalTimeout: (String verificationId) {
-              _continuePressed.value = false;
-              _timeout.value = true;
+              continuePressed.value = false;
+              timeout.value = true;
 
               showSnackBar("Timed out!");
             },
           );
-          if (kDebugMode) {
-            print('connected');
-          }
         }
       } on SocketException catch (_) {
-        _continuePressed.value = false;
+        continuePressed.value = false;
 
         showSnackBar("Your internet connection is not working! Try again");
       }
@@ -1247,7 +1248,7 @@ class BannerScreenState extends State<BannerScreen>
     } else {
       phoneNumber = "+91 ${_phoneController.text.toString().trim()}";
 
-      print(defaultTargetPlatform);
+      debugPrint("defaultTargetPlatform $defaultTargetPlatform");
       if (TargetPlatform.android == defaultTargetPlatform ||
           TargetPlatform.iOS == defaultTargetPlatform ||
           TargetPlatform.macOS == defaultTargetPlatform) {
@@ -1258,16 +1259,16 @@ class BannerScreenState extends State<BannerScreen>
               phoneNumber: phoneNumber,
               timeout: const Duration(seconds: 120),
               verificationFailed: (FirebaseAuthException error) {
-                print(error);
-                _continuePressed.value = false;
+                debugPrint("error $error");
+                continuePressed.value = false;
                 showSnackBar("${error.message}");
               },
               codeSent: (String verificationId, int? resendToken) async {
                 showSnackBar("Resent OTP !");
-                _timeout.value = false;
-                _otpSent.value = true;
-                _continuePressed.value = true;
-                verification_id = verificationId;
+                timeout.value = false;
+                otpSent.value = true;
+                continuePressed.value = true;
+                verificationid = verificationId;
                 Navigator.pop(context);
                 WidgetsBinding.instance
                     .addPostFrameCallback((timeStamp) => loginView(context));
@@ -1277,17 +1278,17 @@ class BannerScreenState extends State<BannerScreen>
                 showSnackBar("Verified.");
               },
               codeAutoRetrievalTimeout: (String verificationId) {
-                _timeout.value = true;
+                timeout.value = true;
 
                 //showSnackBar("Timeout!");
               },
             );
 
-            print('connected');
+            debugPrint('connected');
           }
         } on SocketException catch (_) {
-          _otpDone.value = false;
-          _continuePressed.value = false;
+          otpDone.value = false;
+          continuePressed.value = false;
           showSnackBar("Your internet connection is not working.");
         }
       }
@@ -1298,26 +1299,26 @@ class BannerScreenState extends State<BannerScreen>
     if (output.isEmpty) {
       showSnackBar("Please Enter Valid OTP !!");
 
-      _otpDone.value = false;
+      otpDone.value = false;
       return;
     }
 
     if (output.length < 6) {
       showSnackBar("Please Enter Valid OTP !!");
 
-      _otpDone.value = false;
+      otpDone.value = false;
 
       return;
     }
     PhoneAuthCredential credential = PhoneAuthProvider.credential(
-        verificationId: verification_id, smsCode: output);
+        verificationId: verificationid, smsCode: output);
 
     try {
       var response =
           await FirebaseAuth.instance.signInWithCredential(credential);
       if (response.user != null) {
-        _continuePressed.value = false;
-        _otpDone.value = false;
+        continuePressed.value = false;
+        otpDone.value = false;
 
         String? id = response.user?.uid;
         String? name = _nameController.text.toString();
@@ -1329,25 +1330,22 @@ class BannerScreenState extends State<BannerScreen>
 
         FirebaseDatabase.instance
             .ref()
-            .child('SUDCustomer/Customers/' +
-                name +
-                "-" +
-                id.toString() +
-                "/" +
-                DateTime.now().millisecondsSinceEpoch.toString())
+            .child(
+                'SUDCustomer/Customers/$name-$id/${DateTime.now().millisecondsSinceEpoch}')
             .set(userMap)
             .then((value) => null);
         _start = 60;
         startTimer();
-        print("Verified");
-        Navigator.of(context).pop();
+        debugPrint("Verified");
         _nameController.clear();
         _phoneController.clear();
         showSnackBar("Logged in successfully !!");
         setState(() {});
+        if (!mounted) return;
+        Navigator.of(context).pop();
       } else {
-        _otpDone.value = false;
-        _continuePressed.value = false;
+        otpDone.value = false;
+        continuePressed.value = false;
 
         showSnackBar("Enter Correct OTP");
       }
@@ -1357,7 +1355,7 @@ class BannerScreenState extends State<BannerScreen>
           showSnackBar("OTP Mismatch!");
           break;
         case 'session-expired':
-          _otpSent.value = false;
+          otpSent.value = false;
           Navigator.pop(context);
           showSnackBar("Session Expired");
           break;
@@ -1365,11 +1363,11 @@ class BannerScreenState extends State<BannerScreen>
           showSnackBar("Something went wrong!");
           break;
       }
-      _otpDone.value = false;
-      _continuePressed.value = false;
+      otpDone.value = false;
+      continuePressed.value = false;
     } catch (error) {
-      _otpDone.value = false;
-      _continuePressed.value = false;
+      otpDone.value = false;
+      continuePressed.value = false;
 
       showSnackBar("Something Went Wrong!");
     }
@@ -1380,8 +1378,6 @@ class BannerScreenState extends State<BannerScreen>
     if (_timer.isActive) {
       _timer.cancel();
     }
-    _controller.dispose();
-    controller.dispose();
     super.dispose();
   }
 
@@ -1538,8 +1534,8 @@ class BannerScreenState extends State<BannerScreen>
     clear();
     await FirebaseAuth.instance.signOut();
     showSnackBar("Session Timed out!!");
-    _otpSent.value = false;
-    _otpDone.value = false;
+    otpSent.value = false;
+    otpDone.value = false;
     setState(() {});
   }
 

@@ -18,14 +18,14 @@ class Facts {
   Facts(this.title, this.description);
 }
 
-class FunFacts_Screen extends StatefulWidget {
-  const FunFacts_Screen({Key? key}) : super(key: key);
+class FunFactsScreen extends StatefulWidget {
+  const FunFactsScreen({Key? key}) : super(key: key);
 
   @override
-  State<FunFacts_Screen> createState() => _FunFacts_ScreenState();
+  State<FunFactsScreen> createState() => _FunFactsScreenState();
 }
 
-class _FunFacts_ScreenState extends State<FunFacts_Screen> {
+class _FunFactsScreenState extends State<FunFactsScreen> {
   List<Facts> factsList = [
     Facts(
       "The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
@@ -111,7 +111,7 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
   //       "Nearly  80% of Indian population is without life insurance cover."
   // ];
 
-  late int index = 0;
+  int index = 0;
   late Facts factString = factsList[0];
 
   Future<void> clear() async {
@@ -269,7 +269,6 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
           }
         } else {
           _start--;
-          print(_start);
         }
       },
     );
@@ -315,9 +314,8 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
 
   @override
   Widget build(BuildContext context) {
-    final double heightSize = MediaQuery.of(context).size.height;
     final double widthSize = MediaQuery.of(context).size.width;
-    print("FunFacts Screen");
+    debugPrint("FunFacts Screen");
 
     // SystemChrome.setPreferredOrientations([
     //   DeviceOrientation.landscapeLeft,
@@ -1157,7 +1155,7 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
                         onTap: () {
                           if (_timer.isActive) {
                             _timer.cancel();
-                            print(
+                            debugPrint(
                                 "FunFacts Timer Canceled and Start in Dispose() ");
                           }
 
@@ -1189,7 +1187,7 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
                         onTap: () {
                           if (_timer.isActive) {
                             _timer.cancel();
-                            print(
+                            debugPrint(
                                 "FunFacts Timer Canceled and Start in Dispose() ");
                           }
                           Navigator.of(context).pop();
@@ -1315,13 +1313,13 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
   void getFactText(bool value) {
     if (value) {
       setState(() {
-        print(index);
+        debugPrint("index $index");
         index = index + 1;
         factString = factsList[index];
       });
     } else {
       setState(() {
-        print(index);
+        debugPrint("index: $index");
         index = index - 1;
         factString = factsList[index];
       });

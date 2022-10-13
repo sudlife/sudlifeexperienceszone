@@ -9,8 +9,8 @@ import 'package:sudlifeexperienceszone/screens/quiz_screen.dart';
 import 'banner_screen.dart';
 
 class ScoreBoardScreen extends StatefulWidget {
-  final String Score;
-  const ScoreBoardScreen({Key? key, required this.Score}) : super(key: key);
+  final String score;
+  const ScoreBoardScreen({Key? key, required this.score}) : super(key: key);
 
   @override
   State<ScoreBoardScreen> createState() => _ScoreBoardScreenState();
@@ -35,7 +35,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
           }
         } else {
           _start--;
-          print(_start);
+          debugPrint("_start: $_start");
         }
       },
     );
@@ -251,7 +251,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
                                         height: 10,
                                       ),
                                       Text(
-                                        "${widget.Score}/10",
+                                        "${widget.score}/10",
                                         style: const TextStyle(
                                             color: Color(0xff2474B9),
                                             fontSize: 48,
@@ -272,7 +272,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
                                               context,
                                               MaterialPageRoute(
                                                   builder: (context) =>
-                                                      const Quiz_Screen()));
+                                                      const QuizScreen()));
                                         },
                                         child: Row(
                                           mainAxisAlignment:
@@ -552,7 +552,7 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
     super.dispose();
     if (_timer.isActive) {
       _timer.cancel();
-      print("ScoreBoard Timer Canceled in Dispose() ");
+      debugPrint("ScoreBoard Timer Canceled in Dispose() ");
     }
   }
 

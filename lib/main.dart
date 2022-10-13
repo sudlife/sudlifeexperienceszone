@@ -4,12 +4,8 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:responsive_framework/responsive_wrapper.dart';
-import 'package:responsive_framework/utils/scroll_behavior.dart';
 import 'package:sudlifeexperienceszone/screens/splash_screen.dart';
 import 'package:toast/toast.dart';
-
-const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
 class MyHttpOverrides extends HttpOverrides {
   @override
@@ -20,14 +16,10 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-// adb -s emulator-5554 install /Users/ViS/life/sudlifeexperienceszone/build/app/outputs/flutter-apk/app-debug.apk
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
   await Firebase.initializeApp();
-  if (isProduction) {
-    debugPrint = (String? message, {int? wrapWidth}) => null;
-  }
   runApp(const MyApp());
 }
 
@@ -62,19 +54,19 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     // These are the callbacks
     switch (state) {
       case AppLifecycleState.resumed:
-        print("widget is resumed");
+        debugPrint("widget is resumed");
         // widget is resumed
         break;
       case AppLifecycleState.inactive:
-        print("widget is inactive");
+        debugPrint("widget is inactive");
         // widget is inactive
         break;
       case AppLifecycleState.paused:
-        print("widget is paused");
+        debugPrint("widget is paused");
         // widget is paused
         break;
       case AppLifecycleState.detached:
-        print("widget is detached");
+        debugPrint("widget is detached");
         // widget is detached
         break;
     }
@@ -84,16 +76,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     ToastContext().init(context);
     return MaterialApp(
-      builder: (context, widget) => ResponsiveWrapper.builder(
-        BouncingScrollWrapper.builder(context, widget!),
-        defaultScale: true,
-        breakpoints: const [
-          ResponsiveBreakpoint.resize(480, name: MOBILE),
-          ResponsiveBreakpoint.autoScale(800, name: TABLET),
-          ResponsiveBreakpoint.resize(1000, name: DESKTOP),
-          ResponsiveBreakpoint.autoScale(2460, name: '4K'),
-        ],
-      ),
       title: 'Experience Zone',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

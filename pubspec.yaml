@@ -24,66 +24,34 @@ dependencies:
   flutter:
     sdk: flutter
 
-  animations: ^2.0.7
-  animated_widgets: ^1.1.0
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.5
-  chess_vectors_flutter: ^1.0.18
-  chess: ^0.8.0
-  #dropdown_button2: ^1.8.0
-  #  webview_flutter: ^0.3.20+2
-  #  flutter_inappwebview: ^5.4.3
-  wp_chessboard: ^0.0.3
-  #webview_flutter: ^1.0.7
   webview_flutter: ^3.0.4
-  flutter_wall_layout: ^2.1.1
 
+# Firebase Libs
   firebase_core: ^1.24.0
   firebase_auth: ^3.11.2
   firebase_storage: ^10.3.11
   firebase_database: ^9.1.7
   firebase_analytics: ^9.3.8
   firebase_messaging: ^13.1.0
+
+# Other Libs
   flutter_chat_bubble: ^2.0.0
   flutter_launcher_icons: ^0.10.0
-  package_info_plus: ^1.4.3+1
-
+  package_info_plus: ^2.0.0
   simple_animations: ^4.2.0
   shared_preferences: ^2.0.15
   url_launcher: ^6.1.6
   pin_code_fields: ^7.4.0
-
-  fab_circular_menu: ^1.0.2
-  rive: ^0.9.1
-  root: ^2.0.4
-  flutter_root_detection: ^1.0.0
-  animated_button: ^0.2.0
-  liquid_progress_indicator: ^0.4.0
-  animated_bottom_navigation_bar: ^1.1.0
-  flutter_switch: ^0.3.2
-  joystick: ^1.1.0
-  page_transition: ^2.0.9
-  swipedetector: ^1.2.0
-  flutter_emoji: ^2.4.0
-  flutter_svg: ^1.1.5
-  loading_animations: ^2.2.0
-  audioplayers: ^1.1.1
-  screenshot: ^1.2.3
-  #share_plus: ^3.1.0
-  path_provider: ^2.0.11
-
-  provider: ^6.0.3
-  responsive_framework: ^0.2.0
   get: ^4.6.5
-  flutter_native_splash: ^2.2.11
   toast: ^0.3.0
   google_fonts: ^3.0.1
   flutter_swiper_view: ^1.1.8
   safe_device: ^1.1.1
   lottie: ^1.4.3
   animate_do: ^2.1.0
-
 
 dev_dependencies:
   flutter_test:
@@ -118,17 +86,7 @@ flutter:
     - assets/
     - assets/images/
     - assets/icon/
-    - assets/games/
     - assets/game/
-    - assets/css/
-    - assets/audio/TapSound.mp3
-    - assets/audio/fail.wav
-    - assets/audio/win_splace_screen.wav
-    - assets/audio/vaccine_collected.wav
-    - assets/audio/give_up.wav
-    - assets/audio/button_click.wav
-    - assets/audio/game_enter.wav
-    - assets/audio/switch.mp3
     - assets/json/not_auth_mobile.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -142,15 +100,7 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: PaytoneOne
-      fonts:
-        - asset: assets/fonts/PaytoneOne/PaytoneOne-Regular.ttf
-    - family: Montserrat
-      fonts:
-        #      - asset: assets/fonts/Montserrat/Montserrat-Regular.ttf
-        - asset: assets/fonts/Montserrat/Montserrat-Bold.ttf
-          weight: 500
+
   # fonts:
   #   - family: Schyler
   #     fonts:

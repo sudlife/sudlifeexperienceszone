@@ -11,13 +11,13 @@ import 'package:sudlifeexperienceszone/screens/scoreboard_screen.dart';
 import '../cache/common.dart';
 import '../utils/light_color.dart';
 
-enum SingingCharacter { Yes, NO }
+enum SingingCharacter { yes, no }
 
-class Quiz_Screen extends StatefulWidget {
-  const Quiz_Screen({Key? key}) : super(key: key);
+class QuizScreen extends StatefulWidget {
+  const QuizScreen({Key? key}) : super(key: key);
 
   @override
-  State<Quiz_Screen> createState() => _Quiz_ScreenState();
+  State<QuizScreen> createState() => _QuizScreenState();
 }
 
 class Questionz {
@@ -48,7 +48,7 @@ class Questionz {
       this.answerD);
 }
 
-class _Quiz_ScreenState extends State<Quiz_Screen> {
+class _QuizScreenState extends State<QuizScreen> {
   List<Questionz> quizList = [
     Questionz(
       false,
@@ -173,7 +173,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
   late int counter = index + 1;
   late Questionz quizObject = quizList[0];
 
-  late List<String> AnswerValues;
+  late List<String> answerValues;
   late String quizAnswerStatic;
 
   final List<String> _answers = ['A', 'B', 'C', 'D', '_'];
@@ -200,8 +200,6 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
   late String pressed = '';
   late String previousValue = '';
 
-  late var system_size;
-
   late Timer _timer;
   int _start = 60; // 2 minute
 
@@ -221,7 +219,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
           }
         } else {
           _start--;
-          print(_start);
+          debugPrint("_start: $_start");
         }
       },
     );
@@ -425,7 +423,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
   Widget build(BuildContext context) {
     final double heightSize = MediaQuery.of(context).size.height;
     final double widthSize = MediaQuery.of(context).size.width;
-    print("Quiz Screen");
+    debugPrint("Quiz Screen");
     var size = MediaQuery.of(context).size.width;
     // SystemChrome.setPreferredOrientations([
     //   DeviceOrientation.landscapeLeft,
@@ -3007,7 +3005,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
         MaterialPageRoute(
             // builder: (context) => ChessGame()),
             builder: (context) => ScoreBoardScreen(
-                  Score: score.toString(),
+                  score: score.toString(),
                 )));
   }
 
@@ -3015,7 +3013,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
   void dispose() {
     if (_timer.isActive) {
       _timer.cancel();
-      print("QuizScreen Timer Canceled in Dispose() ");
+      debugPrint("QuizScreen Timer Canceled in Dispose() ");
     }
     super.dispose();
   }
@@ -3024,7 +3022,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
     /// false for PREVIOUS and true for NEXT
 
     if (value) {
-      print(index);
+      debugPrint("index: $index");
 
       setState(() {
         index = index + 1;
@@ -3714,7 +3712,7 @@ class _Quiz_ScreenState extends State<Quiz_Screen> {
         //_correctD = false;
       });
     } else {
-      print(index);
+      debugPrint("index: $index");
 
       setState(() {
         index = index - 1;

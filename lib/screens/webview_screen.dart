@@ -16,7 +16,7 @@ class WebViewScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  _WebViewState createState() => _WebViewState();
+  State<WebViewScreen> createState() => _WebViewState();
 }
 
 class _WebViewState extends State<WebViewScreen> {
@@ -42,7 +42,7 @@ class _WebViewState extends State<WebViewScreen> {
           }
         } else {
           _start--;
-          print(_start);
+          debugPrint("_start: $_start");
         }
       },
     );

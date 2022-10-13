@@ -17,7 +17,7 @@ class GameWebViewScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  _GameWebViewState createState() => _GameWebViewState();
+  State<GameWebViewScreen> createState() => _GameWebViewState();
 }
 
 class _GameWebViewState extends State<GameWebViewScreen> {
@@ -43,7 +43,7 @@ class _GameWebViewState extends State<GameWebViewScreen> {
           }
         } else {
           _start--;
-          print(_start);
+          debugPrint(_start.toString());
         }
       },
     );
