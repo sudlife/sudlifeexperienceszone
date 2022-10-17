@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sudlifeexperienceszone/screens/splash_screen.dart';
+import 'package:sudlifeexperienceszone/utils/configure_nonweb.dart'
+    if (dart.library.html) 'package:sudlifeexperienceszone/utils/configure_web.dart';
 import 'package:toast/toast.dart';
 
 import 'firebase_options.dart';
@@ -28,6 +31,7 @@ Future<void> main() async {
   if (isProduction) {
     debugPrint = (String? message, {int? wrapWidth}) => null;
   }
+  configureApp();
   runApp(const MyApp());
 }
 
@@ -85,6 +89,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     ToastContext().init(context);
     return MaterialApp(
       title: 'Experience Zone',
+      scrollBehavior: MyCustomScrollBehavior(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: GoogleFonts.poppins().fontFamily,
@@ -94,4 +99,13 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       home: const SplashScreen(),
     );
   }
+}
+
+class MyCustomScrollBehavior extends MaterialScrollBehavior {
+  // Override behavior methods and getters like dragDevices
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+        PointerDeviceKind.touch,
+        PointerDeviceKind.mouse,
+      };
 }

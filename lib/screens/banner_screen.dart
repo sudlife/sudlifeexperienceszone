@@ -195,189 +195,178 @@ class BannerScreenState extends State<BannerScreen>
                   fit: BoxFit.fill,
                 ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 50, 30, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(14),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(15.0),
-                                bottomRight: Radius.circular(15.0),
-                                topLeft: Radius.circular(15.0),
-                                bottomLeft: Radius.circular(15.0)),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.fromLTRB(80, 20, 80, 20),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 50, 30, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(14),
                             decoration: const BoxDecoration(
                               color: Colors.white,
-                              image: DecorationImage(
-                                image:
-                                    AssetImage("assets/images/site-logo.png"),
-                                fit: BoxFit.contain,
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(15.0),
+                                  bottomRight: Radius.circular(15.0),
+                                  topLeft: Radius.circular(15.0),
+                                  bottomLeft: Radius.circular(15.0)),
+                            ),
+                            child: Container(
+                              padding:
+                                  const EdgeInsets.fromLTRB(80, 20, 80, 20),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage("assets/images/site-logo.png"),
+                                  fit: BoxFit.contain,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                    child: Text(
-                      "SUD Life Experience Zone",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.w700, fontSize: 26),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Container(
-                      height: 50,
-                      width: 210,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(15.0),
-                            bottomRight: Radius.circular(15.0),
-                            topLeft: Radius.circular(15.0),
-                            bottomLeft: Radius.circular(15.0)),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      margin: const EdgeInsets.fromLTRB(0, 0, 20, 10),
-                      child: DropdownButton(
-                        dropdownColor: Colors.white,
-                        iconSize: 24,
-                        elevation: 16,
-                        isExpanded: true,
-                        value: itemValue,
-                        iconEnabledColor: LightColor.appBlue,
-                        icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                        borderRadius: BorderRadius.circular(7.0),
-                        style: const TextStyle(
-                            color: LightColor.appBlue,
-                            fontWeight: FontWeight.w600),
-                        items: users.map((Item user) {
-                          return DropdownMenuItem(
-                            value: user,
-                            child: Row(
-                              children: [
-                                user.name != 'Self-Help'
-                                    ? ImageIcon(
-                                        AssetImage(user.icon),
-                                        size: 25,
-                                        color: Colors.red,
-                                      )
-                                    : Container(),
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                Text(
-                                  user.name,
-                                  style: const TextStyle(
-                                      color: LightColor.appBlue, fontSize: 16),
-                                ),
-
-                                //Divider(height: 1,thickness: 2,color: Colors.black),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                        underline:
-                            DropdownButtonHideUnderline(child: Container()),
-                        onChanged: (newValue) {
-                          user = FirebaseAuth.instance.currentUser;
-                          setState(() {});
-                          if (user != null) {
-                            newValue = newValue as Item;
-                            redirectToWeb(value: newValue.name);
-                          } else {
-                            loginView(context);
-                          }
-                        },
+                        ],
                       ),
                     ),
-                  ),
-                  const Expanded(
-                    child: SizedBox(
-                      height: 10,
+                    Container(
+                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                      child: Text(
+                        "SUD Life Experience Zone",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                            fontWeight: FontWeight.w700, fontSize: 26),
+                      ),
                     ),
-                  ),
-                  /*    SizedBox(
-                        height: 300,
-                        child: Swiper(
-                          itemBuilder: (BuildContext context, int index) {
-                            return gameBox(context, gameList[index].url,
-                                gameList[index].name, gameList[index].imageUrl);
-                          },
-                          itemCount: gameList.length,
-                          viewportFraction: 0.8,
-                          scale: 0.9,
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Container(
+                        height: 50,
+                        width: 210,
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(15.0),
+                              bottomRight: Radius.circular(15.0),
+                              topLeft: Radius.circular(15.0),
+                              bottomLeft: Radius.circular(15.0)),
                         ),
-                      ),*/
-
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.all(10),
-                    child: Row(
-                      children: [
-                        for (var element in gameList) ...{
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: gameBox(context, element.url, element.name,
-                                element.imageUrl),
-                          ),
-                        }
-                      ],
-                    ),
-                  ),
-                  const Expanded(
-                    child: SizedBox(
-                      height: 10,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                    child: SizedBox(
-                      height: 60,
-                      width: 160,
-                      child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.0)),
-                          side: const BorderSide(
-                            width: 2,
-                            color: Color(0xff0F5A93),
-                          ),
-                        ),
-                        child: Text(
-                          loginLogoutText.value,
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                        margin: const EdgeInsets.fromLTRB(0, 0, 20, 10),
+                        child: DropdownButton(
+                          dropdownColor: Colors.white,
+                          iconSize: 24,
+                          elevation: 16,
+                          isExpanded: true,
+                          value: itemValue,
+                          iconEnabledColor: LightColor.appBlue,
+                          icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                          borderRadius: BorderRadius.circular(7.0),
                           style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.redAccent,
-                          ),
+                              color: LightColor.appBlue,
+                              fontWeight: FontWeight.w600),
+                          items: users.map((Item user) {
+                            return DropdownMenuItem(
+                              value: user,
+                              child: Row(
+                                children: [
+                                  user.name != 'Self-Help'
+                                      ? ImageIcon(
+                                          AssetImage(user.icon),
+                                          size: 25,
+                                          color: Colors.red,
+                                        )
+                                      : Container(),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    user.name,
+                                    style: const TextStyle(
+                                        color: LightColor.appBlue,
+                                        fontSize: 16),
+                                  ),
+
+                                  //Divider(height: 1,thickness: 2,color: Colors.black),
+                                ],
+                              ),
+                            );
+                          }).toList(),
+                          underline:
+                              DropdownButtonHideUnderline(child: Container()),
+                          onChanged: (newValue) {
+                            user = FirebaseAuth.instance.currentUser;
+                            setState(() {});
+                            if (user != null) {
+                              newValue = newValue as Item;
+                              redirectToWeb(value: newValue.name);
+                            } else {
+                              loginView(context);
+                            }
+                          },
                         ),
-                        onPressed: () async {
-                          setState(() {});
-                          user = FirebaseAuth.instance.currentUser;
-                          user != null ? _showMyDialog() : loginView(context);
-                        },
                       ),
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 40, 0, 40),
-                    child: Text(
+                    SizedBox(
+                      height: 10,
+                    ),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(10),
+                      child: Row(
+                        children: [
+                          for (var element in gameList) ...{
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: gameBox(context, element.url, element.name,
+                                  element.imageUrl),
+                            ),
+                          }
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      child: SizedBox(
+                        height: 60,
+                        width: 160,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10.0)),
+                            side: const BorderSide(
+                              width: 2,
+                              color: Color(0xff0F5A93),
+                            ),
+                          ),
+                          child: Text(
+                            loginLogoutText.value,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.redAccent,
+                            ),
+                          ),
+                          onPressed: () async {
+                            setState(() {});
+                            user = FirebaseAuth.instance.currentUser;
+                            user != null ? _showMyDialog() : loginView(context);
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Text(
                       "Protecting Families, Enriching Lives",
                       textAlign: TextAlign.center,
                       style: GoogleFonts.poppins(
@@ -386,8 +375,11 @@ class BannerScreenState extends State<BannerScreen>
                         color: Colors.white,
                       ),
                     ),
-                  ),
-                ],
+                    SizedBox(
+                      height: 10,
+                    ),
+                  ],
+                ),
               )),
         ),
       ),
