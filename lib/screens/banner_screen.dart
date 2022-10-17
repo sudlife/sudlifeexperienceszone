@@ -358,16 +358,23 @@ class _BannerScreenState extends State<BannerScreen>
                       ),
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(0, 40, 0, 40),
-                    child: Text(
-                      "Protecting Families, Enriching Lives",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
+                  const Flexible(
+                    child: SizedBox(
+                      height: 10,
+                    ),
+                  ),
+                  Text(
+                    "Protecting Families, Enriching Lives",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Flexible(
+                    child: SizedBox(
+                      height: 10,
                     ),
                   ),
                 ],
