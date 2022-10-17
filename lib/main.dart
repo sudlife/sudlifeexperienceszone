@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:sudlifeexperienceszone/screens/splash_screen.dart';
 import 'package:toast/toast.dart';
 
@@ -21,17 +20,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
   await Firebase.initializeApp();
-
-  await SentryFlutter.init(
-    (options) {
-      options.dsn =
-          'https://f73a38e5b22d44878752d36c8f5211cc@o4503981840728064.ingest.sentry.io/4503981842104320';
-      // Set tracesSampleRate to 1.0 to capture 100% of transactions for performance monitoring.
-      // We recommend adjusting this value in production.
-      options.tracesSampleRate = 1.0;
-    },
-    appRunner: () => runApp(const MyApp()),
-  );
+  runApp(const MyApp());
 
   // runApp(const MyApp());
 }
