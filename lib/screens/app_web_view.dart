@@ -1,8 +1,9 @@
-import 'dart:html';
 import 'dart:io';
-import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:sudlifeexperienceszone/utils/configure_nonweb.dart'
+    if (dart.library.html) 'package:sudlifeexperienceszone/utils/configure_web.dart';
 
 import 'banner_screen.dart';
 
@@ -18,14 +19,7 @@ class _AppWebViewState extends State<AppWebView> {
   @override
   void initState() {
     // TODO: implement initState
-
-    ui.platformViewRegistry.registerViewFactory(
-        'hello-world-html',
-        (int viewId) => IFrameElement()
-          ..width = "${MediaQuery.of(context).size.width}"
-          ..height = "${MediaQuery.of(context).size.height}"
-          ..src = widget.url
-          ..style.border = 'none');
+    configureHtml(context: context, url: widget.url);
     super.initState();
   }
 
@@ -35,10 +29,7 @@ class _AppWebViewState extends State<AppWebView> {
       onWillPop: () async {
         await Navigator.push(
           context,
-          MaterialPageRoute(
-              // builder: (context) => ChessGame()),
-              //  builder: (context) => ZoneHomeScreen()),
-              builder: (context) => const BannerScreen()),
+          MaterialPageRoute(builder: (context) => const BannerScreen()),
         );
         exit(0);
       },
@@ -47,9 +38,11 @@ class _AppWebViewState extends State<AppWebView> {
         child: SizedBox(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
-          child: HtmlElementView(
-            viewType: 'hello-world-html',
-          ),
+          child: kIsWeb
+              ? HtmlElementView(
+                  viewType: 'hello-world-html',
+                )
+              : Container(),
         ),
       ),
     );

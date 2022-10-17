@@ -349,7 +349,7 @@ class BannerScreenState extends State<BannerScreen>
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 30,
                       ),
                       Padding(
@@ -385,7 +385,7 @@ class BannerScreenState extends State<BannerScreen>
                           ),
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Text(
@@ -397,7 +397,7 @@ class BannerScreenState extends State<BannerScreen>
                           color: Colors.white,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                     ],
@@ -1640,70 +1640,5 @@ class BannerScreenState extends State<BannerScreen>
   Future<void> getVersion() async {
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     version.value = "${packageInfo.version} (${packageInfo.buildNumber})";
-  }
-}
-
-class OtpInput extends StatelessWidget {
-  final TextEditingController controller;
-  final bool autoFocus;
-  const OtpInput(this.controller, this.autoFocus, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 53,
-      width: 40,
-      margin: const EdgeInsets.fromLTRB(5, 0, 5, 0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(
-            color: (Colors.grey[800])!, // Set border color
-            width: 0.2),
-        // gradient: const LinearGradient(
-        //   // begin: Alignment.centerLeft,
-        //   // end: Alignment.centerRight,
-        //   colors: <Color>[
-        //     Color.fromRGBO(
-        //         255, 241, 255, 1.0),
-        //     Color.fromRGBO(
-        //         243, 231, 255, 1.0),
-        //   ],
-        // ),
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            spreadRadius: 1,
-            blurRadius: 19,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
-      ),
-      child: TextField(
-        autofocus: autoFocus,
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        controller: controller,
-        minLines: 1,
-        maxLength: 1,
-        cursorColor: Theme.of(context).primaryColor,
-        textAlignVertical: TextAlignVertical.center,
-        style: const TextStyle(
-          color: Colors.black87,
-        ),
-        decoration: const InputDecoration(
-            border: InputBorder.none,
-            hintText: " ",
-            filled: false,
-            hintStyle: TextStyle(fontSize: 14, color: Colors.grey)),
-        onChanged: (value) {
-          if (value.length == 1) {
-            FocusScope.of(context).nextFocus();
-          } else {
-            FocusScope.of(context).previousFocus();
-          }
-        },
-      ),
-    );
   }
 }

@@ -4,16 +4,6 @@ import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
     show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
-/// Default [FirebaseOptions] for use with your Firebase apps.
-///
-/// Example:
-/// ```dart
-/// import 'firebase_options.dart';
-/// // ...
-/// await Firebase.initializeApp(
-///   options: DefaultFirebaseOptions.currentPlatform,
-/// );
-/// ```
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
@@ -24,8 +14,6 @@ class DefaultFirebaseOptions {
         return android;
       case TargetPlatform.iOS:
         return ios;
-      case TargetPlatform.macOS:
-        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -70,20 +58,10 @@ class DefaultFirebaseOptions {
     projectId: 'experiencezone-8a3a5',
     databaseURL: 'https://experiencezone-8a3a5-default-rtdb.firebaseio.com',
     storageBucket: 'experiencezone-8a3a5.appspot.com',
-    androidClientId: '802592535097-7jpbidhaparl5hkb7j6la6a5gc17l0bi.apps.googleusercontent.com',
-    iosClientId: '802592535097-j22686sruq5o0aj77crpp6tme0ll930d.apps.googleusercontent.com',
+    androidClientId:
+        '802592535097-7jpbidhaparl5hkb7j6la6a5gc17l0bi.apps.googleusercontent.com',
+    iosClientId:
+        '802592535097-j22686sruq5o0aj77crpp6tme0ll930d.apps.googleusercontent.com',
     iosBundleId: 'com.example.experiencezone',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyB-qQnWI0cnzauD9Sf7-i9d8_S5V0UDDm0',
-    appId: '1:802592535097:ios:f01d4d675b627d1871d3e8',
-    messagingSenderId: '802592535097',
-    projectId: 'experiencezone-8a3a5',
-    databaseURL: 'https://experiencezone-8a3a5-default-rtdb.firebaseio.com',
-    storageBucket: 'experiencezone-8a3a5.appspot.com',
-    androidClientId: '802592535097-7jpbidhaparl5hkb7j6la6a5gc17l0bi.apps.googleusercontent.com',
-    iosClientId: '802592535097-tn41c5buvkn5g7s9u0tj3k0945vsgeih.apps.googleusercontent.com',
-    iosBundleId: 'com.example.app',
   );
 }

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,8 +8,6 @@ import 'package:sudlifeexperienceszone/screens/splash_screen.dart';
 import 'package:sudlifeexperienceszone/utils/configure_nonweb.dart'
     if (dart.library.html) 'package:sudlifeexperienceszone/utils/configure_web.dart';
 import 'package:toast/toast.dart';
-
-import 'firebase_options.dart';
 
 const bool isProduction = bool.fromEnvironment('dart.vm.product');
 
@@ -23,14 +20,10 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-// adb -s emulator-5554 install /Users/ViS/life/sudlifeexperienceszone/build/app/outputs/flutter-apk/app-debug.apk
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   HttpOverrides.global = MyHttpOverrides();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  if (isProduction) {
-    debugPrint = (String? message, {int? wrapWidth}) => null;
-  }
+  await initializeFirebase();
   configureApp();
   runApp(const MyApp());
 }
