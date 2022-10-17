@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,39 +16,9 @@ class ScoreBoardScreen extends StatefulWidget {
 }
 
 class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
-  late Timer _timer;
-  int _start = 60; // 2 minute
-
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start == 0) {
-          if (FirebaseAuth.instance.currentUser != null) {
-            logOutUser(context);
-            _timer.cancel();
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => const BannerScreen()));
-          }
-        } else {
-          _start--;
-          print(_start);
-        }
-      },
-    );
-  }
-
-  void logOutUser(BuildContext context) {
-    clear();
-    FirebaseAuth.instance.signOut();
-    setState(() {});
-  }
-
   @override
   void initState() {
-    startTimer();
+    //startTimer();
     super.initState();
   }
 
@@ -72,42 +41,56 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
         //   title: Text(""),
         //   centerTitle: false,
         // ),
-        body: GestureDetector(
-          onTap: () {
-            if (FirebaseAuth.instance.currentUser != null) {
-              _start = 60;
-            }
-          },
-          onTapDown: (val) {
-            if (FirebaseAuth.instance.currentUser != null) {
-              _start = 60;
-            }
-          },
-          onTapUp: (val) {
-            if (FirebaseAuth.instance.currentUser != null) {
-              _start = 60;
-            }
-          },
-          child: Stack(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/images/Background.png"),
-                    fit: BoxFit.fill,
-                  ),
+        body: Stack(
+          children: [
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/images/Background.png"),
+                  fit: BoxFit.fill,
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 150,
+              ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 150,
+                    ),
+                    Container(
+                      height: 70,
+                      width: 140,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(15.0),
+                            bottomRight: Radius.circular(15.0),
+                            topLeft: Radius.circular(15.0),
+                            bottomLeft: Radius.circular(15.0)),
                       ),
-                      Container(
-                        height: 70,
-                        width: 140,
+                      child: Container(
+                        height: 50,
+                        width: 100,
+                        margin: const EdgeInsets.all(12),
+                        decoration: const BoxDecoration(
+                          color: Colors.white,
+                          image: DecorationImage(
+                            image: AssetImage("assets/images/site-logo.png"),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        child: null,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    SingleChildScrollView(
+                      child: Container(
+                        //height: 350,
+                        //width: 450,
+                        width: MediaQuery.of(context).size.width - 120,
                         decoration: const BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
@@ -116,432 +99,397 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
                               topLeft: Radius.circular(15.0),
                               bottomLeft: Radius.circular(15.0)),
                         ),
-                        child: Container(
-                          height: 50,
-                          width: 100,
-                          margin: const EdgeInsets.all(12),
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            image: DecorationImage(
-                              image: AssetImage("assets/images/site-logo.png"),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                          child: null,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 50,
-                      ),
-                      SingleChildScrollView(
-                        child: Container(
-                          //height: 350,
-                          //width: 450,
-                          width: MediaQuery.of(context).size.width - 120,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(15.0),
-                                bottomRight: Radius.circular(15.0),
-                                topLeft: Radius.circular(15.0),
-                                bottomLeft: Radius.circular(15.0)),
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    margin: const EdgeInsets.all(10),
-                                    height: 40,
-                                    width: 40,
-                                    decoration: const BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                            "assets/Quiz time ic.png"),
-                                        fit: BoxFit.fill,
-                                      ),
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  margin: const EdgeInsets.all(10),
+                                  height: 40,
+                                  width: 40,
+                                  decoration: const BoxDecoration(
+                                    image: DecorationImage(
+                                      image:
+                                          AssetImage("assets/Quiz time ic.png"),
+                                      fit: BoxFit.fill,
                                     ),
                                   ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        height: 40,
-                                        //width: 90,
-                                        child: Center(
-                                          child: Text(
-                                            "Match the following",
-                                            style: TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.blue.shade800,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 20,
-
-                                        //width: 90,
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: 40,
+                                      //width: 90,
+                                      child: Center(
                                         child: Text(
-                                          "10 Questions",
-                                          textAlign: TextAlign.start,
+                                          "Match the following",
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 18,
                                               color: Colors.blue.shade800,
                                               fontWeight: FontWeight.bold),
                                         ),
                                       ),
-                                      const SizedBox(
-                                        height: 6,
+                                    ),
+                                    SizedBox(
+                                      height: 20,
+
+                                      //width: 90,
+                                      child: Text(
+                                        "10 Questions",
+                                        textAlign: TextAlign.start,
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.blue.shade800,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  InkWell(
-                                    onTap: () {
-                                      clear();
-                                      dispose();
-                                      //Navigator.of(context).pop();
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              //builder: (context) => ZoneHomeScreen()));
-                                              builder: (context) =>
-                                                  const BannerScreen()));
-                                    },
-                                    child: Container(
-                                      height: 35,
-                                      width: 35,
-                                      margin: const EdgeInsets.fromLTRB(
-                                          0, 0, 10, 0),
-                                      decoration: const BoxDecoration(
-                                        image: DecorationImage(
-                                          image: AssetImage(
-                                              "assets/icon/close.png"),
-                                          fit: BoxFit.fill,
-                                        ),
+                                    ),
+                                    const SizedBox(
+                                      height: 6,
+                                    ),
+                                  ],
+                                ),
+                                const Spacer(),
+                                InkWell(
+                                  onTap: () {
+                                    clear();
+                                    dispose();
+                                    //Navigator.of(context).pop();
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            //builder: (context) => ZoneHomeScreen()));
+                                            builder: (context) =>
+                                                const BannerScreen()));
+                                  },
+                                  child: Container(
+                                    height: 35,
+                                    width: 35,
+                                    margin:
+                                        const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                    decoration: const BoxDecoration(
+                                      image: DecorationImage(
+                                        image:
+                                            AssetImage("assets/icon/close.png"),
+                                        fit: BoxFit.fill,
                                       ),
                                     ),
                                   ),
-                                ],
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                child: Divider(
-                                  color: Colors.black45,
-                                  height: 0.5,
                                 ),
+                              ],
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: Divider(
+                                color: Colors.black45,
+                                height: 0.5,
                               ),
-                              SizedBox(
-                                height: 250,
-                                width: 350,
-                                child: Center(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const Text(
-                                        "Your Score",
-                                        style: TextStyle(
-                                            color: Color(0xff2474B9),
-                                            fontSize: 30,
-                                            fontWeight: FontWeight.w500),
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "${widget.Score}/10",
-                                        style: const TextStyle(
-                                            color: Color(0xff2474B9),
-                                            fontSize: 48,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      InkWell(
-                                        onTap: () {
-                                          clear();
+                            ),
+                            SizedBox(
+                              height: 250,
+                              width: 350,
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Your Score",
+                                      style: TextStyle(
+                                          color: Color(0xff2474B9),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    Text(
+                                      "${widget.Score}/10",
+                                      style: const TextStyle(
+                                          color: Color(0xff2474B9),
+                                          fontSize: 48,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(
+                                      height: 20,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        clear();
 
-                                          dispose();
-                                          //Navigator.of(context).pop();
-                                          // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                                          //     builder: (context) => Quiz_Screen()), (Route<dynamic> route) => false);
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      const Quiz_Screen()));
-                                        },
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              height: 15,
-                                              width: 15,
-                                              margin: const EdgeInsets.all(12),
-                                              decoration: const BoxDecoration(
-                                                color: Colors.white,
-                                                image: DecorationImage(
-                                                  image: AssetImage(
-                                                      "assets/images/try again.png"),
-                                                  fit: BoxFit.contain,
-                                                ),
+                                        dispose();
+                                        //Navigator.of(context).pop();
+                                        // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                                        //     builder: (context) => Quiz_Screen()), (Route<dynamic> route) => false);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const QuizScreen()));
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Container(
+                                            height: 15,
+                                            width: 15,
+                                            margin: const EdgeInsets.all(12),
+                                            decoration: const BoxDecoration(
+                                              color: Colors.white,
+                                              image: DecorationImage(
+                                                image: AssetImage(
+                                                    "assets/images/try again.png"),
+                                                fit: BoxFit.contain,
                                               ),
                                             ),
-                                            const Text(
-                                              "Take Quiz Again    ",
-                                              style: TextStyle(
-                                                  color: Color(0xff2474B9),
-                                                  fontSize: 18,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                          ),
+                                          const Text(
+                                            "Take Quiz Again    ",
+                                            style: TextStyle(
+                                                color: Color(0xff2474B9),
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 30,
-                      ),
-                    ],
-                  ),
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                  ],
                 ),
               ),
-              //       Positioned(
-              //         top: 0.0,
-              //         left: 10.0,
-              //         right: 0.0,
-              //         child: AppBar(
-              //           title: const Text(''), // You can add title here
-              //           leading: IconButton(
-              //             icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-              //             onPressed: () => {
-              //               clear(),
-              //               Navigator.of(context).pop(),
-              // Navigator.push(context,
-              // MaterialPageRoute(builder: (context) => BannerScreen())),
-              //             },
-              //           ),
-              //           backgroundColor:
-              //               Colors.transparent, //You can make this transparent
-              //           elevation: 0.0, //No shadow
-              //         ),
-              //       ),
-              Positioned(
-                top: 20.0,
-                right: 30.0,
-                child: InkWell(
-                  onTap: () {
-                    dispose();
-                    //Navigator.of(context).pop();
-                    // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                    //     builder: (context) => ZoneHomeScreen()), (Route<dynamic> route) => false);
+            ),
+            //       Positioned(
+            //         top: 0.0,
+            //         left: 10.0,
+            //         right: 0.0,
+            //         child: AppBar(
+            //           title: const Text(''), // You can add title here
+            //           leading: IconButton(
+            //             icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+            //             onPressed: () => {
+            //               clear(),
+            //               Navigator.of(context).pop(),
+            // Navigator.push(context,
+            // MaterialPageRoute(builder: (context) => BannerScreen())),
+            //             },
+            //           ),
+            //           backgroundColor:
+            //               Colors.transparent, //You can make this transparent
+            //           elevation: 0.0, //No shadow
+            //         ),
+            //       ),
+            Positioned(
+              top: 20.0,
+              right: 30.0,
+              child: InkWell(
+                onTap: () {
+                  dispose();
 
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          // builder: (context) => ChessGame()),
-                          //  builder: (context) => ZoneHomeScreen()),
-                          builder: (context) => const BannerScreen()),
-                    );
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.all(10),
-                    height: 100,
-                    width: 40,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage("assets/games/Home Icon.png"),
-                        fit: BoxFit.contain,
-                      ),
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        // builder: (context) => ChessGame()),
+                        //  builder: (context) => ZoneHomeScreen()),
+                        builder: (context) => const BannerScreen()),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  height: 100,
+                  width: 40,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/games/Home Icon.png"),
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),
               ),
-            ],
-            // child: Container(
-            //   width: MediaQuery.of(context).size.width,
-            //   height: MediaQuery.of(context).size.height,
-            //   decoration: const BoxDecoration(
-            //     image: DecorationImage(
-            //       image: AssetImage("assets/images/Background.png"),
-            //       fit: BoxFit.fill,
-            //     ),
-            //   ),
-            //   child: SingleChildScrollView(
-            //     child: Column(
-            //       children: [
-            //
-            //         SizedBox(
-            //           height: 50,
-            //         ),
-            //
-            //         Container(
-            //           height: 70,
-            //           width: 140,
-            //           decoration: const BoxDecoration(
-            //             color: Colors.white,
-            //             borderRadius: BorderRadius.only(
-            //                 topRight: Radius.circular(15.0),
-            //                 bottomRight: Radius.circular(15.0),
-            //                 topLeft: Radius.circular(15.0),
-            //                 bottomLeft: Radius.circular(15.0)),
-            //           ),
-            //           child: Container(
-            //             height: 50,
-            //             width: 100,
-            //             margin: const EdgeInsets.all(12),
-            //             decoration: const BoxDecoration(
-            //               color: Colors.white,
-            //               image: DecorationImage(
-            //                 image: AssetImage("assets/images/site-logo.png"),
-            //                 fit: BoxFit.contain,
-            //               ),
-            //             ),
-            //             child: null,
-            //           ),
-            //         ),
-            //
-            //         SizedBox(
-            //           height: 50,
-            //         ),
-            //
-            //         Container(
-            //           //height: 350,
-            //           width: 350,
-            //           decoration: const BoxDecoration(
-            //             color: Colors.white,
-            //             borderRadius: BorderRadius.only(
-            //                 topRight: Radius.circular(15.0),
-            //                 bottomRight: Radius.circular(15.0),
-            //                 topLeft: Radius.circular(15.0),
-            //                 bottomLeft: Radius.circular(15.0)),
-            //           ),
-            //           child: Expanded(
-            //             child: Column(
-            //               children: [
-            //                 Row(
-            //                   children: [
-            //                     Container(
-            //                       margin: EdgeInsets.all(10),
-            //                       height: 35,
-            //                       width: 35,
-            //                       decoration: const BoxDecoration(
-            //                         image: DecorationImage(
-            //                           image: AssetImage("assets/icon/fun facts ic.png"),
-            //                           fit: BoxFit.fill,
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Container(
-            //                       height: 40,
-            //                       width: 90,
-            //                       child: Center(
-            //                         child: Text(
-            //                           "Fun Facts",
-            //                           style: TextStyle(fontSize: 18, color: Colors.blue,fontWeight: FontWeight.bold),
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Spacer(),
-            //                     Container(
-            //                       height: 35,
-            //                       width: 35,
-            //                       margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-            //                       decoration: const BoxDecoration(
-            //                         image: DecorationImage(
-            //                           image: AssetImage("assets/icon/close.png"),
-            //                           fit: BoxFit.fill,
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //
-            //                 Padding(
-            //                   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            //                   child: const Divider(
-            //
-            //                     color: Colors.black45,
-            //                     height: 0.5,
-            //                   ),
-            //                 ),
-            //
-            //                 Container(
-            //                   //height: 150,
-            //                   width: MediaQuery.of(context).size.width,
-            //                   margin: EdgeInsets.all(20),
-            //                   decoration: const BoxDecoration(
-            //                     color: Colors.white,
-            //                     image: DecorationImage(
-            //                       image: AssetImage("assets/icon/Background.png"),
-            //                       fit: BoxFit.fill,
-            //                     ),
-            //                   ),
-            //                   child: Container(
-            //                     //height: 130,
-            //                     width: 220,
-            //                     margin: EdgeInsets.all(30),
-            //                     padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
-            //                     child: Center(
-            //                       child: Text(
-            //                         "•	The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
-            //                         style: TextStyle(fontSize: 18, color: Colors.blue),
-            //                       ),
-            //                     ),
-            //                   ),
-            //                 ),
-            //
-            //                 SizedBox(height: 10),
-            //
-            //                 Row(
-            //                   children: [
-            //                     Container(
-            //                       margin: EdgeInsets.fromLTRB(20,0,0,0),
-            //                       height: 45,
-            //                       width: 100,
-            //                       decoration: const BoxDecoration(
-            //                         image: DecorationImage(
-            //                           image: AssetImage("assets/icon/Previous.png"),
-            //                           fit: BoxFit.fill,
-            //                         ),
-            //                       ),
-            //                     ),
-            //                     Spacer(),
-            //                     Container(
-            //                       margin: EdgeInsets.fromLTRB(0,0,20,0),
-            //                       height: 45,
-            //                       width: 100,
-            //                       decoration: const BoxDecoration(
-            //                         image: DecorationImage(
-            //                           image: AssetImage("assets/icon/Next.png"),
-            //                           fit: BoxFit.fill,
-            //                         ),
-            //                       ),
-            //                     ),
-            //                   ],
-            //                 ),
-            //
-            //                 SizedBox(height: 20),
-            //
-            //               ],
-            //             ),
-            //           ),
-            //         )
-            //       ],
-            //     ),
-            //   ),
-            // ),
-          ),
+            ),
+          ],
+          // child: Container(
+          //   width: MediaQuery.of(context).size.width,
+          //   height: MediaQuery.of(context).size.height,
+          //   decoration: const BoxDecoration(
+          //     image: DecorationImage(
+          //       image: AssetImage("assets/images/Background.png"),
+          //       fit: BoxFit.fill,
+          //     ),
+          //   ),
+          //   child: SingleChildScrollView(
+          //     child: Column(
+          //       children: [
+          //
+          //         SizedBox(
+          //           height: 50,
+          //         ),
+          //
+          //         Container(
+          //           height: 70,
+          //           width: 140,
+          //           decoration: const BoxDecoration(
+          //             color: Colors.white,
+          //             borderRadius: BorderRadius.only(
+          //                 topRight: Radius.circular(15.0),
+          //                 bottomRight: Radius.circular(15.0),
+          //                 topLeft: Radius.circular(15.0),
+          //                 bottomLeft: Radius.circular(15.0)),
+          //           ),
+          //           child: Container(
+          //             height: 50,
+          //             width: 100,
+          //             margin: const EdgeInsets.all(12),
+          //             decoration: const BoxDecoration(
+          //               color: Colors.white,
+          //               image: DecorationImage(
+          //                 image: AssetImage("assets/images/site-logo.png"),
+          //                 fit: BoxFit.contain,
+          //               ),
+          //             ),
+          //             child: null,
+          //           ),
+          //         ),
+          //
+          //         SizedBox(
+          //           height: 50,
+          //         ),
+          //
+          //         Container(
+          //           //height: 350,
+          //           width: 350,
+          //           decoration: const BoxDecoration(
+          //             color: Colors.white,
+          //             borderRadius: BorderRadius.only(
+          //                 topRight: Radius.circular(15.0),
+          //                 bottomRight: Radius.circular(15.0),
+          //                 topLeft: Radius.circular(15.0),
+          //                 bottomLeft: Radius.circular(15.0)),
+          //           ),
+          //           child: Expanded(
+          //             child: Column(
+          //               children: [
+          //                 Row(
+          //                   children: [
+          //                     Container(
+          //                       margin: EdgeInsets.all(10),
+          //                       height: 35,
+          //                       width: 35,
+          //                       decoration: const BoxDecoration(
+          //                         image: DecorationImage(
+          //                           image: AssetImage("assets/icon/fun facts ic.png"),
+          //                           fit: BoxFit.fill,
+          //                         ),
+          //                       ),
+          //                     ),
+          //                     Container(
+          //                       height: 40,
+          //                       width: 90,
+          //                       child: Center(
+          //                         child: Text(
+          //                           "Fun Facts",
+          //                           style: TextStyle(fontSize: 18, color: Colors.blue,fontWeight: FontWeight.bold),
+          //                         ),
+          //                       ),
+          //                     ),
+          //                     Spacer(),
+          //                     Container(
+          //                       height: 35,
+          //                       width: 35,
+          //                       margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+          //                       decoration: const BoxDecoration(
+          //                         image: DecorationImage(
+          //                           image: AssetImage("assets/icon/close.png"),
+          //                           fit: BoxFit.fill,
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //
+          //                 Padding(
+          //                   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+          //                   child: const Divider(
+          //
+          //                     color: Colors.black45,
+          //                     height: 0.5,
+          //                   ),
+          //                 ),
+          //
+          //                 Container(
+          //                   //height: 150,
+          //                   width: MediaQuery.of(context).size.width,
+          //                   margin: EdgeInsets.all(20),
+          //                   decoration: const BoxDecoration(
+          //                     color: Colors.white,
+          //                     image: DecorationImage(
+          //                       image: AssetImage("assets/icon/Background.png"),
+          //                       fit: BoxFit.fill,
+          //                     ),
+          //                   ),
+          //                   child: Container(
+          //                     //height: 130,
+          //                     width: 220,
+          //                     margin: EdgeInsets.all(30),
+          //                     padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+          //                     child: Center(
+          //                       child: Text(
+          //                         "•	The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
+          //                         style: TextStyle(fontSize: 18, color: Colors.blue),
+          //                       ),
+          //                     ),
+          //                   ),
+          //                 ),
+          //
+          //                 SizedBox(height: 10),
+          //
+          //                 Row(
+          //                   children: [
+          //                     Container(
+          //                       margin: EdgeInsets.fromLTRB(20,0,0,0),
+          //                       height: 45,
+          //                       width: 100,
+          //                       decoration: const BoxDecoration(
+          //                         image: DecorationImage(
+          //                           image: AssetImage("assets/icon/Previous.png"),
+          //                           fit: BoxFit.fill,
+          //                         ),
+          //                       ),
+          //                     ),
+          //                     Spacer(),
+          //                     Container(
+          //                       margin: EdgeInsets.fromLTRB(0,0,20,0),
+          //                       height: 45,
+          //                       width: 100,
+          //                       decoration: const BoxDecoration(
+          //                         image: DecorationImage(
+          //                           image: AssetImage("assets/icon/Next.png"),
+          //                           fit: BoxFit.fill,
+          //                         ),
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //
+          //                 SizedBox(height: 20),
+          //
+          //               ],
+          //             ),
+          //           ),
+          //         )
+          //       ],
+          //     ),
+          //   ),
+          // ),
         ),
       ),
     );
@@ -550,10 +498,6 @@ class _ScoreBoardScreenState extends State<ScoreBoardScreen> {
   @override
   void dispose() {
     super.dispose();
-    if (_timer.isActive) {
-      _timer.cancel();
-      print("ScoreBoard Timer Canceled in Dispose() ");
-    }
   }
 
   // @override

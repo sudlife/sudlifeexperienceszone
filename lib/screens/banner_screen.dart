@@ -97,7 +97,7 @@ class BannerScreenState extends State<BannerScreen>
   late ConfirmationResult NewConfirmationResult;
 
   late Timer _timer;
-  int _start = 60; // 2 minute
+  int _start = 61; // 2 minute
 
   var loginLogoutText =
       FirebaseAuth.instance.currentUser != null ? "Logout".obs : "Login".obs;
@@ -123,6 +123,7 @@ class BannerScreenState extends State<BannerScreen>
   @override
   void initState() {
     user = FirebaseAuth.instance.currentUser;
+    startTimer();
     getVersion();
     clear();
     Future.delayed(const Duration(seconds: 1), () => setState(() {}));
@@ -151,11 +152,14 @@ class BannerScreenState extends State<BannerScreen>
   @override
   Widget build(BuildContext context) {
     user = FirebaseAuth.instance.currentUser;
-    print('build Called');
-    print(user != null);
 
     if (FirebaseAuth.instance.currentUser != null) {
-      startTimer();
+      _start = 61;
+      if (!_timer.isActive) {
+        startTimer();
+      }
+    } else {
+      _timer.cancel();
     }
     widthSize = MediaQuery.of(context).size.width;
     heightSize = MediaQuery.of(context).size.height;
@@ -168,219 +172,238 @@ class BannerScreenState extends State<BannerScreen>
       onWillPop: () async => false,
       child: Scaffold(
         backgroundColor: LightColor.buttonground,
-        body: GestureDetector(
-          onTap: () {
+        body: MouseRegion(
+          onEnter: (val) {
             if (FirebaseAuth.instance.currentUser != null) {
-              _start = 60;
+              _start = 61;
             }
           },
-          onTapDown: (val) {
+          onExit: (val) {
             if (FirebaseAuth.instance.currentUser != null) {
-              _start = 60;
+              _start = 61;
             }
           },
-          onTapUp: (val) {
+          onHover: (val) {
             if (FirebaseAuth.instance.currentUser != null) {
-              _start = 60;
+              _start = 61;
             }
           },
-          child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(widthSize < 500
-                      ? "assets/images/game_bg.png"
-                      : "assets/images/game_bg_tab.png"),
-                  fit: BoxFit.fill,
+          child: GestureDetector(
+            onTap: () {
+              if (FirebaseAuth.instance.currentUser != null) {
+                _start = 61;
+              }
+            },
+            onTapDown: (val) {
+              if (FirebaseAuth.instance.currentUser != null) {
+                _start = 61;
+              }
+            },
+            onTapUp: (val) {
+              if (FirebaseAuth.instance.currentUser != null) {
+                _start = 61;
+              }
+            },
+            child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(widthSize < 500
+                        ? "assets/images/game_bg.png"
+                        : "assets/images/game_bg_tab.png"),
+                    fit: BoxFit.fill,
+                  ),
                 ),
-              ),
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 50, 30, 0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(14),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(15.0),
-                                  bottomRight: Radius.circular(15.0),
-                                  topLeft: Radius.circular(15.0),
-                                  bottomLeft: Radius.circular(15.0)),
-                            ),
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.fromLTRB(80, 20, 80, 20),
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(30, 50, 30, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(14),
                               decoration: const BoxDecoration(
                                 color: Colors.white,
-                                image: DecorationImage(
-                                  image:
-                                      AssetImage("assets/images/site-logo.png"),
-                                  fit: BoxFit.contain,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    bottomRight: Radius.circular(15.0),
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0)),
+                              ),
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(80, 20, 80, 20),
+                                decoration: const BoxDecoration(
+                                  color: Colors.white,
+                                  image: DecorationImage(
+                                    image: AssetImage(
+                                        "assets/images/site-logo.png"),
+                                    fit: BoxFit.contain,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                      child: Text(
-                        "SUD Life Experience Zone",
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                        child: Text(
+                          "SUD Life Experience Zone",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                              fontWeight: FontWeight.w700, fontSize: 26),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: Container(
+                          height: 50,
+                          width: 210,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(15.0),
+                                bottomRight: Radius.circular(15.0),
+                                topLeft: Radius.circular(15.0),
+                                bottomLeft: Radius.circular(15.0)),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                          margin: const EdgeInsets.fromLTRB(0, 0, 20, 10),
+                          child: DropdownButton(
+                            dropdownColor: Colors.white,
+                            iconSize: 24,
+                            elevation: 16,
+                            isExpanded: true,
+                            value: itemValue,
+                            iconEnabledColor: LightColor.appBlue,
+                            icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                            borderRadius: BorderRadius.circular(7.0),
+                            style: const TextStyle(
+                                color: LightColor.appBlue,
+                                fontWeight: FontWeight.w600),
+                            items: users.map((Item user) {
+                              return DropdownMenuItem(
+                                value: user,
+                                child: Row(
+                                  children: [
+                                    user.name != 'Self-Help'
+                                        ? ImageIcon(
+                                            AssetImage(user.icon),
+                                            size: 25,
+                                            color: Colors.red,
+                                          )
+                                        : Container(),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      user.name,
+                                      style: const TextStyle(
+                                          color: LightColor.appBlue,
+                                          fontSize: 16),
+                                    ),
+
+                                    //Divider(height: 1,thickness: 2,color: Colors.black),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                            underline:
+                                DropdownButtonHideUnderline(child: Container()),
+                            onChanged: (newValue) {
+                              user = FirebaseAuth.instance.currentUser;
+                              setState(() {});
+                              if (user != null) {
+                                newValue = newValue as Item;
+                                redirectToWeb(value: newValue.name);
+                              } else {
+                                loginView(context);
+                              }
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        padding: const EdgeInsets.all(10),
+                        child: Row(
+                          children: [
+                            for (var element in gameList) ...{
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: gameBox(context, element.url,
+                                    element.name, element.imageUrl),
+                              ),
+                            }
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                        child: SizedBox(
+                          height: 60,
+                          width: 161,
+                          child: OutlinedButton(
+                            style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0)),
+                              side: const BorderSide(
+                                width: 2,
+                                color: Color(0xff0F5A93),
+                              ),
+                            ),
+                            child: Text(
+                              loginLogoutText.value,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                            onPressed: () async {
+                              setState(() {});
+                              user = FirebaseAuth.instance.currentUser;
+                              user != null
+                                  ? _showMyDialog()
+                                  : loginView(context);
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        "Protecting Families, Enriching Lives",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.w700, fontSize: 26),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: Container(
-                        height: 50,
-                        width: 210,
-                        decoration: const BoxDecoration(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 18,
                           color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(15.0),
-                              bottomRight: Radius.circular(15.0),
-                              topLeft: Radius.circular(15.0),
-                              bottomLeft: Radius.circular(15.0)),
-                        ),
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        margin: const EdgeInsets.fromLTRB(0, 0, 20, 10),
-                        child: DropdownButton(
-                          dropdownColor: Colors.white,
-                          iconSize: 24,
-                          elevation: 16,
-                          isExpanded: true,
-                          value: itemValue,
-                          iconEnabledColor: LightColor.appBlue,
-                          icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                          borderRadius: BorderRadius.circular(7.0),
-                          style: const TextStyle(
-                              color: LightColor.appBlue,
-                              fontWeight: FontWeight.w600),
-                          items: users.map((Item user) {
-                            return DropdownMenuItem(
-                              value: user,
-                              child: Row(
-                                children: [
-                                  user.name != 'Self-Help'
-                                      ? ImageIcon(
-                                          AssetImage(user.icon),
-                                          size: 25,
-                                          color: Colors.red,
-                                        )
-                                      : Container(),
-                                  const SizedBox(
-                                    width: 10,
-                                  ),
-                                  Text(
-                                    user.name,
-                                    style: const TextStyle(
-                                        color: LightColor.appBlue,
-                                        fontSize: 16),
-                                  ),
-
-                                  //Divider(height: 1,thickness: 2,color: Colors.black),
-                                ],
-                              ),
-                            );
-                          }).toList(),
-                          underline:
-                              DropdownButtonHideUnderline(child: Container()),
-                          onChanged: (newValue) {
-                            user = FirebaseAuth.instance.currentUser;
-                            setState(() {});
-                            if (user != null) {
-                              newValue = newValue as Item;
-                              redirectToWeb(value: newValue.name);
-                            } else {
-                              loginView(context);
-                            }
-                          },
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.all(10),
-                      child: Row(
-                        children: [
-                          for (var element in gameList) ...{
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: gameBox(context, element.url, element.name,
-                                  element.imageUrl),
-                            ),
-                          }
-                        ],
+                      SizedBox(
+                        height: 10,
                       ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                      child: SizedBox(
-                        height: 60,
-                        width: 160,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0)),
-                            side: const BorderSide(
-                              width: 2,
-                              color: Color(0xff0F5A93),
-                            ),
-                          ),
-                          child: Text(
-                            loginLogoutText.value,
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.redAccent,
-                            ),
-                          ),
-                          onPressed: () async {
-                            setState(() {});
-                            user = FirebaseAuth.instance.currentUser;
-                            user != null ? _showMyDialog() : loginView(context);
-                          },
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Protecting Families, Enriching Lives",
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.poppins(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                  ],
-                ),
-              )),
+                    ],
+                  ),
+                )),
+          ),
         ),
       ),
     );
@@ -464,10 +487,11 @@ class BannerScreenState extends State<BannerScreen>
   }
 
   void redirectToGame(String name, String url) async {
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
     if (url != "null") {
       if (kIsWeb) {
-        //  openUrl(url: url);
-
         Navigator.of(context).pop();
         await Navigator.of(context).push(PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) {
@@ -507,9 +531,6 @@ class BannerScreenState extends State<BannerScreen>
       ]);
     } else {
       showSnackBar("Coming Soon!");
-    }
-    if (_timer.isActive) {
-      _timer.cancel();
     }
   }
 
@@ -1091,11 +1112,15 @@ class BannerScreenState extends State<BannerScreen>
   }
 
   void redirectToScreen(String name, String url) {
+    if (_timer.isActive) {
+      _timer.cancel();
+    }
+
     if (name == "Fun Facts") {
       Navigator.of(context).pop();
       Navigator.of(context).push(PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return const FunFacts_Screen();
+            return const FunFactsScreen();
           },
           transitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -1108,7 +1133,7 @@ class BannerScreenState extends State<BannerScreen>
       Navigator.of(context).pop();
       Navigator.of(context).push(PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
-            return const Quiz_Screen();
+            return const QuizScreen();
           },
           transitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -1232,7 +1257,7 @@ class BannerScreenState extends State<BannerScreen>
           },
           codeSent: (String verificationId, int? resendToken) async {
             showSnackBar("OTP sent!");
-            _start = 60;
+            _start = 61;
             _otpSent.value = true;
             verification_id = verificationId;
             Navigator.pop(context);
@@ -1242,7 +1267,7 @@ class BannerScreenState extends State<BannerScreen>
           },
           verificationCompleted: (PhoneAuthCredential phoneAuthCredential) {
             showSnackBar("Verified.");
-            _start = 60;
+            _start = 61;
           },
           codeAutoRetrievalTimeout: (String verificationId) {
             _continuePressed.value = false;
@@ -1358,8 +1383,8 @@ class BannerScreenState extends State<BannerScreen>
                 DateTime.now().millisecondsSinceEpoch.toString())
             .set(userMap)
             .then((value) => null);
-        _start = 60;
-        startTimer();
+        _start = 61;
+        // startTimer();
         print("Verified");
         Navigator.of(context).pop();
         _nameController.clear();
@@ -1599,7 +1624,7 @@ class BannerScreenState extends State<BannerScreen>
     if (_timer.isActive) {
       _timer.cancel();
     }
-    _start = 60;
+    _start = 61;
   }
 
   void logOutUser(BuildContext context) async {

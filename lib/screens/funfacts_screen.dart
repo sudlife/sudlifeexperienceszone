@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,14 +17,14 @@ class Facts {
   Facts(this.title, this.description);
 }
 
-class FunFacts_Screen extends StatefulWidget {
-  const FunFacts_Screen({Key? key}) : super(key: key);
+class FunFactsScreen extends StatefulWidget {
+  const FunFactsScreen({Key? key}) : super(key: key);
 
   @override
-  State<FunFacts_Screen> createState() => _FunFacts_ScreenState();
+  State<FunFactsScreen> createState() => _FunFactsScreenState();
 }
 
-class _FunFacts_ScreenState extends State<FunFacts_Screen> {
+class _FunFactsScreenState extends State<FunFactsScreen> {
   List<Facts> factsList = [
     Facts(
       "The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
@@ -251,36 +250,6 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
     prefs.clear();
   }
 
-  late Timer _timer;
-  int _start = 60; // 2 minute
-
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start == 0) {
-          if (FirebaseAuth.instance.currentUser != null) {
-            logOutUser(context);
-            _timer.cancel();
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => const BannerScreen()));
-          }
-        } else {
-          _start--;
-          print(_start);
-        }
-      },
-    );
-  }
-
-  void logOutUser(BuildContext context) {
-    clear();
-    FirebaseAuth.instance.signOut();
-    setState(() {});
-  }
-
   // void startTimer() {
   //   const oneSec = Duration(seconds: 1);
   //   _timer = Timer.periodic(
@@ -309,7 +278,6 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
 
   @override
   void initState() {
-    startTimer();
     super.initState();
   }
 
@@ -331,973 +299,903 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        body: GestureDetector(
-          onTap: () {
-            if (FirebaseAuth.instance.currentUser != null) {
-              _start = 60;
-            }
-          },
-          onTapDown: (val) {
-            if (FirebaseAuth.instance.currentUser != null) {
-              _start = 60;
-            }
-          },
-          onTapUp: (val) {
-            if (FirebaseAuth.instance.currentUser != null) {
-              _start = 60;
-            }
-          },
-          child: Stack(
-            children: [
-              widthSize < 900
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/images/Background.png"),
-                          fit: BoxFit.fill,
-                        ),
+        body: Stack(
+          children: [
+            widthSize < 900
+                ? Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/Background.png"),
+                        fit: BoxFit.fill,
                       ),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            const SizedBox(
-                              height: 100,
-                            ),
-                            // // Container(
-                            // //   height: 70,
-                            // //   width: 160,
-                            // //   decoration: const BoxDecoration(
-                            // //     color: Colors.white,
-                            // //     borderRadius: BorderRadius.only(
-                            // //         topRight: Radius.circular(15.0),
-                            // //         bottomRight: Radius.circular(15.0),
-                            // //         topLeft: Radius.circular(15.0),
-                            // //         bottomLeft: Radius.circular(15.0)),
-                            // //   ),
-                            // //   child: Container(
-                            // //     height: 50,
-                            // //     width: 100,
-                            // //     margin: const EdgeInsets.all(12),
-                            // //     decoration: const BoxDecoration(
-                            // //       color: Colors.white,
-                            // //       image: DecorationImage(
-                            // //         image:
-                            // //             AssetImage("assets/images/site-logo.png"),
-                            // //         fit: BoxFit.contain,
-                            // //       ),
-                            // //     ),
-                            // //     child: null,
-                            // //   ),
-                            // // ),
-                            // Padding(
-                            //   padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       Container(
-                            //         // height: 70,
-                            //         // width: 160,
-                            //         padding: const EdgeInsets.all(14),
-                            //         decoration: const BoxDecoration(
-                            //           color: Colors.white,
-                            //           borderRadius: BorderRadius.only(
-                            //               topRight: Radius.circular(15.0),
-                            //               bottomRight: Radius.circular(15.0),
-                            //               topLeft: Radius.circular(15.0),
-                            //               bottomLeft: Radius.circular(15.0)),
-                            //         ),
-                            //         child: Container(
-                            //           // height: 50,
-                            //           // width: 100,
-                            //           padding: const EdgeInsets.fromLTRB(60,20,60,20),
-                            //           decoration: const BoxDecoration(
-                            //             color: Colors.white,
-                            //             image: DecorationImage(
-                            //               image:
-                            //               AssetImage("assets/images/site-logo.png"),
-                            //               fit: BoxFit.contain,
-                            //             ),
-                            //           ),
-                            //           child: null,
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-                            const SizedBox(
-                              height: 50,
-                            ),
-                            SingleChildScrollView(
-                              child: Container(
-                                //height: 350,
-                                //width: 450,
-                                margin: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                                //width: MediaQuery.of(context).size.width - 100,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(15.0),
-                                      bottomRight: Radius.circular(15.0),
-                                      topLeft: Radius.circular(15.0),
-                                      bottomLeft: Radius.circular(15.0)),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.all(10),
-                                          height: 35,
-                                          width: 35,
-                                          decoration: const BoxDecoration(
-                                            image: DecorationImage(
-                                              image: AssetImage(
-                                                  "assets/icon/fun facts ic.png"),
-                                              fit: BoxFit.fill,
-                                            ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 100,
+                          ),
+                          // // Container(
+                          // //   height: 70,
+                          // //   width: 160,
+                          // //   decoration: const BoxDecoration(
+                          // //     color: Colors.white,
+                          // //     borderRadius: BorderRadius.only(
+                          // //         topRight: Radius.circular(15.0),
+                          // //         bottomRight: Radius.circular(15.0),
+                          // //         topLeft: Radius.circular(15.0),
+                          // //         bottomLeft: Radius.circular(15.0)),
+                          // //   ),
+                          // //   child: Container(
+                          // //     height: 50,
+                          // //     width: 100,
+                          // //     margin: const EdgeInsets.all(12),
+                          // //     decoration: const BoxDecoration(
+                          // //       color: Colors.white,
+                          // //       image: DecorationImage(
+                          // //         image:
+                          // //             AssetImage("assets/images/site-logo.png"),
+                          // //         fit: BoxFit.contain,
+                          // //       ),
+                          // //     ),
+                          // //     child: null,
+                          // //   ),
+                          // // ),
+                          // Padding(
+                          //   padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       Container(
+                          //         // height: 70,
+                          //         // width: 160,
+                          //         padding: const EdgeInsets.all(14),
+                          //         decoration: const BoxDecoration(
+                          //           color: Colors.white,
+                          //           borderRadius: BorderRadius.only(
+                          //               topRight: Radius.circular(15.0),
+                          //               bottomRight: Radius.circular(15.0),
+                          //               topLeft: Radius.circular(15.0),
+                          //               bottomLeft: Radius.circular(15.0)),
+                          //         ),
+                          //         child: Container(
+                          //           // height: 50,
+                          //           // width: 100,
+                          //           padding: const EdgeInsets.fromLTRB(60,20,60,20),
+                          //           decoration: const BoxDecoration(
+                          //             color: Colors.white,
+                          //             image: DecorationImage(
+                          //               image:
+                          //               AssetImage("assets/images/site-logo.png"),
+                          //               fit: BoxFit.contain,
+                          //             ),
+                          //           ),
+                          //           child: null,
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          SingleChildScrollView(
+                            child: Container(
+                              //height: 350,
+                              //width: 450,
+                              margin: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                              //width: MediaQuery.of(context).size.width - 100,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    bottomRight: Radius.circular(15.0),
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0)),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(10),
+                                        height: 35,
+                                        width: 35,
+                                        decoration: const BoxDecoration(
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                "assets/icon/fun facts ic.png"),
+                                            fit: BoxFit.fill,
                                           ),
                                         ),
-                                        Container(
-                                          height: 40,
-                                          //width: 90,
+                                      ),
+                                      Container(
+                                        height: 40,
+                                        //width: 90,
+                                        margin: const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 0),
+                                        child: Center(
+                                          child: Text(
+                                            "Fun Facts",
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.blue.shade800,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                // builder: (context) => ChessGame()),
+                                                //  builder: (context) => ZoneHomeScreen()),
+                                                builder: (context) =>
+                                                    const BannerScreen()),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 35,
+                                          width: 35,
                                           margin: const EdgeInsets.fromLTRB(
-                                              10, 0, 10, 0),
-                                          child: Center(
-                                            child: Text(
-                                              "Fun Facts",
-                                              style: TextStyle(
-                                                  fontSize: 20,
-                                                  color: Colors.blue.shade800,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  // builder: (context) => ChessGame()),
-                                                  //  builder: (context) => ZoneHomeScreen()),
-                                                  builder: (context) =>
-                                                      const BannerScreen()),
-                                            );
-                                          },
-                                          child: Container(
-                                            height: 35,
-                                            width: 35,
-                                            margin: const EdgeInsets.fromLTRB(
-                                                0, 0, 10, 0),
-                                            decoration: const BoxDecoration(
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                    "assets/icon/close.png"),
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 5, 10, 0),
-                                      child: Divider(
-                                        color: Colors.black45,
-                                        height: 0.5,
-                                      ),
-                                    ),
-
-                                    Container(
-                                      margin: const EdgeInsets.all(20),
-                                      child: ChatBubble(
-                                        clipper: ChatBubbleClipper6(
-                                            type: BubbleType.sendBubble),
-                                        alignment: Alignment.topRight,
-                                        margin: const EdgeInsets.only(top: 20),
-                                        //backGroundColor: Colors.blue.shade800,
-                                        backGroundColor:
-                                            const Color(0xff0F5A93),
-                                        child: SizedBox(
-                                          // constraints: BoxConstraints(
-                                          //   maxWidth: MediaQuery.of(context).size.width * 0.7,
-                                          // ),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Container(
-                                            margin: const EdgeInsets.all(10),
-                                            padding: const EdgeInsets.fromLTRB(
-                                                0, 0, 0, 0),
-                                            child: Column(
-                                              children: [
-                                                Center(
-                                                  child: Text(
-                                                    factString.title,
-                                                    //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
-                                                    style: const TextStyle(
-                                                        fontSize: 18,
-                                                        //color: Colors.blue.shade800,
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  ),
-                                                ),
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          10, 10, 0, 0),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "   ${factString.description}",
-                                                      //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
-                                                      style: const TextStyle(
-                                                          fontSize: 14,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                    // Container(
-                                    //   //height: 150,
-                                    //   width: MediaQuery.of(context).size.width,
-                                    //   margin: const EdgeInsets.all(20),
-                                    //   decoration: const BoxDecoration(
-                                    //     color: Colors.white,
-                                    //     image: DecorationImage(
-                                    //       image: AssetImage(
-                                    //           "assets/icon/Background.png"),
-                                    //       fit: BoxFit.fill,
-                                    //     ),
-                                    //   ),
-                                    //   child: Container(
-                                    //     margin: const EdgeInsets.all(30),
-                                    //     padding:
-                                    //         const EdgeInsets.fromLTRB(0, 0, 0, 70),
-                                    //     child: Column(
-                                    //       children: [
-                                    //         Center(
-                                    //           child: Text(
-                                    //             factString.title,
-                                    //             //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
-                                    //             style: TextStyle(
-                                    //                 fontSize: 18,
-                                    //                 color: Colors.blue.shade800,
-                                    //                 fontWeight: FontWeight.w600),
-                                    //           ),
-                                    //         ),
-                                    //         Container(
-                                    //           padding:
-                                    //               EdgeInsets.fromLTRB(20, 20, 0, 0),
-                                    //           child: Center(
-                                    //             child: Text(
-                                    //               "   " + factString.description,
-                                    //               //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
-                                    //               style: TextStyle(
-                                    //                   fontSize: 14,
-                                    //                   color: Colors.blue.shade800,
-                                    //                   fontWeight: FontWeight.w400),
-                                    //             ),
-                                    //           ),
-                                    //         ),
-                                    //       ],
-                                    //     ),
-                                    //   ),
-                                    // ),
-
-                                    const SizedBox(height: 10),
-
-                                    // Row(
-                                    //   children: [
-                                    //     index != 0
-                                    //         ? InkWell(
-                                    //             onTap: () {
-                                    //               getFactText(false);
-                                    //             },
-                                    //             child: Container(
-                                    //               margin: const EdgeInsets.fromLTRB(
-                                    //                   20, 0, 0, 0),
-                                    //               height: 45,
-                                    //               width: 100,
-                                    //               decoration: const BoxDecoration(
-                                    //                 image: DecorationImage(
-                                    //                   image: AssetImage(
-                                    //                       "assets/icon/Previous.png"),
-                                    //                   fit: BoxFit.fill,
-                                    //                 ),
-                                    //               ),
-                                    //             ),
-                                    //           )
-                                    //         : Container(
-                                    //             margin: const EdgeInsets.fromLTRB(
-                                    //                 20, 0, 0, 0),
-                                    //             height: 45,
-                                    //             width: 100,
-                                    //           ),
-                                    //     const Spacer(),
-                                    //     InkWell(
-                                    //       onTap: () {
-                                    //         getFactText(true);
-                                    //       },
-                                    //       child: Container(
-                                    //         margin:
-                                    //             const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                    //         height: 45,
-                                    //         width: 100,
-                                    //         decoration: const BoxDecoration(
-                                    //           image: DecorationImage(
-                                    //             image: AssetImage("assets/icon/Next.png"),
-                                    //             fit: BoxFit.fill,
-                                    //           ),
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //   ],
-                                    // ),
-
-                                    Row(
-                                      children: [
-                                        index != 0
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        30, 0, 0, 0),
-                                                child: SizedBox(
-                                                  height: 45,
-                                                  width: 120,
-                                                  // child: OutlineButton(
-                                                  //   shape: RoundedRectangleBorder(
-                                                  //       borderRadius:
-                                                  //           BorderRadius.circular(
-                                                  //               15.0)),
-                                                  //   child: const Text(
-                                                  //     "Previous",
-                                                  //     style: TextStyle(
-                                                  //       fontSize: 16,
-                                                  //       fontWeight: FontWeight.bold,
-                                                  //       color: Color(0xff0F5A93),
-                                                  //     ),
-                                                  //   ),
-                                                  //   borderSide: const BorderSide(
-                                                  //     width: 2,
-                                                  //     color: Color(0xff0F5A93),
-                                                  //   ),
-                                                  //   onPressed: () {
-                                                  //     index > 0
-                                                  //         ? getFactText(false)
-                                                  //         : Container();
-                                                  //   },
-                                                  // ),
-
-                                                  child: OutlinedButton(
-                                                    style: OutlinedButton
-                                                        .styleFrom(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15.0)),
-                                                      side: const BorderSide(
-                                                        width: 2,
-                                                        color:
-                                                            Color(0xff0F5A93),
-                                                      ),
-                                                    ),
-                                                    child: const Text(
-                                                      "Previous",
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Color(0xff0F5A93),
-                                                      ),
-                                                    ),
-                                                    onPressed: () {
-                                                      index > 0
-                                                          ? getFactText(false)
-                                                          : Container();
-                                                    },
-                                                  ),
-                                                ),
-                                              )
-                                            : Container(
-                                                margin:
-                                                    const EdgeInsets.fromLTRB(
-                                                        20, 0, 0, 0),
-                                                height: 45,
-                                                width: 100,
-                                              ),
-                                        const Spacer(),
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 0, 30, 0),
-                                          child: Container(
-                                            height: 45,
-                                            width: 120,
-                                            decoration: const BoxDecoration(
-                                              color: Color(0xff0F5A93),
-                                              borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(15.0),
-                                                  bottomRight:
-                                                      Radius.circular(15.0),
-                                                  topLeft:
-                                                      Radius.circular(15.0),
-                                                  bottomLeft:
-                                                      Radius.circular(15.0)),
-                                            ),
-                                            child: TextButton(
-                                              style: TextButton.styleFrom(
-                                                foregroundColor:
-                                                    const Color(0xff0F5A93),
-                                              ),
-                                              onPressed: () {
-                                                factString = factsList[index];
-                                                factsList.length - 1 != index
-                                                    ? getFactText(true)
-                                                    : {
-                                                        Navigator.of(context)
-                                                            .pop(),
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              // builder: (context) => ChessGame()),
-                                                              //  builder: (context) => ZoneHomeScreen()),
-                                                              builder: (context) =>
-                                                                  const BannerScreen()),
-                                                        ),
-                                                      };
-                                              },
-                                              child: Text(
-                                                factsList.length - 1 != index
-                                                    ? 'Next'
-                                                    : 'Finish',
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
-                                                ),
-                                                // style:
-                                                //     const TextStyle(color: Colors.white),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-
-                                    const SizedBox(height: 20),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    )
-                  : Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("assets/images/Background.png"),
-                          fit: BoxFit.fill,
-                        ),
-                      ),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            // Padding(
-                            //   padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
-                            //   child: Row(
-                            //     mainAxisAlignment: MainAxisAlignment.center,
-                            //     children: [
-                            //       Container(
-                            //         // height: 70,
-                            //         // width: 160,
-                            //         padding: const EdgeInsets.all(14),
-                            //         decoration: const BoxDecoration(
-                            //           color: Colors.white,
-                            //           borderRadius: BorderRadius.only(
-                            //               topRight: Radius.circular(15.0),
-                            //               bottomRight: Radius.circular(15.0),
-                            //               topLeft: Radius.circular(15.0),
-                            //               bottomLeft: Radius.circular(15.0)),
-                            //         ),
-                            //         child: Container(
-                            //           // height: 50,
-                            //           // width: 100,
-                            //           padding:
-                            //               const EdgeInsets.fromLTRB(60, 20, 60, 20),
-                            //           decoration: const BoxDecoration(
-                            //             color: Colors.white,
-                            //             image: DecorationImage(
-                            //               image: AssetImage(
-                            //                   "assets/images/site-logo.png"),
-                            //               fit: BoxFit.contain,
-                            //             ),
-                            //           ),
-                            //           child: null,
-                            //         ),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // ),
-
-                            // Container(
-                            //   height: 70,
-                            //   width: 140,
-                            //   decoration: const BoxDecoration(
-                            //     color: Colors.white,
-                            //     borderRadius: BorderRadius.only(
-                            //         topRight: Radius.circular(15.0),
-                            //         bottomRight: Radius.circular(15.0),
-                            //         topLeft: Radius.circular(15.0),
-                            //         bottomLeft: Radius.circular(15.0)),
-                            //   ),
-                            //   child: Container(
-                            //     height: 50,
-                            //     width: 100,
-                            //     margin: const EdgeInsets.all(12),
-                            //     decoration: const BoxDecoration(
-                            //       color: Colors.white,
-                            //       image: DecorationImage(
-                            //         image:
-                            //             AssetImage("assets/images/site-logo.png"),
-                            //         fit: BoxFit.contain,
-                            //       ),
-                            //     ),
-                            //     child: null,
-                            //   ),
-                            // ),
-
-                            const SizedBox(
-                              height: 100,
-                            ),
-
-                            SingleChildScrollView(
-                              child: Container(
-                                //height: 350,
-                                //width: 450,
-                                margin:
-                                    const EdgeInsets.fromLTRB(140, 40, 140, 0),
-                                //width: MediaQuery.of(context).size.width - 100,
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(15.0),
-                                      bottomRight: Radius.circular(15.0),
-                                      topLeft: Radius.circular(15.0),
-                                      bottomLeft: Radius.circular(15.0)),
-                                ),
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Container(
-                                          margin: const EdgeInsets.all(10),
-                                          height: 35,
-                                          width: 35,
+                                              0, 0, 10, 0),
                                           decoration: const BoxDecoration(
                                             image: DecorationImage(
                                               image: AssetImage(
-                                                  "assets/icon/fun facts ic.png"),
+                                                  "assets/icon/close.png"),
                                               fit: BoxFit.fill,
                                             ),
                                           ),
                                         ),
-                                        SizedBox(
-                                          height: 40,
-                                          width: 90,
-                                          child: Center(
-                                            child: Text(
-                                              "Fun Facts",
-                                              style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.blue.shade800,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                          ),
-                                        ),
-                                        const Spacer(),
-                                        InkWell(
-                                          onTap: () {
-                                            Navigator.of(context).pop();
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  // builder: (context) => ChessGame()),
-                                                  //  builder: (context) => ZoneHomeScreen()),
-                                                  builder: (context) =>
-                                                      const BannerScreen()),
-                                            );
-                                          },
-                                          child: Container(
-                                            height: 35,
-                                            width: 35,
-                                            margin: const EdgeInsets.fromLTRB(
-                                                0, 0, 10, 0),
-                                            decoration: const BoxDecoration(
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                    "assets/icon/close.png"),
-                                                fit: BoxFit.fill,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    const Padding(
-                                      padding:
-                                          EdgeInsets.fromLTRB(10, 0, 10, 0),
-                                      child: Divider(
-                                        color: Colors.black45,
-                                        height: 0.5,
                                       ),
+                                    ],
+                                  ),
+
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                                    child: Divider(
+                                      color: Colors.black45,
+                                      height: 0.5,
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.all(20),
-                                      child: ChatBubble(
-                                        clipper: ChatBubbleClipper6(
-                                            type: BubbleType.sendBubble),
-                                        alignment: Alignment.topRight,
-                                        margin: const EdgeInsets.only(top: 20),
-                                        //backGroundColor: Colors.yellow.shade500,
-                                        //backGroundColor: Colors.blue.shade800,
-                                        backGroundColor:
-                                            const Color(0xff0F5A93),
-                                        child: SizedBox(
-                                          // constraints: BoxConstraints(
-                                          //   maxWidth: MediaQuery.of(context).size.width * 0.7,
-                                          // ),
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          child: Container(
-                                            margin: const EdgeInsets.all(10),
-                                            padding: const EdgeInsets.fromLTRB(
-                                                0, 0, 0, 0),
-                                            child: Column(
-                                              children: [
-                                                Center(
+                                  ),
+
+                                  Container(
+                                    margin: const EdgeInsets.all(20),
+                                    child: ChatBubble(
+                                      clipper: ChatBubbleClipper6(
+                                          type: BubbleType.sendBubble),
+                                      alignment: Alignment.topRight,
+                                      margin: const EdgeInsets.only(top: 20),
+                                      //backGroundColor: Colors.blue.shade800,
+                                      backGroundColor: const Color(0xff0F5A93),
+                                      child: SizedBox(
+                                        // constraints: BoxConstraints(
+                                        //   maxWidth: MediaQuery.of(context).size.width * 0.7,
+                                        // ),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Container(
+                                          margin: const EdgeInsets.all(10),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 0, 0, 0),
+                                          child: Column(
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                  factString.title,
+                                                  //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
+                                                  style: const TextStyle(
+                                                      fontSize: 18,
+                                                      //color: Colors.blue.shade800,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 0, 0),
+                                                child: Center(
                                                   child: Text(
-                                                    factString.title,
+                                                    "   ${factString.description}",
                                                     //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
                                                     style: const TextStyle(
-                                                        fontSize: 18,
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w400),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
+                                  // Container(
+                                  //   //height: 150,
+                                  //   width: MediaQuery.of(context).size.width,
+                                  //   margin: const EdgeInsets.all(20),
+                                  //   decoration: const BoxDecoration(
+                                  //     color: Colors.white,
+                                  //     image: DecorationImage(
+                                  //       image: AssetImage(
+                                  //           "assets/icon/Background.png"),
+                                  //       fit: BoxFit.fill,
+                                  //     ),
+                                  //   ),
+                                  //   child: Container(
+                                  //     margin: const EdgeInsets.all(30),
+                                  //     padding:
+                                  //         const EdgeInsets.fromLTRB(0, 0, 0, 70),
+                                  //     child: Column(
+                                  //       children: [
+                                  //         Center(
+                                  //           child: Text(
+                                  //             factString.title,
+                                  //             //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
+                                  //             style: TextStyle(
+                                  //                 fontSize: 18,
+                                  //                 color: Colors.blue.shade800,
+                                  //                 fontWeight: FontWeight.w600),
+                                  //           ),
+                                  //         ),
+                                  //         Container(
+                                  //           padding:
+                                  //               EdgeInsets.fromLTRB(20, 20, 0, 0),
+                                  //           child: Center(
+                                  //             child: Text(
+                                  //               "   " + factString.description,
+                                  //               //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
+                                  //               style: TextStyle(
+                                  //                   fontSize: 14,
+                                  //                   color: Colors.blue.shade800,
+                                  //                   fontWeight: FontWeight.w400),
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //       ],
+                                  //     ),
+                                  //   ),
+                                  // ),
+
+                                  const SizedBox(height: 10),
+
+                                  // Row(
+                                  //   children: [
+                                  //     index != 0
+                                  //         ? InkWell(
+                                  //             onTap: () {
+                                  //               getFactText(false);
+                                  //             },
+                                  //             child: Container(
+                                  //               margin: const EdgeInsets.fromLTRB(
+                                  //                   20, 0, 0, 0),
+                                  //               height: 45,
+                                  //               width: 100,
+                                  //               decoration: const BoxDecoration(
+                                  //                 image: DecorationImage(
+                                  //                   image: AssetImage(
+                                  //                       "assets/icon/Previous.png"),
+                                  //                   fit: BoxFit.fill,
+                                  //                 ),
+                                  //               ),
+                                  //             ),
+                                  //           )
+                                  //         : Container(
+                                  //             margin: const EdgeInsets.fromLTRB(
+                                  //                 20, 0, 0, 0),
+                                  //             height: 45,
+                                  //             width: 100,
+                                  //           ),
+                                  //     const Spacer(),
+                                  //     InkWell(
+                                  //       onTap: () {
+                                  //         getFactText(true);
+                                  //       },
+                                  //       child: Container(
+                                  //         margin:
+                                  //             const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                  //         height: 45,
+                                  //         width: 100,
+                                  //         decoration: const BoxDecoration(
+                                  //           image: DecorationImage(
+                                  //             image: AssetImage("assets/icon/Next.png"),
+                                  //             fit: BoxFit.fill,
+                                  //           ),
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+
+                                  Row(
+                                    children: [
+                                      index != 0
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      30, 0, 0, 0),
+                                              child: SizedBox(
+                                                height: 45,
+                                                width: 120,
+                                                // child: OutlineButton(
+                                                //   shape: RoundedRectangleBorder(
+                                                //       borderRadius:
+                                                //           BorderRadius.circular(
+                                                //               15.0)),
+                                                //   child: const Text(
+                                                //     "Previous",
+                                                //     style: TextStyle(
+                                                //       fontSize: 16,
+                                                //       fontWeight: FontWeight.bold,
+                                                //       color: Color(0xff0F5A93),
+                                                //     ),
+                                                //   ),
+                                                //   borderSide: const BorderSide(
+                                                //     width: 2,
+                                                //     color: Color(0xff0F5A93),
+                                                //   ),
+                                                //   onPressed: () {
+                                                //     index > 0
+                                                //         ? getFactText(false)
+                                                //         : Container();
+                                                //   },
+                                                // ),
+
+                                                child: OutlinedButton(
+                                                  style:
+                                                      OutlinedButton.styleFrom(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15.0)),
+                                                    side: const BorderSide(
+                                                      width: 2,
+                                                      color: Color(0xff0F5A93),
+                                                    ),
+                                                  ),
+                                                  child: const Text(
+                                                    "Previous",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color(0xff0F5A93),
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    index > 0
+                                                        ? getFactText(false)
+                                                        : Container();
+                                                  },
+                                                ),
+                                              ),
+                                            )
+                                          : Container(
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  20, 0, 0, 0),
+                                              height: 45,
+                                              width: 100,
+                                            ),
+                                      const Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 30, 0),
+                                        child: Container(
+                                          height: 45,
+                                          width: 120,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xff0F5A93),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(15.0),
+                                                bottomRight:
+                                                    Radius.circular(15.0),
+                                                topLeft: Radius.circular(15.0),
+                                                bottomLeft:
+                                                    Radius.circular(15.0)),
+                                          ),
+                                          child: TextButton(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor:
+                                                  const Color(0xff0F5A93),
+                                            ),
+                                            onPressed: () {
+                                              factString = factsList[index];
+                                              factsList.length - 1 != index
+                                                  ? getFactText(true)
+                                                  : {
+                                                      Navigator.of(context)
+                                                          .pop(),
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            // builder: (context) => ChessGame()),
+                                                            //  builder: (context) => ZoneHomeScreen()),
+                                                            builder: (context) =>
+                                                                const BannerScreen()),
+                                                      ),
+                                                    };
+                                            },
+                                            child: Text(
+                                              factsList.length - 1 != index
+                                                  ? 'Next'
+                                                  : 'Finish',
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                              // style:
+                                              //     const TextStyle(color: Colors.white),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  )
+                : Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/images/Background.png"),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          // Padding(
+                          //   padding: EdgeInsets.fromLTRB(30, 30, 30, 0),
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.center,
+                          //     children: [
+                          //       Container(
+                          //         // height: 70,
+                          //         // width: 160,
+                          //         padding: const EdgeInsets.all(14),
+                          //         decoration: const BoxDecoration(
+                          //           color: Colors.white,
+                          //           borderRadius: BorderRadius.only(
+                          //               topRight: Radius.circular(15.0),
+                          //               bottomRight: Radius.circular(15.0),
+                          //               topLeft: Radius.circular(15.0),
+                          //               bottomLeft: Radius.circular(15.0)),
+                          //         ),
+                          //         child: Container(
+                          //           // height: 50,
+                          //           // width: 100,
+                          //           padding:
+                          //               const EdgeInsets.fromLTRB(60, 20, 60, 20),
+                          //           decoration: const BoxDecoration(
+                          //             color: Colors.white,
+                          //             image: DecorationImage(
+                          //               image: AssetImage(
+                          //                   "assets/images/site-logo.png"),
+                          //               fit: BoxFit.contain,
+                          //             ),
+                          //           ),
+                          //           child: null,
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
+
+                          // Container(
+                          //   height: 70,
+                          //   width: 140,
+                          //   decoration: const BoxDecoration(
+                          //     color: Colors.white,
+                          //     borderRadius: BorderRadius.only(
+                          //         topRight: Radius.circular(15.0),
+                          //         bottomRight: Radius.circular(15.0),
+                          //         topLeft: Radius.circular(15.0),
+                          //         bottomLeft: Radius.circular(15.0)),
+                          //   ),
+                          //   child: Container(
+                          //     height: 50,
+                          //     width: 100,
+                          //     margin: const EdgeInsets.all(12),
+                          //     decoration: const BoxDecoration(
+                          //       color: Colors.white,
+                          //       image: DecorationImage(
+                          //         image:
+                          //             AssetImage("assets/images/site-logo.png"),
+                          //         fit: BoxFit.contain,
+                          //       ),
+                          //     ),
+                          //     child: null,
+                          //   ),
+                          // ),
+
+                          const SizedBox(
+                            height: 100,
+                          ),
+
+                          SingleChildScrollView(
+                            child: Container(
+                              //height: 350,
+                              //width: 450,
+                              margin:
+                                  const EdgeInsets.fromLTRB(140, 40, 140, 0),
+                              //width: MediaQuery.of(context).size.width - 100,
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(15.0),
+                                    bottomRight: Radius.circular(15.0),
+                                    topLeft: Radius.circular(15.0),
+                                    bottomLeft: Radius.circular(15.0)),
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(10),
+                                        height: 35,
+                                        width: 35,
+                                        decoration: const BoxDecoration(
+                                          image: DecorationImage(
+                                            image: AssetImage(
+                                                "assets/icon/fun facts ic.png"),
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 40,
+                                        width: 90,
+                                        child: Center(
+                                          child: Text(
+                                            "Fun Facts",
+                                            style: TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.blue.shade800,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.of(context).pop();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                // builder: (context) => ChessGame()),
+                                                //  builder: (context) => ZoneHomeScreen()),
+                                                builder: (context) =>
+                                                    const BannerScreen()),
+                                          );
+                                        },
+                                        child: Container(
+                                          height: 35,
+                                          width: 35,
+                                          margin: const EdgeInsets.fromLTRB(
+                                              0, 0, 10, 0),
+                                          decoration: const BoxDecoration(
+                                            image: DecorationImage(
+                                              image: AssetImage(
+                                                  "assets/icon/close.png"),
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    child: Divider(
+                                      color: Colors.black45,
+                                      height: 0.5,
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: const EdgeInsets.all(20),
+                                    child: ChatBubble(
+                                      clipper: ChatBubbleClipper6(
+                                          type: BubbleType.sendBubble),
+                                      alignment: Alignment.topRight,
+                                      margin: const EdgeInsets.only(top: 20),
+                                      //backGroundColor: Colors.yellow.shade500,
+                                      //backGroundColor: Colors.blue.shade800,
+                                      backGroundColor: const Color(0xff0F5A93),
+                                      child: SizedBox(
+                                        // constraints: BoxConstraints(
+                                        //   maxWidth: MediaQuery.of(context).size.width * 0.7,
+                                        // ),
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Container(
+                                          margin: const EdgeInsets.all(10),
+                                          padding: const EdgeInsets.fromLTRB(
+                                              0, 0, 0, 0),
+                                          child: Column(
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                  factString.title,
+                                                  //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
+                                                  style: const TextStyle(
+                                                      fontSize: 18,
+                                                      //color: Colors.blue.shade800,
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        10, 10, 0, 0),
+                                                child: Center(
+                                                  child: Text(
+                                                    "   ${factString.description}",
+                                                    //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
                                                         //color: Colors.blue.shade800,
                                                         color: Colors.white,
                                                         fontWeight:
-                                                            FontWeight.w600),
+                                                            FontWeight.w400),
                                                   ),
                                                 ),
-                                                Container(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          10, 10, 0, 0),
-                                                  child: Center(
-                                                    child: Text(
-                                                      "   ${factString.description}",
-                                                      //" The word 'insurance' is derived from the French word 'ensurer' and originally meant an 'engagement to marry'.",
-                                                      style: const TextStyle(
-                                                          fontSize: 14,
-                                                          //color: Colors.blue.shade800,
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.w400),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        index != 0
-                                            ? Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        30, 0, 0, 0),
-                                                child: SizedBox(
-                                                  height: 45,
-                                                  width: 120,
-                                                  child: OutlinedButton(
-                                                    style: OutlinedButton
-                                                        .styleFrom(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          15.0)),
-                                                      side: const BorderSide(
-                                                        width: 2,
-                                                        color:
-                                                            Color(0xff0F5A93),
-                                                      ),
-                                                    ),
-                                                    child: const Text(
-                                                      "Previous",
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Color(0xff0F5A93),
-                                                      ),
-                                                    ),
-                                                    onPressed: () {
-                                                      // restartTime();
-                                                      index > 0
-                                                          ? getFactText(false)
-                                                          : Container();
-                                                    },
-                                                  ),
-                                                ),
-                                              )
-                                            : Container(
-                                                margin:
-                                                    const EdgeInsets.fromLTRB(
-                                                        20, 0, 0, 0),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Row(
+                                    children: [
+                                      index != 0
+                                          ? Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      30, 0, 0, 0),
+                                              child: SizedBox(
                                                 height: 45,
-                                                width: 100,
-                                              ),
-                                        const Spacer(),
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 0, 30, 0),
-                                          child: Container(
-                                            height: 45,
-                                            width: 120,
-                                            decoration: const BoxDecoration(
-                                              color: Color(0xff0F5A93),
-                                              borderRadius: BorderRadius.only(
-                                                  topRight:
-                                                      Radius.circular(15.0),
-                                                  bottomRight:
-                                                      Radius.circular(15.0),
-                                                  topLeft:
-                                                      Radius.circular(15.0),
-                                                  bottomLeft:
-                                                      Radius.circular(15.0)),
-                                            ),
-                                            child: TextButton(
-                                              style: TextButton.styleFrom(
-                                                foregroundColor:
-                                                    const Color(0xff0F5A93),
-                                              ),
-                                              onPressed: () {
-                                                // factsList.length - 1 != index
-                                                //     ? restartTime() : dispose();
-                                                factString = factsList[index];
-                                                factsList.length - 1 != index
-                                                    ? getFactText(true)
-                                                    : {
-                                                        Navigator.of(context)
-                                                            .pop(),
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              // builder: (context) => ChessGame()),
-                                                              //  builder: (context) => ZoneHomeScreen()),
-                                                              builder: (context) =>
-                                                                  const BannerScreen()),
-                                                        ),
-                                                      };
-                                              },
-                                              child: Text(
-                                                factsList.length - 1 != index
-                                                    ? 'Next'
-                                                    : 'Finish',
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.white,
+                                                width: 120,
+                                                child: OutlinedButton(
+                                                  style:
+                                                      OutlinedButton.styleFrom(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        15.0)),
+                                                    side: const BorderSide(
+                                                      width: 2,
+                                                      color: Color(0xff0F5A93),
+                                                    ),
+                                                  ),
+                                                  child: const Text(
+                                                    "Previous",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Color(0xff0F5A93),
+                                                    ),
+                                                  ),
+                                                  onPressed: () {
+                                                    // restartTime();
+                                                    index > 0
+                                                        ? getFactText(false)
+                                                        : Container();
+                                                  },
                                                 ),
-                                                // style:
-                                                //     const TextStyle(color: Colors.white),
                                               ),
+                                            )
+                                          : Container(
+                                              margin: const EdgeInsets.fromLTRB(
+                                                  20, 0, 0, 0),
+                                              height: 45,
+                                              width: 100,
+                                            ),
+                                      const Spacer(),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 30, 0),
+                                        child: Container(
+                                          height: 45,
+                                          width: 120,
+                                          decoration: const BoxDecoration(
+                                            color: Color(0xff0F5A93),
+                                            borderRadius: BorderRadius.only(
+                                                topRight: Radius.circular(15.0),
+                                                bottomRight:
+                                                    Radius.circular(15.0),
+                                                topLeft: Radius.circular(15.0),
+                                                bottomLeft:
+                                                    Radius.circular(15.0)),
+                                          ),
+                                          child: TextButton(
+                                            style: TextButton.styleFrom(
+                                              foregroundColor:
+                                                  const Color(0xff0F5A93),
+                                            ),
+                                            onPressed: () {
+                                              // factsList.length - 1 != index
+                                              //     ? restartTime() : dispose();
+                                              factString = factsList[index];
+                                              factsList.length - 1 != index
+                                                  ? getFactText(true)
+                                                  : {
+                                                      Navigator.of(context)
+                                                          .pop(),
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            // builder: (context) => ChessGame()),
+                                                            //  builder: (context) => ZoneHomeScreen()),
+                                                            builder: (context) =>
+                                                                const BannerScreen()),
+                                                      ),
+                                                    };
+                                            },
+                                            child: Text(
+                                              factsList.length - 1 != index
+                                                  ? 'Next'
+                                                  : 'Finish',
+                                              style: const TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.white,
+                                              ),
+                                              // style:
+                                              //     const TextStyle(color: Colors.white),
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                  ],
-                                ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
                               ),
-                            )
-                          ],
-                        ),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-              TargetPlatform.android == defaultTargetPlatform
-                  ? Positioned(
-                      top: 20.0,
-                      right: 30.0,
-                      child: InkWell(
-                        onTap: () {
-                          if (_timer.isActive) {
-                            _timer.cancel();
-                            print(
-                                "FunFacts Timer Canceled and Start in Dispose() ");
-                          }
-
-                          Navigator.of(context).pop();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                // builder: (context) => ChessGame()),
-                                builder: (context) => const BannerScreen()),
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          height: 100,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/games/Home Icon.png"),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : Positioned(
-                      top: 30.0,
-                      right: 30.0,
-                      child: InkWell(
-                        onTap: () {
-                          if (_timer.isActive) {
-                            _timer.cancel();
-                            print(
-                                "FunFacts Timer Canceled and Start in Dispose() ");
-                          }
-                          Navigator.of(context).pop();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                // builder: (context) => ChessGame()),
-                                builder: (context) => const BannerScreen()),
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.all(10),
-                          height: 100,
-                          width: 40,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage("assets/games/Home Icon.png"),
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
+                  ),
+            Positioned(
+              top: 30.0,
+              right: 30.0,
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const BannerScreen()),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  height: 100,
+                  width: 40,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/games/Home Icon.png"),
+                      fit: BoxFit.contain,
                     ),
-              TargetPlatform.android == defaultTargetPlatform
-                  ? Positioned(
-                      top: 60.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              // height: 70,
-                              // width: 160,
-                              padding: const EdgeInsets.all(14),
+                  ),
+                ),
+              ),
+            ),
+            TargetPlatform.android == defaultTargetPlatform
+                ? Positioned(
+                    top: 60.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            // height: 70,
+                            // width: 160,
+                            padding: const EdgeInsets.all(14),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(15.0),
+                                  bottomRight: Radius.circular(15.0),
+                                  topLeft: Radius.circular(15.0),
+                                  bottomLeft: Radius.circular(15.0)),
+                            ),
+                            child: Container(
+                              // height: 50,
+                              // width: 100,
+                              padding:
+                                  const EdgeInsets.fromLTRB(60, 15, 60, 15),
                               decoration: const BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(15.0),
-                                    bottomRight: Radius.circular(15.0),
-                                    topLeft: Radius.circular(15.0),
-                                    bottomLeft: Radius.circular(15.0)),
-                              ),
-                              child: Container(
-                                // height: 50,
-                                // width: 100,
-                                padding:
-                                    const EdgeInsets.fromLTRB(60, 15, 60, 15),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/images/site-logo.png"),
-                                    fit: BoxFit.contain,
-                                  ),
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage("assets/images/site-logo.png"),
+                                  fit: BoxFit.contain,
                                 ),
-                                child: null,
                               ),
+                              child: null,
                             ),
-                          ],
-                        ),
-                      ),
-                    )
-                  : Positioned(
-                      top: 60.0,
-                      left: 0.0,
-                      right: 0.0,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              // height: 70,
-                              // width: 160,
-                              padding: const EdgeInsets.all(14),
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.only(
-                                    topRight: Radius.circular(15.0),
-                                    bottomRight: Radius.circular(15.0),
-                                    topLeft: Radius.circular(15.0),
-                                    bottomLeft: Radius.circular(15.0)),
-                              ),
-                              child: Container(
-                                // height: 50,
-                                // width: 100,
-                                padding:
-                                    const EdgeInsets.fromLTRB(60, 15, 60, 15),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                        "assets/images/site-logo.png"),
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                child: null,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-            ],
-          ),
+                  )
+                : Positioned(
+                    top: 60.0,
+                    left: 0.0,
+                    right: 0.0,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            // height: 70,
+                            // width: 160,
+                            padding: const EdgeInsets.all(14),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(15.0),
+                                  bottomRight: Radius.circular(15.0),
+                                  topLeft: Radius.circular(15.0),
+                                  bottomLeft: Radius.circular(15.0)),
+                            ),
+                            child: Container(
+                              // height: 50,
+                              // width: 100,
+                              padding:
+                                  const EdgeInsets.fromLTRB(60, 15, 60, 15),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                image: DecorationImage(
+                                  image:
+                                      AssetImage("assets/images/site-logo.png"),
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              child: null,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+          ],
         ),
       ),
     );
@@ -1305,10 +1203,6 @@ class _FunFacts_ScreenState extends State<FunFacts_Screen> {
 
   @override
   void dispose() {
-    if (_timer.isActive) {
-      _timer.cancel();
-    }
-
     super.dispose();
   }
 
