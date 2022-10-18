@@ -568,7 +568,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                           }
                                         },
                                         child: SizedBox(
-                                          height: 55,
+                                          height: 65,
                                           width: size,
                                           child: CustomPaint(
                                             painter: AMobileOptionCustomPainter(
@@ -586,7 +586,6 @@ class _QuizScreenState extends State<QuizScreen> {
                                                   "A. ${quizObject.optionA}",
                                                   //"A. What is the Purpose of Life insurance",
                                                   textAlign: TextAlign.center,
-                                                  maxLines: 3,
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       color: _correctA
@@ -635,7 +634,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                           }
                                         },
                                         child: SizedBox(
-                                          height: 55,
+                                          height: 65,
                                           width: size,
                                           child: CustomPaint(
                                             size: Size(
@@ -705,7 +704,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                           }
                                         },
                                         child: SizedBox(
-                                          height: 55,
+                                          height: 65,
                                           width: size,
                                           child: CustomPaint(
                                             size: Size(
@@ -770,7 +769,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                           }
                                         },
                                         child: SizedBox(
-                                          height: 55,
+                                          height: 65,
                                           width: size,
                                           child: CustomPaint(
                                             size: Size(
@@ -788,7 +787,6 @@ class _QuizScreenState extends State<QuizScreen> {
                                                   "D. ${quizObject.optionD}",
                                                   //"A. What is the Purpose of Life insurance",
                                                   textAlign: TextAlign.center,
-                                                  maxLines: 3,
                                                   style: TextStyle(
                                                       fontSize: 14,
                                                       color: _correctD
@@ -1781,7 +1779,6 @@ class _QuizScreenState extends State<QuizScreen> {
                                                     "A. ${quizObject.optionA}",
                                                     //"A. What is the Purpose of Life insurance",
                                                     textAlign: TextAlign.start,
-                                                    maxLines: 3,
                                                     style: TextStyle(
                                                         fontSize: 17,
                                                         color: _correctA
@@ -1851,7 +1848,6 @@ class _QuizScreenState extends State<QuizScreen> {
                                                     "B. ${quizObject.optionB}",
                                                     //"A. What is the Purpose of Life insurance",
                                                     textAlign: TextAlign.start,
-                                                    maxLines: 3,
                                                     style: TextStyle(
                                                         fontSize: 18,
                                                         color: _correctB
@@ -1926,7 +1922,6 @@ class _QuizScreenState extends State<QuizScreen> {
                                                   child: Text(
                                                     "C. ${quizObject.optionC}",
                                                     textAlign: TextAlign.start,
-                                                    maxLines: 3,
                                                     style: TextStyle(
                                                         fontSize: 17,
                                                         color: _correctC
@@ -1994,7 +1989,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                                 child: Center(
                                                   child: Text(
                                                     "D. ${quizObject.optionD}",
-                                                    maxLines: 3,
+
                                                     //"A. What is the Purpose of Life insurance",
                                                     textAlign: TextAlign.start,
                                                     style: TextStyle(

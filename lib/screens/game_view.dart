@@ -20,7 +20,7 @@ class GameWebViewScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  _GameWebViewState createState() => _GameWebViewState();
+  State<GameWebViewScreen> createState() => _GameWebViewState();
 }
 
 class _GameWebViewState extends State<GameWebViewScreen> {
@@ -29,7 +29,7 @@ class _GameWebViewState extends State<GameWebViewScreen> {
       Completer<WebViewController>();
 
   late Timer _timer;
-  int _start = 60; // 2 minute
+  int _start = 60; // 1 minute
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
@@ -81,7 +81,7 @@ class _GameWebViewState extends State<GameWebViewScreen> {
               children: <Widget>[
                 Expanded(
                     child: WebView(
-                  initialUrl: widget.urlLink,
+                  initialUrl: "${widget.urlLink}?gender=${widget.gender}",
                   gestureNavigationEnabled: false,
                   navigationDelegate: (request) {
                     if (request.url.contains(
@@ -90,8 +90,6 @@ class _GameWebViewState extends State<GameWebViewScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            // builder: (context) => ChessGame()),
-                            //  builder: (context) => ZoneHomeScreen()),
                             builder: (context) => const BannerScreen()),
                       ); // Close current window
                       return NavigationDecision.prevent; // Prevent opening url
@@ -105,12 +103,7 @@ class _GameWebViewState extends State<GameWebViewScreen> {
                   },
                   javascriptMode: JavascriptMode.unrestricted,
                   onPageFinished: _handleLoad,
-                  onPageStarted: (url) {
-                    //webViewController.loadUrl(url, headers: headers);
-                  },
                   onWebViewCreated: (WebViewController webViewController) {
-                    Map<String, String> headers = {"gender": widget.gender};
-                    webViewController.loadUrl(widget.urlLink, headers: headers);
                     _controller.complete(webViewController);
                   },
                 ))
@@ -303,12 +296,6 @@ class _GameWebViewState extends State<GameWebViewScreen> {
                   );
                 }));
           }),
-      // elevation: 0,
-      // title: Text(
-      //   widget.title,
-      //   style: TextStyle(color: Colors.black),
-      // ),
-      //backgroundColor: Color(0x44000000),
       elevation: 0,
       backgroundColor: Colors.transparent,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
