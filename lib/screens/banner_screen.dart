@@ -527,7 +527,11 @@ class BannerScreenState extends State<BannerScreen>
       await Navigator.of(context).push(PageRouteBuilder(
           pageBuilder: (context, animation, secondaryAnimation) {
             return GameWebViewScreen(
-                key: _scaffoldKey, title: name, urlLink: url);
+              key: _scaffoldKey,
+              title: name,
+              urlLink: url,
+              gender: _maleChecked.value ? 'Male' : 'Female',
+            );
           },
           transitionDuration: const Duration(milliseconds: 500),
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
