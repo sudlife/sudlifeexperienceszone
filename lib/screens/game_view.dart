@@ -11,9 +11,12 @@ import 'banner_screen.dart';
 
 class GameWebViewScreen extends StatefulWidget {
   static const routeName = '/webview_screen';
-  final String urlLink, title;
+  final String urlLink, title, gender;
   const GameWebViewScreen(
-      {required Key key, required this.urlLink, required this.title})
+      {required Key key,
+      required this.urlLink,
+      required this.title,
+      required this.gender})
       : super(key: key);
 
   @override
@@ -87,8 +90,6 @@ class _GameWebViewState extends State<GameWebViewScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            // builder: (context) => ChessGame()),
-                            //  builder: (context) => ZoneHomeScreen()),
                             builder: (context) => const BannerScreen()),
                       ); // Close current window
                       return NavigationDecision.prevent; // Prevent opening url
@@ -103,6 +104,8 @@ class _GameWebViewState extends State<GameWebViewScreen> {
                   javascriptMode: JavascriptMode.unrestricted,
                   onPageFinished: _handleLoad,
                   onWebViewCreated: (WebViewController webViewController) {
+                    Map<String, String> headers = {"gender": widget.gender};
+                    webViewController.loadUrl(widget.urlLink, headers: headers);
                     _controller.complete(webViewController);
                   },
                 ))

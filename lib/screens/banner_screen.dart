@@ -484,7 +484,11 @@ class _BannerScreenState extends State<BannerScreen>
           PageRouteBuilder(
               pageBuilder: (context, animation, secondaryAnimation) {
                 return GameWebViewScreen(
-                    key: _scaffoldKey, title: name, urlLink: url);
+                  key: _scaffoldKey,
+                  title: name,
+                  urlLink: url,
+                  gender: maleChecked.value ? 'male' : 'female',
+                );
               },
               transitionDuration: const Duration(milliseconds: 500),
               transitionsBuilder:
@@ -750,14 +754,12 @@ class _BannerScreenState extends State<BannerScreen>
                                     unselectedWidgetColor: Colors.grey,
                                   ),
                                   child: Obx(() => Checkbox(
-                                        checkColor: Colors.green,
-                                        activeColor: Colors.white,
+                                        checkColor: Colors.white,
+                                        activeColor: Colors.blueAccent,
                                         value: maleChecked.value,
                                         onChanged: (value) {
-                                          setState(() {
-                                            maleChecked.value = value!;
-                                            femaleChecked.value = false;
-                                          });
+                                          maleChecked.value = value!;
+                                          femaleChecked.value = !value;
                                         },
                                       )),
                                 ),
@@ -770,12 +772,12 @@ class _BannerScreenState extends State<BannerScreen>
                                     unselectedWidgetColor: Colors.grey,
                                   ),
                                   child: Obx(() => Checkbox(
-                                        checkColor: Colors.green,
-                                        activeColor: Colors.white,
+                                        checkColor: Colors.white,
+                                        activeColor: Colors.blueAccent,
                                         value: femaleChecked.value,
                                         onChanged: (value) {
                                           femaleChecked.value = value!;
-                                          maleChecked.value = false;
+                                          maleChecked.value = !value;
                                         },
                                       )),
                                 ),
@@ -799,8 +801,8 @@ class _BannerScreenState extends State<BannerScreen>
                                     unselectedWidgetColor: Colors.grey,
                                   ),
                                   child: Obx(() => Checkbox(
-                                        checkColor: Colors.blueAccent,
-                                        activeColor: Colors.white,
+                                        checkColor: Colors.white,
+                                        activeColor: Colors.blueAccent,
                                         value: policyChecked.value,
                                         onChanged: (value) {
                                           policyChecked.value = value!;
