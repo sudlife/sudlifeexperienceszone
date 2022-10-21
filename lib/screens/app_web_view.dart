@@ -40,6 +40,9 @@ class _AppWebViewState extends State<AppWebView> {
           height: MediaQuery.of(context).size.height,
           child: kIsWeb
               ? HtmlElementView(
+                  onPlatformViewCreated: (val) {
+                    print("Alok val $val");
+                  },
                   viewType: 'hello-world-html',
                 )
               : Container(),

@@ -9,8 +9,6 @@ import 'package:sudlifeexperienceszone/utils/configure_nonweb.dart'
     if (dart.library.html) 'package:sudlifeexperienceszone/utils/configure_web.dart';
 import 'package:toast/toast.dart';
 
-const bool isProduction = bool.fromEnvironment('dart.vm.product');
-
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
@@ -48,7 +46,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void dispose() {
     // Remove the observer
     WidgetsBinding.instance.removeObserver(this);
-
     super.dispose();
   }
 

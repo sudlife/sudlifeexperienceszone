@@ -31,14 +31,15 @@ class Item {
 }
 
 class GameBox {
-  late String url;
-  late String name;
-  late String imageUrl;
+  final String url;
+  final String name;
+  final String imageUrl;
 
-  GameBox({required this.url, required this.name, required this.imageUrl});
+  const GameBox(
+      {required this.url, required this.name, required this.imageUrl});
 }
 
-List<GameBox> gameList = [
+List<GameBox> gameList = const [
   GameBox(
       url: "null", name: "Coin Saver", imageUrl: "assets/game/coin Saver.png"),
   GameBox(
@@ -565,6 +566,7 @@ class BannerScreenState extends State<BannerScreen>
       builder: (context) {
         return SimpleDialog(
           backgroundColor: Colors.white,
+          alignment: Alignment.center,
           children: [
             Obx(() => !otpSent.value
                 ? Container(
@@ -937,7 +939,7 @@ class BannerScreenState extends State<BannerScreen>
                       borderRadius: BorderRadius.circular(15),
                     ),
                     margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                    padding: const EdgeInsets.fromLTRB(0, 10, 20, 10),
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -992,11 +994,10 @@ class BannerScreenState extends State<BannerScreen>
                         const SizedBox(
                           height: 10,
                         ),
-                        FadeAnimation(
-                          0.5,
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: PinCodeTextField(
+                        Center(
+                          child: FadeAnimation(
+                            0.5,
+                            PinCodeTextField(
                               length: 6,
                               obscureText: false,
                               autoFocus: true,

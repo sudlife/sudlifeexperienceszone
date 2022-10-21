@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,42 +26,6 @@ class _GameWebViewState extends State<GameWebViewScreen> {
   int _stackToView = 1;
   final Completer<WebViewController> _controller =
       Completer<WebViewController>();
-
-  late Timer _timer;
-  int _start = 60; // 1 minute
-
-  void startTimer() {
-    const oneSec = Duration(seconds: 1);
-    _timer = Timer.periodic(
-      oneSec,
-      (Timer timer) {
-        if (_start == 0) {
-          if (FirebaseAuth.instance.currentUser != null) {
-            logOutUser(context);
-            _timer.cancel();
-            Navigator.pop(context);
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => const BannerScreen()));
-          }
-        } else {
-          _start--;
-          print(_start);
-        }
-      },
-    );
-  }
-
-  void logOutUser(BuildContext context) {
-    clear();
-    FirebaseAuth.instance.signOut();
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    //startTimer();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
