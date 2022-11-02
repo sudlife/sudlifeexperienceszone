@@ -10,13 +10,12 @@ import 'banner_screen.dart';
 
 class GameWebViewScreen extends StatefulWidget {
   static const routeName = '/webview_screen';
-  final String urlLink, title, gender;
-  const GameWebViewScreen(
-      {required Key key,
-      required this.urlLink,
-      required this.title,
-      required this.gender})
-      : super(key: key);
+  final String urlLink, title;
+  const GameWebViewScreen({
+    required Key key,
+    required this.urlLink,
+    required this.title,
+  }) : super(key: key);
 
   @override
   State<GameWebViewScreen> createState() => _GameWebViewState();
@@ -33,7 +32,7 @@ class _GameWebViewState extends State<GameWebViewScreen> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-
+    print(widget.urlLink);
     return Scaffold(
         extendBodyBehindAppBar: true,
         backgroundColor: Colors.transparent,
@@ -44,7 +43,7 @@ class _GameWebViewState extends State<GameWebViewScreen> {
               children: <Widget>[
                 Expanded(
                     child: WebView(
-                  initialUrl: "${widget.urlLink}?gender=${widget.gender}",
+                  initialUrl: widget.urlLink,
                   gestureNavigationEnabled: false,
                   navigationDelegate: (request) {
                     if (request.url.contains(
