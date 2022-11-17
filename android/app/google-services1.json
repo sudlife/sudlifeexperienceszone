@@ -1,7 +1,6 @@
 {
   "project_info": {
     "project_number": "802592535097",
-    "firebase_url": "https://experiencezone-8a3a5-default-rtdb.firebaseio.com",
     "project_id": "experiencezone-8a3a5",
     "storage_bucket": "experiencezone-8a3a5.appspot.com"
   },
@@ -15,35 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "802592535097-7jpbidhaparl5hkb7j6la6a5gc17l0bi.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sudlife.sudlifeexperienceszone",
-            "certificate_hash": "3303f7915fb3190d30d782394b48cbc1bc1eabf3"
-          }
-        },
-        {
           "client_id": "802592535097-ebhiht35ek39uj295qf5i3db441rhapk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sudlife.sudlifeexperienceszone",
             "certificate_hash": "a4276e0684630dba9ba3f5981f27a3b8c8430aaf"
-          }
-        },
-        {
-          "client_id": "802592535097-ppiqko24l8g3l1a6uetjjfjd734368hk.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sudlife.sudlifeexperienceszone",
-            "certificate_hash": "a884398ca5b071ab1dab1d887a5971b2f906984e"
-          }
-        },
-        {
-          "client_id": "802592535097-sg2ltm0vca1ja8osj68gcnto7cbmgtoc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sudlife.sudlifeexperienceszone",
-            "certificate_hash": "4091d65657d982bf8383fc48e6c123b9f93f3d44"
           }
         },
         {
@@ -62,13 +37,6 @@
             {
               "client_id": "802592535097-5ebd2utkhl5h35eng48rj8plnf8uctk7.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "802592535097-j22686sruq5o0aj77crpp6tme0ll930d.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.example.experiencezone"
-              }
             }
           ]
         }

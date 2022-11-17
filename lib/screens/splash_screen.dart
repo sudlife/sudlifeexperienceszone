@@ -53,6 +53,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> init() async {
+
     if (await getRooted()) {
       Navigator.pushAndRemoveUntil(
           context,
@@ -63,7 +64,6 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(milliseconds: 2000), () {
       HapticFeedback.vibrate();
       //Navigator.pop(context);
-
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const BannerScreen()),

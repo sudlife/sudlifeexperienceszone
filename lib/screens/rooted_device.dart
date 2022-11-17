@@ -31,8 +31,7 @@ class RootedDevice extends StatelessWidget {
                 width: 120,
                 child: ElevatedButton(
                     onPressed: () {
-                      exit(0);
-                    },
+                      exit(0);},
                     child: const Text("Ok"))),
           ],
         ),
